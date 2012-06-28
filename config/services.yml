@@ -1,0 +1,28 @@
+parameters:
+  product_subscriber.class: Heystack\Subsystem\Product\Subscriber
+  product_processor.class: Heystack\Subsystem\Product\Processor
+  
+  productholder_subscriber.class: Heystack\Subsystem\ProductHolder\Subscriber
+
+  
+services:
+  
+  product_subscriber:
+    class: %product_subscriber.class%
+    
+  productholder_subscriber:
+    class: %productholder.class%
+
+  event_dispatcher:
+    calls: 
+      - [ addSubscriber, [ @product_subscriber ] ]
+      - [ addSubscriber, [ @productholder_subscriber ] ]
+      
+  product_processor:
+    class: %product_processor.class%
+    arguments: [@state, @event_dispatcher]
+      
+  processor_handler:
+    calls:
+      - [ addProcessor, [ @product_processor ] ]
+      
