@@ -1,6 +1,6 @@
 <?php
 
-namespace Heystack\Subsystem\Products\Product;
+namespace Heystack\Subsystem\Products;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -16,7 +16,7 @@ class ContainerExtension implements ExtensionInterface
 
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator(__DIR__ . '/../../../../config/')
+            new FileLocator(ECOMMERCE_PRODUCT_BASE_PATH . '/config')
         );
 
         $loader->load('services.yml');
@@ -25,7 +25,7 @@ class ContainerExtension implements ExtensionInterface
 
     public function getNamespace()
     {
-        return 'product';
+        return 'products';
     }
 
     public function getXsdValidationBasePath()
@@ -35,7 +35,7 @@ class ContainerExtension implements ExtensionInterface
 
     public function getAlias()
     {
-        return 'product';
+        return 'products';
     }
 
 }

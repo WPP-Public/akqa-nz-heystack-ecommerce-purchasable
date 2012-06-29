@@ -1,10 +1,10 @@
 parameters:
-  product_subscriber.class: Heystack\Subsystem\Product\Subscriber
-  product_processor.class: Heystack\Subsystem\Product\Processor
+  product_subscriber.class: Heystack\Subsystem\Products\Product\Subscriber
+  product_processor.class: Heystack\Subsystem\Products\Product\Processor
   
-  productholder_subscriber.class: Heystack\Subsystem\ProductHolder\Subscriber
+  productholder_subscriber.class: Heystack\Subsystem\Products\ProductHolder\Subscriber
 
-  productholder.class: Heystack\Subsystem\Product\ProductHolder\ProductHolder
+  productholder.class: Heystack\Subsystem\Products\ProductHolder\ProductHolder
 
   
 services:
