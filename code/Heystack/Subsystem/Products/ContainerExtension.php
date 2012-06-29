@@ -16,7 +16,7 @@ class ContainerExtension implements ExtensionInterface
 
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator(ECOMMERCE_PRODUCT_BASE_PATH . '/config')
+            new FileLocator(ECOMMERCE_PRODUCTS_BASE_PATH . '/config')
         );
 
         $loader->load('services.yml');

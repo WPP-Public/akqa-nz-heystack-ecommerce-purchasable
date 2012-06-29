@@ -1,3 +1,3 @@
 <?php
 
-define('ECOMMERCE_PRODUCT_BASE_PATH', __DIR__);
+define('ECOMMERCE_PRODUCTS_BASE_PATH', __DIR__);
