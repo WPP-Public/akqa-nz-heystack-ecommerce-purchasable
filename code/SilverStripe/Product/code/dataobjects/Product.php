@@ -1,16 +1,11 @@
 <?php
 
-class Product implements PurchaseableInterface
+class Product extends DataObject implements PurchaseableInterface
 {
     
     public static $db = array(
-        'Price' => 'EcommercePrice'
+
     );
-    
-    public function getID()
-    {
-        return $this->ID;
-    }
     
     public function getIdentifier()
     {
@@ -19,6 +14,6 @@ class Product implements PurchaseableInterface
     
     public function getPrice()
     {
-        return $this->PriceAmount;
+        return 100;
     }
 }
