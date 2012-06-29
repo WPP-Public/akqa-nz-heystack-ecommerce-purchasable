@@ -33,7 +33,14 @@ class Processor implements ProcessorInterface
     public function process(\SS_HTTPRequest $request)
     {
 
-        $this->productHolder->addPurchaseable();
+        $product = \DataObject::get_by_id('Product', $request->param('ID'));
+
+        if ($product instanceof \Product) {
+
+            $this->productHolder->addPurchaseable($product);
+
+        }
+
 
     }
 
