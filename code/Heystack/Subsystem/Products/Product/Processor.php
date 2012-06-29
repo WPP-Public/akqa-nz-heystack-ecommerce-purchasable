@@ -26,6 +26,7 @@ class Processor implements ProcessorInterface
 
     public function getName()
     {
+
         return 'product';
 
     }
@@ -33,14 +34,24 @@ class Processor implements ProcessorInterface
     public function process(\SS_HTTPRequest $request)
     {
 
-        $product = \DataObject::get_by_id('Product', $request->param('ID'));
+        $product = \DataObject::get_by_id('Product', $request->param('OtherID'));
 
         if ($product instanceof \Product) {
 
-            $this->productHolder->addPurchaseable($product);
+            switch ($request->param('ID')) {
+
+                case 'add':
+                    $this->productHolder->addPurchaseable($product);
+                    break;
+                case 'remove':
+                    $this->productHolder->removePurchaseable($product->getIdentifier());
+                    break;
+
+            }
+
+            $this->productHolder->saveState();
 
         }
-
 
     }
 

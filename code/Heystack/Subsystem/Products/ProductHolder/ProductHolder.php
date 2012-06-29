@@ -3,17 +3,19 @@
 namespace Heystack\Subsystem\Products\ProductHolder;
 
 use Heystack\Subsystem\Core\State\State;
+use Heystack\Subsystem\Core\State\StateableInterface;
 use Heystack\Subsystem\Ecommerce\Purchaseable\Interfaces\PurchaseableHolderInterface;
 use Heystack\Subsystem\Ecommerce\Purchaseable\Interfaces\PurchaseableInterface;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class ProductHolder implements PurchaseableHolderInterface
+class ProductHolder implements PurchaseableHolderInterface, StateableInterface, \Serializable
 {
 
     private $stateService;
     private $eventDispatcher;
     private $purchaseables = array();
+    private $stateKey = 'productholder';
 
     public function __construct(State $stateService, EventDispatcher $eventDispatcher)
     {
@@ -23,13 +25,41 @@ class ProductHolder implements PurchaseableHolderInterface
 
     }
 
+    public function serialize()
+    {
+
+        return serialize($this->purchaseables);
+
+    }
+
+    public function unserialize($data)
+    {
+
+        $this->purchaseables = unserialize($data);
+
+    }
+
+    public function restoreState()
+    {
+
+        $this->purchaseables = $this->stateService->getObj($this->stateKey);
+
+    }
+
+    public function saveState()
+    {
+
+        $this->stateService->setObj($this->stateKey, $this->purchaseables);
+
+    }
+
     public function addPurchaseable(PurchaseableInterface $purchaseable)
     {
 
         $purchaseable->addStateService($this->stateService);
         $purchaseable->addEventDispatcher($this->eventDispatcher);
 
-        $this->purchaseables[$purchaseables->getIdentifier()] = $purchaseable;
+        $this->purchaseables[$purchaseable->getIdentifier()] = $purchaseable;
 
     }
 
@@ -37,6 +67,17 @@ class ProductHolder implements PurchaseableHolderInterface
     {
 
         return isset($this->purchaseables[$identifier]) ? $this->purchaseables[$identifier] : false;
+
+    }
+
+    public function removePurchaseable($identifier)
+    {
+
+        if (isset($this->purchaseables[$identifier])) {
+
+            unset($this->purchaseables[$identifier]);
+
+        }
 
     }
 
