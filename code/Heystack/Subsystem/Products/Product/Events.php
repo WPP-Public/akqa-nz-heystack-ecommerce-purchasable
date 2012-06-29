@@ -2,8 +2,6 @@
 
 namespace Heystack\Subsystem\Products\Product;
 
-final class Events {
-    
-    
-    
+final class Events
+{
 }

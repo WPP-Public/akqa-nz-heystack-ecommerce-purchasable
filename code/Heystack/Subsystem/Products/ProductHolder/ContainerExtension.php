@@ -37,5 +37,5 @@ class ContainerExtension implements ExtensionInterface
     {
         return 'productholder';
     }
-    
+
 }
