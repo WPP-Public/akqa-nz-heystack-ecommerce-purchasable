@@ -1,6 +1,6 @@
 <?php
 
-namespace Heystack\Subsystem\Product;
+namespace Heystack\Subsystem\Products\Product;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;

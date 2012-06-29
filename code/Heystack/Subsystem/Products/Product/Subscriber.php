@@ -1,6 +1,6 @@
 <?php
 
-namespace Heystack\Subsystem\ProductHolder;
+namespace Heystack\Subsystem\Products\Product;
 
 use Heystack\Subsystem\Currency\Events as CurrencyEvents;
 
@@ -13,13 +13,13 @@ class Subscriber implements EventSubscriberInterface
     static public function getSubscribedEvents()
     {
         return array(
-           
+           CurrencyEvents::CURRENCY_CHANGE => array('onCurrencyChange', 10)
         );
     }
     
     public function onCurrencyChange()
     {
-        
+        \HeydayLog::log('Currency did change');
     }
 
 }

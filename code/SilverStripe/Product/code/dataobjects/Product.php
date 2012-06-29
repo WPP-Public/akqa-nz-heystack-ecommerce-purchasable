@@ -1,5 +1,7 @@
 <?php
 
+use Heystack\Subsystem\Ecommerce\Purchaseables\Interfaces;
+
 class Product extends DataObject implements PurchaseableInterface
 {
     
