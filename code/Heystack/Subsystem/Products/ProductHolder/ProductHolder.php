@@ -3,6 +3,8 @@
 namespace Heystack\Subsystem\Products\ProductHolder;
 
 use Heystack\Subsystem\Core\State\State;
+use Heystack\Subsystem\Ecommerce\Purchaseable\Interfaces\PurchaseableHolderInterface;
+use Heystack\Subsystem\Ecommerce\Purchaseable\Interfaces\PurchaseableInterface;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 

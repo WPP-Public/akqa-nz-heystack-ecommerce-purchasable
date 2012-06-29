@@ -13,7 +13,7 @@ services:
     class: %product_subscriber.class%
     
   productholder_subscriber:
-    class: %productholder.class%
+    class: %productholder_subscriber.class%
 
   event_dispatcher:
     calls: 
@@ -22,7 +22,7 @@ services:
       
   product_processor:
     class: %product_processor.class%
-    arguments: [@state, @event_dispatcher]
+    arguments: [@state, @event_dispatcher, @productholder]
       
   processor_handler:
     calls:
