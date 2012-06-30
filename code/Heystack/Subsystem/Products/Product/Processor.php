@@ -34,22 +34,26 @@ class Processor implements ProcessorInterface
     public function process(\SS_HTTPRequest $request)
     {
 
-        $product = \DataObject::get_by_id('Product', $request->param('OtherID'));
+        if ($id = $request->param('OtherID')) {
 
-        if ($product instanceof \Product) {
+            $product = \DataObject::get_by_id('Product', $request->param('OtherID'));
 
-            switch ($request->param('ID')) {
+            if ($product instanceof \Product) {
 
-                case 'add':
-                    $this->productHolder->addPurchaseable($product);
-                    break;
-                case 'remove':
-                    $this->productHolder->removePurchaseable($product->getIdentifier());
-                    break;
+                switch ($request->param('ID')) {
+
+                    case 'add':
+                        $this->productHolder->addPurchaseable($product);
+                        break;
+                    case 'remove':
+                        $this->productHolder->removePurchaseable($product->getIdentifier());
+                        break;
+
+                }
+
+                $this->productHolder->saveState();
 
             }
-
-            $this->productHolder->saveState();
 
         }
 

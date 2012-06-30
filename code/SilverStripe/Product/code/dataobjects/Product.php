@@ -4,6 +4,12 @@ use Heystack\Subsystem\Ecommerce\Purchaseable\Interfaces\PurchaseableInterface;
 
 class Product extends DataObject implements PurchaseableInterface, Serializable
 {
+
+    use Heystack\Subsystem\Core\State\Traits\DataObjectSerializableTrait;
+
+    private $stateService;
+    private $eventService;
+
     public static $db = array(
         'Name' => 'Varchar(255)'
     );
@@ -21,25 +27,14 @@ class Product extends DataObject implements PurchaseableInterface, Serializable
     public function addStateService(\Heystack\Subsystem\Core\State\State $stateService)
     {
 
-    }
-
-    public function addEventDispatcher(\Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher)
-    {
+        $this->stateService = $stateService;
 
     }
 
-    public function serialize()
+    public function addEventService(\Symfony\Component\EventDispatcher\EventDispatcher $eventService)
     {
 
-        return serialize($this->record);
-
-    }
-
-    public function unserialize($data)
-    {
-
-        $this->class = get_class($this);
-        $this->record = unserialize($data);
+        $this->eventService = $eventService;
 
     }
 

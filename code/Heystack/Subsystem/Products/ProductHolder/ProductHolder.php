@@ -13,15 +13,15 @@ class ProductHolder implements PurchaseableHolderInterface, StateableInterface, 
 {
 
     private $stateService;
-    private $eventDispatcher;
+    private $eventService;
     private $purchaseables = array();
     private $stateKey = 'productholder';
 
-    public function __construct(State $stateService, EventDispatcher $eventDispatcher)
+    public function __construct(State $stateService, EventDispatcher $eventService)
     {
 
         $this->stateService = $stateService;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->eventService = $eventService;
 
     }
 
@@ -57,7 +57,7 @@ class ProductHolder implements PurchaseableHolderInterface, StateableInterface, 
     {
 
         $purchaseable->addStateService($this->stateService);
-        $purchaseable->addEventDispatcher($this->eventDispatcher);
+        $purchaseable->addEventService($this->eventService);
 
         $this->purchaseables[$purchaseable->getIdentifier()] = $purchaseable;
 
