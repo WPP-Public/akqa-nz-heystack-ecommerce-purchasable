@@ -2,7 +2,7 @@
 
 namespace Heystack\Subsystem\Products\Product;
 
-use Heystack\Subsystem\Core\Processor\ProcessorInterface;
+use Heystack\Subsystem\Core\Input\ProcessorInterface;
 use Heystack\Subsystem\Core\State\State;
 use Heystack\Subsystem\Products\ProductHolder\ProductHolder;
 

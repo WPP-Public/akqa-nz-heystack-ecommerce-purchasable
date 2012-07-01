@@ -24,7 +24,7 @@ services:
     class: %product_processor.class%
     arguments: [@state, @event_dispatcher, @productholder]
 
-  processor_handler:
+  input_processor_handler:
     calls:
       - [ addProcessor, [ @product_processor ] ]
 
