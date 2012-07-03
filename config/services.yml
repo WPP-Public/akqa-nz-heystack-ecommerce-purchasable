@@ -24,13 +24,13 @@ services:
     class: %product_processor.class%
     arguments: [@state, @event_dispatcher, @productholder]
 
-  input_processor_handler:
-    calls:
-      - [ addProcessor, [ @product_processor ] ]
-
   productholder:
     class: %productholder.class%
     arguments: [ @state, @event_dispatcher ]
     calls:
       - [ restoreState ]
+
+  input_processor_handler:
+    calls:
+      - [ addProcessor, [ @product_processor ] ]
 

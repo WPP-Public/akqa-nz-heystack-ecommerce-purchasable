@@ -12,10 +12,11 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class ProductHolder implements PurchaseableHolderInterface, StateableInterface, \Serializable
 {
 
+    const STATE_KEY = 'productholder';
+
     private $stateService;
     private $eventService;
     private $purchaseables = array();
-    private $stateKey = 'productholder';
 
     public function __construct(State $stateService, EventDispatcher $eventService)
     {
@@ -42,14 +43,14 @@ class ProductHolder implements PurchaseableHolderInterface, StateableInterface, 
     public function restoreState()
     {
 
-        $this->purchaseables = $this->stateService->getObj($this->stateKey);
+        $this->purchaseables = $this->stateService->getObj(self::STATE_KEY);
 
     }
 
     public function saveState()
     {
 
-        $this->stateService->setObj($this->stateKey, $this->purchaseables);
+        $this->stateService->setObj(self::STATE_KEY, $this->purchaseables);
 
     }
 
