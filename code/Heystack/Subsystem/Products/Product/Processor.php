@@ -11,13 +11,15 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class Processor implements ProcessorInterface
 {
 
+    private $productClass;
     private $state;
     private $eventDispatcher;
     private $productHolder;
 
-    public function __construct(State $state, EventDispatcher $eventDispatcher, ProductHolder $productHolder)
+    public function __construct($productClass, State $state, EventDispatcher $eventDispatcher, ProductHolder $productHolder)
     {
 
+        $this->productClass = $productClass;
         $this->state = $state;
         $this->eventDispatcher = $eventDispatcher;
         $this->productHolder = $productHolder;
@@ -27,7 +29,7 @@ class Processor implements ProcessorInterface
     public function getName()
     {
 
-        return 'product';
+        return strtolower($this->productClass);
 
     }
 
@@ -36,9 +38,9 @@ class Processor implements ProcessorInterface
 
         if ($id = $request->param('OtherID')) {
 
-            $product = \DataObject::get_by_id('Product', $request->param('OtherID'));
+            $product = \DataObject::get_by_id($this->productClass, $request->param('OtherID'));
 
-            if ($product instanceof \Product) {
+            if ($product instanceof $this->productClass) {
 
                 switch ($request->param('ID')) {
 

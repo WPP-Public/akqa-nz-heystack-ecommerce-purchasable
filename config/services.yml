@@ -6,6 +6,8 @@ parameters:
 
   productholder.class: Heystack\Subsystem\Products\ProductHolder\ProductHolder
 
+  product.class: Product
+
 
 services:
 
@@ -22,7 +24,7 @@ services:
 
   product_processor:
     class: %product_processor.class%
-    arguments: [@state, @event_dispatcher, @productholder]
+    arguments: [%product.class%, @state, @event_dispatcher, @productholder]
 
   productholder:
     class: %productholder.class%
