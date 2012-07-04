@@ -1,8 +1,8 @@
 <?php
 
-use Heystack\Subsystem\Ecommerce\Purchaseable\Interfaces\PurchaseableInterface;
+use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 
-class Product extends DataObject implements PurchaseableInterface, Serializable
+class Product extends DataObject implements PurchasableInterface, Serializable
 {
 
     use Heystack\Subsystem\Products\Product\DataObjectTrait;

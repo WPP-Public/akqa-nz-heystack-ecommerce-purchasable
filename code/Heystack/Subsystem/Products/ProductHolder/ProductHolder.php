@@ -4,19 +4,19 @@ namespace Heystack\Subsystem\Products\ProductHolder;
 
 use Heystack\Subsystem\Core\State\State;
 use Heystack\Subsystem\Core\State\StateableInterface;
-use Heystack\Subsystem\Ecommerce\Purchaseable\Interfaces\PurchaseableHolderInterface;
-use Heystack\Subsystem\Ecommerce\Purchaseable\Interfaces\PurchaseableInterface;
+use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
+use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class ProductHolder implements PurchaseableHolderInterface, StateableInterface, \Serializable
+class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable
 {
 
     const STATE_KEY = 'productholder';
 
     private $stateService;
     private $eventService;
-    private $purchaseables = array();
+    private $purchasables = array();
 
     public function __construct(State $stateService, EventDispatcher $eventService)
     {
@@ -29,71 +29,71 @@ class ProductHolder implements PurchaseableHolderInterface, StateableInterface, 
     public function serialize()
     {
 
-        return serialize($this->purchaseables);
+        return serialize($this->purchasables);
 
     }
 
     public function unserialize($data)
     {
 
-        $this->purchaseables = unserialize($data);
+        $this->purchasables = unserialize($data);
 
     }
 
     public function restoreState()
     {
 
-        $this->purchaseables = $this->stateService->getObj(self::STATE_KEY);
+        $this->purchasables = $this->stateService->getObj(self::STATE_KEY);
 
     }
 
     public function saveState()
     {
 
-        $this->stateService->setObj(self::STATE_KEY, $this->purchaseables);
+        $this->stateService->setObj(self::STATE_KEY, $this->purchasables);
 
     }
 
-    public function addPurchaseable(PurchaseableInterface $purchaseable)
+    public function addPurchasable(PurchasableInterface $purchasable)
     {
 
-        $purchaseable->addStateService($this->stateService);
-        $purchaseable->addEventService($this->eventService);
+        $purchasable->addStateService($this->stateService);
+        $purchasable->addEventService($this->eventService);
 
-        $this->purchaseables[$purchaseable->getIdentifier()] = $purchaseable;
+        $this->purchasables[$purchasable->getIdentifier()] = $purchasable;
 
     }
 
-    public function getPurchaseable($identifier)
+    public function getPurchasable($identifier)
     {
 
-        return isset($this->purchaseables[$identifier]) ? $this->purchaseables[$identifier] : false;
+        return isset($this->purchasables[$identifier]) ? $this->purchasables[$identifier] : false;
 
     }
 
-    public function removePurchaseable($identifier)
+    public function removePurchasable($identifier)
     {
 
-        if (isset($this->purchaseables[$identifier])) {
+        if (isset($this->purchasables[$identifier])) {
 
-            unset($this->purchaseables[$identifier]);
+            unset($this->purchasables[$identifier]);
 
         }
 
     }
 
-    public function getPurchaseables($identifiers = null)
+    public function getPurchasables($identifiers = null)
     {
 
-        $purchaseables = array();
+        $purchasables = array();
 
         if (!is_null($identifiers) && $identifiers == (array) $identifiers) {
 
             foreach ($identifiers as $identifier) {
 
-                if ($purchaseable = $this->getPurchaseable($identifier)) {
+                if ($purchasable = $this->getPurchasable($identifier)) {
 
-                    $purchaseables[] = $purchaseable;
+                    $purchasables[] = $purchasable;
 
                 }
 
@@ -101,20 +101,20 @@ class ProductHolder implements PurchaseableHolderInterface, StateableInterface, 
 
         } else {
 
-            $purchaseables = $this->purchaseables;
+            $purchasables = $this->purchasables;
 
         }
 
-        return $purchaseables;
+        return $purchasables;
 
     }
 
-    public function setPurchaseables(array $purchaseables)
+    public function setPurchasables(array $purchasables)
     {
 
-        foreach ($purchaseables as $purchaseable) {
+        foreach ($purchasables as $purchasable) {
 
-            $this->addPurchaseable($purchaseable);
+            $this->addPurchasable($purchasable);
 
         }
 

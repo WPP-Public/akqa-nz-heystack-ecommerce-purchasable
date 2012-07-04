@@ -11,7 +11,6 @@ class Processor implements ProcessorInterface
 
     private $productClass;
     private $state;
-    private $eventDispatcher;
     private $productHolder;
 
     public function __construct($productClass, State $state, ProductHolder $productHolder)
