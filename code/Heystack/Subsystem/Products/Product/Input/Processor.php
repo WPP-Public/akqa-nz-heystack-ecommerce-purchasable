@@ -1,6 +1,6 @@
 <?php
 
-namespace Heystack\Subsystem\Products\Product;
+namespace Heystack\Subsystem\Products\Product\Input;
 
 use Heystack\Subsystem\Core\Input\ProcessorInterface;
 use Heystack\Subsystem\Core\State\State;
@@ -26,7 +26,7 @@ class Processor implements ProcessorInterface
 
     }
 
-    public function getName()
+    public function getIdentifier()
     {
 
         return strtolower($this->productClass);
@@ -52,12 +52,24 @@ class Processor implements ProcessorInterface
                         break;
 
                 }
+                
+//                \Heystack\Subsystem\Core\ServiceStore::getService('monolog')->addError('Something went wrong!', array(
+//                    'Product' => $product
+//                ));
 
                 $this->productHolder->saveState();
-
+                
+                return array(
+                    'Success' => true
+                );
+                
             }
 
         }
+                
+        return array(
+            'Success' => false
+        );
 
     }
 
