@@ -49,18 +49,27 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     public function saveState()
     {
-
+        
         $this->stateService->setObj(self::STATE_KEY, $this->purchasables);
 
     }
 
-    public function addPurchasable(PurchasableInterface $purchasable)
-    {
+    public function addPurchasable(PurchasableInterface $purchasable,$quantity = 1)
+    {        
+        if($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())){
+            
+            $cachedPurchasable->setQuantity($cachedPurchasable->getQuantity() + $quantity);
+            
+        }else{
+            $purchasable->addStateService($this->stateService);
+            $purchasable->addEventService($this->eventService);
 
-        $purchasable->addStateService($this->stateService);
-        $purchasable->addEventService($this->eventService);
+            $purchasable->setQuantity($purchasable->getQuantity() + $quantity);
+            $purchasable->setUnitPrice($purchasable->getPrice());
 
-        $this->purchasables[$purchasable->getIdentifier()] = $purchasable;
+            $this->purchasables[$purchasable->getIdentifier()] = $purchasable;
+     
+        }
 
     }
 
