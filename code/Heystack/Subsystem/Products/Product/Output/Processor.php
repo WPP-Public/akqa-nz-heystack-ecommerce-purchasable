@@ -31,19 +31,19 @@ class Processor implements ProcessorInterface
 
     public function process(\Controller $controller, $result = null)
     {
-        if($controller->isAjax()){
-            
+        if ($controller->isAjax()) {
+
             $response = $controller->getResponse();
             $response->setStatusCode(200);
             $response->addHeader('Content-Type', 'application/json');
-            
+
             $response->setBody(json_encode($result));
-            
+
             return $response;
-        }else{
+        } else {
             $controller->redirectBack();
         }
-        
+
         return null;
     }
 

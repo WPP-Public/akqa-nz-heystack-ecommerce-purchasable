@@ -39,7 +39,7 @@ class Processor implements ProcessorInterface
         if ($id = $request->param('OtherID')) {
 
             $product = \DataObject::get_by_id($this->productClass, $request->param('OtherID'));
-            
+
             $quantity = $request->param('ExtraID');
 
             if ($product instanceof $this->productClass) {
@@ -54,21 +54,21 @@ class Processor implements ProcessorInterface
                         break;
 
                 }
-                
+
 //                \Heystack\Subsystem\Core\ServiceStore::getService('monolog')->addError('Something went wrong!', array(
 //                    'Product' => $product
 //                ));
 
                 $this->productHolder->saveState();
-                
+
                 return array(
                     'Success' => true
                 );
-                
+
             }
 
         }
-                
+
         return array(
             'Success' => false
         );
