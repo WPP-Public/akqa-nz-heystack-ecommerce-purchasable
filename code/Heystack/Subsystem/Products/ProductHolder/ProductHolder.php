@@ -1,5 +1,13 @@
 <?php
+/**
+ * This file is part of the Ecommerce-Products package
+ * 
+ * @package Heystack
+ */
 
+/**
+ * ProductHolder namespace
+ */
 namespace Heystack\Subsystem\Products\ProductHolder;
 
 use Heystack\Subsystem\Core\State\State;
@@ -9,15 +17,53 @@ use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
+/**
+ * Purchasable Holder implementation for Ecommerce-Products
+ * 
+ * This class is our version of a 'cart'. It holds together all the 
+ * 'purchasables' in for an order. Notice that it also implements serializable 
+ * and Stateable.
+ * 
+ * @copyright  Heyday
+ * @author Stevie Mayhew <stevie@heyday.co.nz>
+ * @author Glenn Bautista <glenn@heyday.co.nz>
+ * @author Cam Spiers <cameron@heyday.co.nz>
+ * @package Heystack
+ * 
+ */
 class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable
 {
 
+    /**
+     * State Key constant
+     */
     const STATE_KEY = 'productholder';
 
+    /**
+     * Holds the State service
+     * @var State 
+     */
     private $stateService;
+    
+    /**
+     * Holds the EventDispatcher Service
+     * @var EventDispatcher 
+     */
     private $eventService;
+    
+    /**
+     * An array of Purchasables
+     * @var array
+     */
     private $purchasables = array();
-
+    
+    /**
+     * ProductHolder Constructor. Not directly called, use the ServiceStore to
+     * get an instance of this class
+     * 
+     * @param \Heystack\Subsystem\Core\State\State $stateService
+     * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventService
+     */
     public function __construct(State $stateService, EventDispatcher $eventService)
     {
 
@@ -26,6 +72,10 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
+    /**
+     * Returns a serialized string from the purchasables array
+     * @return string
+     */
     public function serialize()
     {
 
@@ -33,6 +83,10 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
+    /**
+     * Unserializes the data into the purchasables array
+     * @param string $data
+     */
     public function unserialize($data)
     {
 
@@ -40,6 +94,9 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
+    /**
+     * Uses the State service to restore the pruchasables array
+     */
     public function restoreState()
     {
 
@@ -47,6 +104,9 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
+    /**
+     * Saves the purchasables array on the State service
+     */
     public function saveState()
     {
         
