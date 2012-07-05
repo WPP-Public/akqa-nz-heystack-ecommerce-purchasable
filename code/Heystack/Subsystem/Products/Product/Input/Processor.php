@@ -39,13 +39,15 @@ class Processor implements ProcessorInterface
         if ($id = $request->param('OtherID')) {
 
             $product = \DataObject::get_by_id($this->productClass, $request->param('OtherID'));
+            
+            $quantity = $request->param('ExtraID');
 
             if ($product instanceof $this->productClass) {
 
                 switch ($request->param('ID')) {
 
                     case 'add':
-                        $this->productHolder->addPurchasable($product);
+                        $this->productHolder->addPurchasable($product,isset($quantity) ? $quantity : 1);
                         break;
                     case 'remove':
                         $this->productHolder->removePurchasable($product->getIdentifier());

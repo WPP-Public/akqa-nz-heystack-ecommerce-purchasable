@@ -25,17 +25,17 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     
     public function getPrice()
     {
-        return $this->ID * 10000;
+        return $this->ID * 100.00;
     }
     
-    public function setUnitPrice(\int $unitPrice)
+    public function setUnitPrice(\Float $unitPrice)
     {
         $this->unitPrice = $unitPrice;
     }
     
     public function getUnitPrice()
     {
-        return $this->unitPrice / 100;
+        return $this->unitPrice;
     }
     
     public function setQuantity($quantity = 1)
