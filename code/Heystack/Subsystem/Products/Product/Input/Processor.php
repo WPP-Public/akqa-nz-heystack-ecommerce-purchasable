@@ -4,7 +4,7 @@ namespace Heystack\Subsystem\Products\Product\Input;
 
 use Heystack\Subsystem\Core\Input\ProcessorInterface;
 use Heystack\Subsystem\Core\State\State;
-use Heystack\Subsystem\Products\ProductHolder\ProductHolder;
+use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -14,15 +14,15 @@ class Processor implements ProcessorInterface
     private $productClass;
     private $state;
     private $eventDispatcher;
-    private $productHolder;
+    private $purchasableHolder;
 
-    public function __construct($productClass, State $state, EventDispatcher $eventDispatcher, ProductHolder $productHolder)
+    public function __construct($productClass, State $state, EventDispatcher $eventDispatcher, PurchasableHolderInterface $purchasableHolder)
     {
 
         $this->productClass = $productClass;
         $this->state = $state;
         $this->eventDispatcher = $eventDispatcher;
-        $this->productHolder = $productHolder;
+        $this->purchasableHolder = $purchasableHolder;
 
     }
 
@@ -40,33 +40,31 @@ class Processor implements ProcessorInterface
 
             $product = \DataObject::get_by_id($this->productClass, $request->param('OtherID'));
 
+            $quantity = $request->param('ExtraID');
+
             if ($product instanceof $this->productClass) {
 
                 switch ($request->param('ID')) {
 
                     case 'add':
-                        $this->productHolder->addPurchasable($product);
+                        $this->purchasableHolder->addPurchasable($product,isset($quantity) ? $quantity : 1);
                         break;
                     case 'remove':
-                        $this->productHolder->removePurchasable($product->getIdentifier());
+                        $this->purchasableHolder->removePurchasable($product->getIdentifier());
                         break;
 
                 }
-                
-//                \Heystack\Subsystem\Core\ServiceStore::getService('monolog')->addError('Something went wrong!', array(
-//                    'Product' => $product
-//                ));
 
-                $this->productHolder->saveState();
-                
+                $this->purchasableHolder->saveState();
+
                 return array(
                     'Success' => true
                 );
-                
+
             }
 
         }
-                
+
         return array(
             'Success' => false
         );

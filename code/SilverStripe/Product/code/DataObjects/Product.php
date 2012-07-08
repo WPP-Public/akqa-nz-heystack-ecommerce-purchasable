@@ -3,8 +3,7 @@
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Subsystem\Core\Storage\DataObjectCodeGenerator\Interfaces\DataObjectCodeGeneratorInterface;
 
-
-class Product extends DataObject implements PurchasableInterface, Serializable, DataObjectCodeGeneratorInterface, ExtraDataInterface
+class Product extends DataObject implements PurchasableInterface, Serializable, DataObjectCodeGeneratorInterface
 {
 
     use Heystack\Subsystem\Products\Product\DataObjectTrait;
