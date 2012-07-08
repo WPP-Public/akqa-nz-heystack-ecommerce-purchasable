@@ -39,7 +39,7 @@ class Processor implements ProcessorInterface
         if ($id = $request->param('OtherID')) {
 
             $product = \DataObject::get_by_id($this->productClass, $request->param('OtherID'));
-            
+
             $quantity = $request->param('ExtraID');
 
             if ($product instanceof $this->productClass) {
@@ -56,15 +56,15 @@ class Processor implements ProcessorInterface
                 }
 
                 $this->purchasableHolder->saveState();
-                
+
                 return array(
                     'Success' => true
                 );
-                
+
             }
 
         }
-                
+
         return array(
             'Success' => false
         );

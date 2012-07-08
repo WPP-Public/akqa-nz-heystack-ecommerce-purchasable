@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of the Ecommerce-Products package
- * 
+ *
  * @package Heystack
  */
 
@@ -19,17 +19,17 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Purchasable Holder implementation for Ecommerce-Products
- * 
- * This class is our version of a 'cart'. It holds together all the 
- * 'purchasables' in for an order. Notice that it also implements serializable 
+ *
+ * This class is our version of a 'cart'. It holds together all the
+ * 'purchasables' in for an order. Notice that it also implements serializable
  * and Stateable.
- * 
+ *
  * @copyright  Heyday
  * @author Stevie Mayhew <stevie@heyday.co.nz>
  * @author Glenn Bautista <glenn@heyday.co.nz>
  * @author Cam Spiers <cameron@heyday.co.nz>
  * @package Heystack
- * 
+ *
  */
 class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable
 {
@@ -41,27 +41,27 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     /**
      * Holds the State service
-     * @var State 
+     * @var State
      */
     private $stateService;
-    
+
     /**
      * Holds the EventDispatcher Service
-     * @var EventDispatcher 
+     * @var EventDispatcher
      */
     private $eventService;
-    
+
     /**
      * An array of Purchasables
      * @var array
      */
     private $purchasables = array();
-    
+
     /**
      * ProductHolder Constructor. Not directly called, use the ServiceStore to
      * get an instance of this class
-     * 
-     * @param \Heystack\Subsystem\Core\State\State $stateService
+     *
+     * @param \Heystack\Subsystem\Core\State\State               $stateService
      * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventService
      */
     public function __construct(State $stateService, EventDispatcher $eventService)
@@ -114,13 +114,20 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
-    public function addPurchasable(PurchasableInterface $purchasable,$quantity = 1)
+    /**
+     * Adds a purchasable object to the product holder
+     * @param PurchasableInterface $purchasable The purchasable object
+     * @param integer              $quantity    number of the object to add
+     */
+    public function addPurchasable(PurchasableInterface $purchasable, $quantity = 1)
     {
+
         if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
 
             $cachedPurchasable->setQuantity($cachedPurchasable->getQuantity() + $quantity);
 
         } else {
+
             $purchasable->addStateService($this->stateService);
             $purchasable->addEventService($this->eventService);
 
@@ -133,6 +140,11 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
+    /**
+     * Returns a purchasable by its identifier
+     * @param  string                     $identifier The identifier of the purchasable
+     * @return PurchasableInterface|false The Purchasable object if found
+     */
     public function getPurchasable($identifier)
     {
 
@@ -140,6 +152,11 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
+    /**
+     * Removes a purchasable from the product holder if found
+     * @param  string $identifier The identifier of the purchasable to remove
+     * @return null
+     */
     public function removePurchasable($identifier)
     {
 
@@ -151,7 +168,12 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
-    public function getPurchasables($identifiers = null)
+    /**
+     * Get multiple purchasables, if no identifiers are passed in then return all purchasables
+     * @param  array|null $identifiers An array of identifiers if passed in
+     * @return array      And array of purchasables
+     */
+    public function getPurchasables(array $identifiers = null)
     {
 
         $purchasables = array();
@@ -178,6 +200,10 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
+    /**
+     * Set an array of purchasables to the product holder
+     * @param array $purchasables Array of purchasables
+     */
     public function setPurchasables(array $purchasables)
     {
 

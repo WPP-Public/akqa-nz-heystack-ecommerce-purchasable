@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of the Ecommerce-Products package
- * 
+ *
  * @package Ecommerce-Products
  */
 
@@ -18,15 +18,15 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Container extension for Heystack.
- * 
- * If Heystacks services are loaded as an extension (this happens when there is 
- * a primary services.yml file in mysite/config) then this is the container 
+ *
+ * If Heystacks services are loaded as an extension (this happens when there is
+ * a primary services.yml file in mysite/config) then this is the container
  * extension that loads heystacks services.yml
- * 
+ *
  * @copyright  Heyday
  * @author Cam Spiers <cameron@heyday.co.nz>
  * @package Ecommerce-Products
- * 
+ *
  */
 class ContainerExtension implements ExtensionInterface
 {
@@ -34,9 +34,9 @@ class ContainerExtension implements ExtensionInterface
     /**
      * Loads a services.yml file into a fresh container, ready to me merged
      * back into the main container
-     * 
-     * @param array $config 
-     * @param ContainerBuilder $container 
+     *
+     * @param  array            $config
+     * @param  ContainerBuilder $container
      * @return null
      */
     public function load(array $config, ContainerBuilder $container)
