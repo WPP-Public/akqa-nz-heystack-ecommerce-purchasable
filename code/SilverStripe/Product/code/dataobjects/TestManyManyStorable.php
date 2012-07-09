@@ -2,32 +2,19 @@
 
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Subsystem\Core\Storage\DataObjectCodeGenerator\Interfaces\DataObjectCodeGeneratorInterface;
-use Heystack\Subsystem\Core\State\ExtraDataInterface;
 
-class Product extends DataObject implements PurchasableInterface, Serializable, DataObjectCodeGeneratorInterface, ExtraDataInterface
+class TestManyManyStorable extends DataObject implements PurchasableInterface, Serializable, DataObjectCodeGeneratorInterface
 {
 
     use Heystack\Subsystem\Products\Product\DataObjectTrait;
-    use Heystack\Subsystem\Core\State\Traits\ExtraDataTrait;
-
-    protected $quantity = 0;
-    protected $unitPrice = 0;
 
     public static $db = array(
         'Name' => 'Varchar(255)',
-        'TestStuff' => 'Varchar(255)'
+        'TestMANYAMNYStuff' => 'Varchar(255)'
     );
     
-    public static $has_one = array(
-        'SingleStorable' => 'TestStorable'
-    );
-    
-    public static $has_many = array(
-        'HasyManyStore' => 'TestManyStorable'
-    );
-    
-    public static $many_many = array(
-        'ManyManyStorable'=> 'TestManyManyStorable'
+    public static $belongs_many_many = array(
+        'Products' => 'Product'
     );
 
     public function getExtraData()
@@ -71,14 +58,14 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     public function getStorableData()
     {
         return array(
-            'Name' => 'Varchar(255)'
+            'TestMANYAMNYStuff' => 'Varchar(255)'
         );
     }
     
     public function getStorableSingleRelations()
     {
        
-        return self::$has_one;
+        //return self::$has_one;
   
     }
     
@@ -86,7 +73,7 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     {
         
         //return self::$has_many;
-        return array_merge(self::$has_many, self::$many_many);
+        //return array_merge(self::$has_many, self::$many_many);
         
     }
 
