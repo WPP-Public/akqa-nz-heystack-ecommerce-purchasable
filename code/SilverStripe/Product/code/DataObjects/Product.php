@@ -4,7 +4,6 @@ use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Subsystem\Core\Storage\DataObjectCodeGenerator\Interfaces\DataObjectCodeGeneratorInterface;
 use Heystack\Subsystem\Core\State\ExtraDataInterface;
 
-
 class Product extends DataObject implements PurchasableInterface, Serializable, DataObjectCodeGeneratorInterface, ExtraDataInterface
 {
 
@@ -24,11 +23,11 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     );
     
     public static $has_many = array(
-        'MultiStorable' => 'TestStorable'
+        'HasyManyStore' => 'TestManyStorable'
     );
     
     public static $many_many = array(
-        'ManyStorable'=> 'TestStorable'
+        'ManyManyStorable'=> 'TestManyManyStorable'
     );
 
     public function getExtraData()

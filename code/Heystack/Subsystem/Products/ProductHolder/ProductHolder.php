@@ -2,7 +2,7 @@
 /**
  * This file is part of the Ecommerce-Products package
  *
- * @package Heystack
+ * @package Ecommerce-Products
  */
 
 /**
@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 /**
  * Purchasable Holder implementation for Ecommerce-Products
  *
- * This class is our version of a 'cart'. It holds together all the
+ * This class is our version of a 'shopping cart'. It holds together all the
  * 'purchasables' in for an order. Notice that it also implements serializable
  * and Stateable.
  *
@@ -115,29 +115,52 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     }
 
     /**
-     * Adds a purchasable object to the product holder
+     * Adds a purchasable object to the product holder and increments the
+     * quantity
      * @param PurchasableInterface $purchasable The purchasable object
-     * @param integer              $quantity    number of the object to add
+     * @param integer              $quantity    quantity of the object to add
      */
     public function addPurchasable(PurchasableInterface $purchasable, $quantity = 1)
     {
+        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
+            
+            $this->setPurchasable($cachedPurchasable, $cachedPurchasable->getQuantity() + $quantity);
 
+        } else {
+            
+            $this->setPurchasable($purchasable, $quantity);
+
+        }
+
+    }
+    
+    /**
+     * Sets the quantity of a purchasable object on the product holder
+     * @param PurchasableInterface $purchasable The purchasable object
+     * @param int $quantity quantity of the purchasable object to be set
+     */
+    public function setPurchasable(PurchasableInterface $purchasable, $quantity)
+    {
+        if(is_null($quantity)){
+            $quantity = 1;
+        }
+        
         if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
 
-            $cachedPurchasable->setQuantity($cachedPurchasable->getQuantity() + $quantity);
+            $cachedPurchasable->setQuantity($quantity);
 
         } else {
 
             $purchasable->addStateService($this->stateService);
             $purchasable->addEventService($this->eventService);
 
-            $purchasable->setQuantity($purchasable->getQuantity() + $quantity);
+            $purchasable->setQuantity($quantity);
             $purchasable->setUnitPrice($purchasable->getPrice());
 
             $this->purchasables[$purchasable->getIdentifier()] = $purchasable;
 
         }
-
+        
     }
 
     /**
@@ -201,7 +224,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     }
 
     /**
-     * Set an array of purchasables to the product holder
+     * Set an array of purchasables on the product holder
      * @param array $purchasables Array of purchasables
      */
     public function setPurchasables(array $purchasables)
@@ -215,7 +238,8 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
     
-    public function saveToDatabase() {
+    public function saveToDatabase() 
+    {
         
         $storage = \Heystack\Subsystem\Core\ServiceStore::getService('storage_processor');
         
