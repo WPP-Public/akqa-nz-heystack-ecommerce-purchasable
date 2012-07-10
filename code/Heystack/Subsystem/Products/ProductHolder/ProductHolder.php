@@ -28,7 +28,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  * @author Stevie Mayhew <stevie@heyday.co.nz>
  * @author Glenn Bautista <glenn@heyday.co.nz>
  * @author Cam Spiers <cameron@heyday.co.nz>
- * @package Heystack
+ * @package Ecommerce-Products
  *
  */
 class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable
