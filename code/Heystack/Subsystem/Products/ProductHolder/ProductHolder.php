@@ -14,6 +14,7 @@ use Heystack\Subsystem\Core\State\State;
 use Heystack\Subsystem\Core\State\StateableInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
+use Heystack\Subsystem\Products\ProductHolder\Event\ProductHolderEvent;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -125,10 +126,14 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
             
             $this->setPurchasable($cachedPurchasable, $cachedPurchasable->getQuantity() + $quantity);
+            
+            $dispatchedPurchasable = $cachedPurchasable;
 
         } else {
             
             $this->setPurchasable($purchasable, $quantity);
+            
+            $dispatchedPurchasable = $cachedPurchasable;
 
         }
 
@@ -148,6 +153,8 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
 
             $cachedPurchasable->setQuantity($quantity);
+            
+            $this->eventService->dispatch(Events::PRODUCTHOLDER_CHANGE_PURCHASABLE, new ProductHolderEvent($this,$cachedPurchasable));
 
         } else {
 
@@ -158,6 +165,8 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
             $purchasable->setUnitPrice($purchasable->getPrice());
 
             $this->purchasables[$purchasable->getIdentifier()] = $purchasable;
+            
+            $this->eventService->dispatch(Events::PRODUCTHOLDER_ADD_PURCHASABLE, new ProductHolderEvent($this,$purchasable));
 
         }
         
@@ -184,8 +193,12 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     {
 
         if (isset($this->purchasables[$identifier])) {
+            
+            $purchasable = $this->purchasables[$identifier];
 
             unset($this->purchasables[$identifier]);
+            
+            $this->eventService->dispatch(Events::PRODUCTHOLDER_REMOVE_PURCHASABLE, new ProductHolderEvent($this,$purchasable));
 
         }
 
