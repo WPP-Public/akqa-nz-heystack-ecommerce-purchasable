@@ -47,7 +47,7 @@ class Processor implements ProcessorInterface
                 switch ($request->param('ID')) {
 
                     case 'add':
-                        $this->purchasableHolder->addPurchasable($product,$quantity);
+                        $this->purchasableHolder->addPurchasable($product);
                         break;
                     case 'remove':
                         $this->purchasableHolder->removePurchasable($product->getIdentifier());
