@@ -4,11 +4,10 @@ use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Subsystem\Core\Storage\DataObjectCodeGenerator\Interfaces\DataObjectCodeGeneratorInterface;
 use Heystack\Subsystem\Core\State\ExtraDataInterface;
 
-class Product extends DataObject implements PurchasableInterface, Serializable, DataObjectCodeGeneratorInterface, ExtraDataInterface
+class TestManyStorable extends DataObject implements Serializable, DataObjectCodeGeneratorInterface
 {
 
     use Heystack\Subsystem\Products\Product\DataObjectTrait;
-    use Heystack\Subsystem\Core\State\Traits\ExtraDataTrait;
 
     protected $quantity = 0;
     protected $unitPrice = 0;
@@ -19,24 +18,9 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     );
     
     public static $has_one = array(
-        'SingleStorable' => 'TestStorable'
+        'Product' => 'Product'
     );
     
-    public static $has_many = array(
-        'HasyManyStore' => 'TestManyStorable'
-    );
-    
-    public static $many_many = array(
-        'ManyManyStorable'=> 'TestManyManyStorable'
-    );
-
-    public function getExtraData()
-    {
-        return array(
-            'quantity' => $this->quantity,
-            'unitPrice' => $this->unitPrice
-        );
-    }
 
     public function getPrice()
     {
@@ -71,14 +55,14 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     public function getStorableData()
     {
         return array(
-            'Name' => 'Varchar(255)'
+            'TestStuff' => 'Varchar(255)'
         );
     }
     
     public function getStorableSingleRelations()
     {
        
-        return self::$has_one;
+        //return self::$has_one;
   
     }
     
@@ -86,7 +70,7 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     {
         
         //return self::$has_many;
-        return array_merge(self::$has_many, self::$many_many);
+        //return array_merge(self::$has_many, self::$many_many);
         
     }
 
