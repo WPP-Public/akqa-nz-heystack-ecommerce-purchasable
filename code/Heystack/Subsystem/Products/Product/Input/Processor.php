@@ -40,7 +40,7 @@ class Processor implements ProcessorInterface
 
             $product = \DataObject::get_by_id($this->productClass, $request->param('OtherID'));
 
-            $quantity = $request->param('ExtraID');
+            $quantity = $request->param('ExtraID') ? $request->param('ExtraID') : 1 ;
 
             if ($product instanceof $this->productClass) {
 

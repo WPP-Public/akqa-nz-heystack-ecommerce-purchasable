@@ -121,8 +121,9 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      * @param PurchasableInterface $purchasable The purchasable object
      * @param integer              $quantity    quantity of the object to add
      */
-    public function addPurchasable(PurchasableInterface $purchasable, $quantity = 1)
+    public function addPurchasable(PurchasableInterface $purchasable, $quantity)
     {
+        
         if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
             
             $this->setPurchasable($cachedPurchasable, $cachedPurchasable->getQuantity() + $quantity);
@@ -145,11 +146,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      * @param int $quantity quantity of the purchasable object to be set
      */
     public function setPurchasable(PurchasableInterface $purchasable, $quantity)
-    {
-        if(is_null($quantity)){
-            $quantity = 1;
-        }
-        
+    {        
         if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
 
             $cachedPurchasable->setQuantity($quantity);
