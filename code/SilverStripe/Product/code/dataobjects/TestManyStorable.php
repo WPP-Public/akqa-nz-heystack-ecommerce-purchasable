@@ -2,28 +2,25 @@
 
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Subsystem\Core\Storage\DataObjectCodeGenerator\Interfaces\DataObjectCodeGeneratorInterface;
+use Heystack\Subsystem\Core\State\ExtraDataInterface;
 
-class TestManyStorable extends DataObject implements PurchasableInterface, Serializable, DataObjectCodeGeneratorInterface
+class TestManyStorable extends DataObject implements Serializable, DataObjectCodeGeneratorInterface
 {
 
     use Heystack\Subsystem\Products\Product\DataObjectTrait;
 
+    protected $quantity = 0;
+    protected $unitPrice = 0;
+
     public static $db = array(
         'Name' => 'Varchar(255)',
-        'TestManyStuff' => 'Varchar(255)'
+        'TestStuff' => 'Varchar(255)'
     );
     
     public static $has_one = array(
         'Product' => 'Product'
     );
-
-    public function getExtraData()
-    {
-        return array(
-            'quantity' => $this->quantity,
-            'unitPrice' => $this->unitPrice
-        );
-    }
+    
 
     public function getPrice()
     {
@@ -58,7 +55,7 @@ class TestManyStorable extends DataObject implements PurchasableInterface, Seria
     public function getStorableData()
     {
         return array(
-            'TestManyStuff' => 'Varchar(255)'
+            'TestStuff' => 'Varchar(255)'
         );
     }
     

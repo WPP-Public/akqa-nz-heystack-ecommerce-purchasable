@@ -14,6 +14,8 @@ use Heystack\Subsystem\Core\State\State;
 use Heystack\Subsystem\Core\State\StateableInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
+use Heystack\Subsystem\Core\Storage\DataObjectCodeGenerator\Interfaces\DataObjectCodeGeneratorInterface;
+
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -31,7 +33,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  * @package Heystack
  *
  */
-class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable
+class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable, DataObjectCodeGeneratorInterface
 {
 
     /**
@@ -221,13 +223,28 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         
         $purchaseables = $this->getPurchasables(NULL);
         
-        echo "<pre>";
-        
         foreach ($purchaseables as $purchaseable) {
             
             $storage->process($purchaseable);
             
         }
+        
+    }
+
+    public function getStorableData()
+    {
+        return array(
+            'Something' => 'Varchar(255)'
+        );
+    }
+
+    public function getStorableManyRelations()
+    {
+        
+    }
+
+    public function getStorableSingleRelations()
+    {
         
     }
 

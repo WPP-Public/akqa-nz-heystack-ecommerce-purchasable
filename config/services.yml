@@ -7,7 +7,8 @@ parameters:
 
   productholder.class: Heystack\Subsystem\Products\ProductHolder\ProductHolder
 
-
+  product.class: Product
+  
 services:
 
   product_subscriber:
@@ -43,3 +44,9 @@ services:
     calls:
       - [ addProcessor, [ @product_output_processor ] ]
 
+  product:
+    class: %product.class%
+
+  dataobjectgenerator:
+    calls:
+      - [ addDataObject, [ @product ] ]
