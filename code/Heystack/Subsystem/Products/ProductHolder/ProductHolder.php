@@ -32,7 +32,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  * @package Ecommerce-Products
  *
  */
-class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable, DataObjectCodeGeneratorInterface
+class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable
 {
 
     /**
