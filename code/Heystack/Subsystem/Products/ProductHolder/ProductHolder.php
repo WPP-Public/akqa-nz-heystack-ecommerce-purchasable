@@ -263,21 +263,4 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         
     }
 
-    public function getStorableData()
-    {
-        return array(
-            'Something' => 'Varchar(255)'
-        );
-    }
-
-    public function getStorableManyRelations()
-    {
-        
-    }
-
-    public function getStorableSingleRelations()
-    {
-        
-    }
-
 }
