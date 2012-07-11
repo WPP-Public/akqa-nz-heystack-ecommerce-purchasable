@@ -44,19 +44,19 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      * Holds the State service
      * @var State
      */
-    private $stateService;
+    protected $stateService;
 
     /**
      * Holds the EventDispatcher Service
      * @var EventDispatcher
      */
-    private $eventService;
+    protected $eventService;
 
     /**
      * An array of Purchasables
      * @var array
      */
-    private $purchasables = array();
+    protected $purchasables = array();
 
     /**
      * ProductHolder Constructor. Not directly called, use the ServiceStore to
