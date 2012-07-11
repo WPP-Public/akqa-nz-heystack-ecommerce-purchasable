@@ -48,8 +48,8 @@ class Subscriber implements EventSubscriberInterface
     {
 //        \HeydayLog::log('Currency did change');
 
-        error_log('Currency Changed! Value:' . $event->getCurrency()->retrieveValue());
-        error_log('Currency Changed! Symbol:' . $event->getCurrency()->retrieveSymbol());
+        error_log('Currency Changed! Value:' . $event->getCurrency()->getValue());
+        error_log('Currency Changed! Symbol:' . $event->getCurrency()->getSymbol());
     }
 
 }
