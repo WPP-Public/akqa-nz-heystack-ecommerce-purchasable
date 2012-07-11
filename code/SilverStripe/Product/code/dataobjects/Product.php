@@ -17,15 +17,15 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
         'Name' => 'Varchar(255)',
         'TestStuff' => 'Varchar(255)'
     );
-    
+
     public static $has_one = array(
         'SingleStorable' => 'TestStorable'
     );
-    
+
     public static $has_many = array(
         'HasyManyStore' => 'TestManyStorable'
     );
-    
+
     public static $many_many = array(
         'ManyManyStorable'=> 'TestManyManyStorable'
     );
@@ -67,27 +67,27 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     {
         return $this->getQuantity() * $this->getUnitPrice();
     }
-    
+
     public function getStorableData()
     {
         return array(
             'Name' => 'Varchar(255)'
         );
     }
-    
+
     public function getStorableSingleRelations()
     {
-       
+
         return self::$has_one;
-  
+
     }
-    
+
     public function getStorableManyRelations()
     {
-        
+
         //return self::$has_many;
         return array_merge(self::$has_many, self::$many_many);
-        
+
     }
 
 }

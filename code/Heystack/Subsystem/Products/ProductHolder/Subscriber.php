@@ -20,34 +20,34 @@ class Subscriber implements EventSubscriberInterface
             CurrencyEvents::CURRENCY_CHANGE     => array('onCurrencyChange', 0),
         );
     }
-    
+
     public function onSave()
     {
-        
+
         $productHolder = \Heystack\Subsystem\Core\ServiceStore::getService(ProductHolder::STATE_KEY);
         $productHolder->saveToDatabase();
-        
+
     }
-    
+
     public function onChange(ProductHolderEvent $event)
     {
         error_log('Change Event on ProductID: ' . $event->getProduct()->ID);
     }
-    
+
     public function onRemove(ProductHolderEvent $event)
     {
         error_log('Remove Event on ProductID: ' . $event->getProduct()->ID);
     }
-    
+
     public function onAdd(ProductHolderEvent $event)
     {
         error_log('Add Event on ProductID: ' . $event->getProduct()->ID);
     }
-    
+
     public function onCurrencyChange(CurrencyEvent $event)
     {
 //        \HeydayLog::log('Currency did change');
-        
+
         error_log('Currency Changed! Value:' . $event->getCurrency()->retrieveValue());
         error_log('Currency Changed! Symbol:' . $event->getCurrency()->retrieveSymbol());
     }

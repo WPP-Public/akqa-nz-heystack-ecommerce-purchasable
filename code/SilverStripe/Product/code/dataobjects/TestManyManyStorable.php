@@ -1,8 +1,6 @@
 <?php
 
-use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Subsystem\Core\Storage\DataObjectCodeGenerator\Interfaces\DataObjectCodeGeneratorInterface;
-use Heystack\Subsystem\Core\State\ExtraDataInterface;
 
 class TestManyManyStorable extends DataObject implements Serializable, DataObjectCodeGeneratorInterface
 {
@@ -16,7 +14,7 @@ class TestManyManyStorable extends DataObject implements Serializable, DataObjec
         'Name' => 'Varchar(255)',
         'TestStuff' => 'Varchar(255)'
     );
-    
+
     public static $belongs_many_many = array(
         'Products'=> 'Product'
     );
@@ -58,27 +56,27 @@ class TestManyManyStorable extends DataObject implements Serializable, DataObjec
     {
         return $this->getQuantity() * $this->getUnitPrice();
     }
-    
+
     public function getStorableData()
     {
         return array(
             'TestStuff' => 'Varchar(255)'
         );
     }
-    
+
     public function getStorableSingleRelations()
     {
-       
+
        // return self::$has_one;
-  
+
     }
-    
+
     public function getStorableManyRelations()
     {
-        
+
         //return self::$has_many;
         //return array_merge(self::$has_many, self::$many_many);
-        
+
     }
 
 }
