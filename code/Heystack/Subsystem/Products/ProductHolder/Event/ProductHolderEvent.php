@@ -10,22 +10,21 @@ class ProductHolderEvent extends Event
 {
     protected $product;
     protected $productHolder;
-    
+
     public function __construct(ProductHolder $productHolder, PurchasableInterface $product)
     {
         $this->productHolder = $productHolder;
         $this->product = $product;
     }
-    
+
     public function getProduct()
     {
         return $this->product;
     }
-    
+
     public function getProductHolder()
     {
         return $this->productHolder;
     }
-    
-    
+
 }
