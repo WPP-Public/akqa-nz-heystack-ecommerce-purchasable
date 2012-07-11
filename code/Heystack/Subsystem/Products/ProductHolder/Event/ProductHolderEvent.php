@@ -8,12 +8,24 @@ use \Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 
 class ProductHolderEvent extends Event
 {
-    public $product;
-    public $productHolder;
+    protected $product;
+    protected $productHolder;
     
     public function __construct(ProductHolder $productHolder, PurchasableInterface $product)
     {
         $this->productHolder = $productHolder;
         $this->product = $product;
     }
+    
+    public function getProduct()
+    {
+        return $this->product;
+    }
+    
+    public function getProductHolder()
+    {
+        return $this->productHolder;
+    }
+    
+    
 }

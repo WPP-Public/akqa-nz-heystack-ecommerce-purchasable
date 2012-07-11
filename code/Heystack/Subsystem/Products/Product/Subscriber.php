@@ -18,7 +18,7 @@ class Subscriber implements EventSubscriberInterface
 
     public function onCurrencyChange()
     {
-        \HeydayLog::log('Currency did change');
+//        \HeydayLog::log('Currency did change');
     }
 
 }
