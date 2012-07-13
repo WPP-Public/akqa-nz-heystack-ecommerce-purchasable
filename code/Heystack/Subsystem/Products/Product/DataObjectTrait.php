@@ -28,5 +28,9 @@ trait DataObjectTrait
         $this->eventService = $eventService;
 
     }
+    
+    public function getStorageIdentifier() {
+        return 'dataobject';
+    }
 
 }

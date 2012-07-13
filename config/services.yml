@@ -47,6 +47,6 @@ services:
   product:
     class: %product.class%
 
-  dataobjectgenerator:
+  dataobject_storage_generator:
     calls:
       - [ addDataObject, [ @product ] ]

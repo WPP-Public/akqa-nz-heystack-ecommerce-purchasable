@@ -251,7 +251,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     public function saveToDatabase()
     {
 
-        $storage = \Heystack\Subsystem\Core\ServiceStore::getService('storage_processor');
+        $storage = \Heystack\Subsystem\Core\ServiceStore::getService('storage_processor_handler');
 
         $purchaseables = $this->getPurchasables(NULL);
 
