@@ -264,11 +264,6 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         $this->saveState();
     }
     
-    public function getUpdateEventString()
-    {
-        return Events::PRODUCTHOLDER_UPDATED;
-    }
-    
     public function updatePurchasablePrices()
     {
         foreach($this->data[self::PURCHASABLES_KEY] as $purchasable){
