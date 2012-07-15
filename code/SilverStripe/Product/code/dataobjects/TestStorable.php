@@ -1,8 +1,8 @@
 <?php
 
-use Heystack\Subsystem\Core\Storage\DataObjectCodeGenerator\Interfaces\DataObjectCodeGeneratorInterface;
+use Heystack\Subsystem\Core\Storage\DataObjectStorage\Interfaces\DataObjectStorageInterface;
 
-class TestStorable extends DataObject implements Serializable, DataObjectCodeGeneratorInterface
+class TestStorable extends DataObject implements Serializable, DataObjectStorageInterface
 {
 
     use Heystack\Subsystem\Products\Product\DataObjectTrait;
