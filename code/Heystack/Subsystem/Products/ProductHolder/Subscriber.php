@@ -2,13 +2,22 @@
 
 namespace Heystack\Subsystem\Products\ProductHolder;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Heystack\Subsystem\Ecommerce\Currency\Events as CurrencyEvents;
 use Heystack\Subsystem\Ecommerce\Currency\Event\CurrencyEvent;
 
+use \Heystack\Subsystem\Core\ServiceStore;
+
 class Subscriber implements EventSubscriberInterface
 {
+    protected $eventDispatcher;
+    
+    public function __construct(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
 
     public static function getSubscribedEvents()
     {
@@ -31,25 +40,25 @@ class Subscriber implements EventSubscriberInterface
 
     public function onChange(ProductHolderEvent $event)
     {
-        error_log('Change Event on ProductID: ' . $event->getProduct()->ID);
+        $this->eventDispatcher->dispatch(Events::PRODUCTHOLDER_UPDATED);
     }
 
     public function onRemove(ProductHolderEvent $event)
     {
-        error_log('Remove Event on ProductID: ' . $event->getProduct()->ID);
+        $this->eventDispatcher->dispatch(Events::PRODUCTHOLDER_UPDATED);
     }
 
     public function onAdd(ProductHolderEvent $event)
     {
-        error_log('Add Event on ProductID: ' . $event->getProduct()->ID);
+        $this->eventDispatcher->dispatch(Events::PRODUCTHOLDER_UPDATED);
     }
 
     public function onCurrencyChange(CurrencyEvent $event)
-    {
-//        \HeydayLog::log('Currency did change');
-
-        error_log('Currency Changed! Value:' . $event->getCurrency()->getValue());
-        error_log('Currency Changed! Symbol:' . $event->getCurrency()->getSymbol());
+    {        
+        $productHolder = ServiceStore::getService(ProductHolder::STATE_KEY);
+        $productHolder->updatePurchasablePrices();
+        
+        $this->eventDispatcher->dispatch(Events::PRODUCTHOLDER_UPDATED);
     }
 
 }

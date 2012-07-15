@@ -27,4 +27,5 @@ final class Events
     const PRODUCTHOLDER_ADD_PURCHASABLE = 'productholder.addpurchasable';
     const PRODUCTHOLDER_CHANGE_PURCHASABLE = 'productholder.changepurchasable';
     const PRODUCTHOLDER_REMOVE_PURCHASABLE = 'productholder.removepurchasable';
+    const PRODUCTHOLDER_UPDATED = 'productholder.updated';
 }
