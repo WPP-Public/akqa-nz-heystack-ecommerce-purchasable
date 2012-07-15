@@ -8,15 +8,17 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Heystack\Subsystem\Ecommerce\Currency\Events as CurrencyEvents;
 use Heystack\Subsystem\Ecommerce\Currency\Event\CurrencyEvent;
 
-use \Heystack\Subsystem\Core\ServiceStore;
+use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 
 class Subscriber implements EventSubscriberInterface
 {
     protected $eventDispatcher;
+    protected $purchasableHolder;
     
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(EventDispatcherInterface $eventDispatcher, PurchasableHolderInterface $purchasableHolder)
     {
         $this->eventDispatcher = $eventDispatcher;
+        $this->purchasableHolder = $purchasableHolder;
     }
 
     public static function getSubscribedEvents()
@@ -40,23 +42,26 @@ class Subscriber implements EventSubscriberInterface
 
     public function onChange(ProductHolderEvent $event)
     {
+        $this->purchasableHolder->updateTotal();
         $this->eventDispatcher->dispatch(Events::PRODUCTHOLDER_UPDATED);
     }
 
     public function onRemove(ProductHolderEvent $event)
     {
+        $this->purchasableHolder->updateTotal();
         $this->eventDispatcher->dispatch(Events::PRODUCTHOLDER_UPDATED);
     }
 
     public function onAdd(ProductHolderEvent $event)
     {
+        $this->purchasableHolder->updateTotal();
         $this->eventDispatcher->dispatch(Events::PRODUCTHOLDER_UPDATED);
     }
 
     public function onCurrencyChange(CurrencyEvent $event)
     {        
-        $productHolder = ServiceStore::getService(ProductHolder::STATE_KEY);
-        $productHolder->updatePurchasablePrices();
+        $this->purchasableHolder->updatePurchasablePrices();
+        $this->purchasableHolder->updateTotal();
         
         $this->eventDispatcher->dispatch(Events::PRODUCTHOLDER_UPDATED);
     }

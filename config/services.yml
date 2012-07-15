@@ -16,7 +16,7 @@ services:
 
   productholder_subscriber:
     class: %productholder_subscriber.class%
-    arguments: [@event_dispatcher]
+    arguments: [@event_dispatcher, @productholder]
 
   event_dispatcher:
     calls: 
