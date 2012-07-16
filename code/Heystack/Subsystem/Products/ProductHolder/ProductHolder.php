@@ -70,7 +70,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         $this->eventService = $eventService;
 
     }
-    
+
     public function getIdentifier()
     {
         return self::STATE_KEY;
@@ -134,7 +134,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         } else {
 
             $this->setPurchasable($purchasable, $quantity);
-            
+
         }
 
     }
@@ -246,27 +246,27 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         }
 
     }
-    
+
     public function getTotal()
     {
         return isset($this->data[self::TOTAL_KEY]) ? $this->data[self::TOTAL_KEY] : 0;
     }
-    
+
     public function updateTotal()
     {
         $total = 0;
-        
-        foreach($this->data[self::PURCHASABLES_KEY] as $purchasable){
+
+        foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
             $total += $purchasable->getTotal();
         }
-        
+
         $this->data[self::TOTAL_KEY] = $total;
         $this->saveState();
     }
-    
+
     public function updatePurchasablePrices()
     {
-        foreach($this->data[self::PURCHASABLES_KEY] as $purchasable){
+        foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
             $purchasable->setUnitPrice($purchasable->getPrice());
         }
         $this->saveState();

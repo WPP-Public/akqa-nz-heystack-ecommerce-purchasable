@@ -18,17 +18,17 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Process input for the product system.
- * 
+ *
  * This processor takes care of all interactions which involve input for the
  * product system.
- * 
+ *
  * @copyright  Heyday
  * @author Stevie Mayhew <stevie@heyday.co.nz>
  * @author Cameron Spiers <cam@heyday.co.nz>
  * @author Glenn Bautista <glenn@heyday.co.nz>
  * @package Ecommerce-Products
  * @see Symfony\Component\EventDispatcher
- * 
+ *
  */
 class Processor implements ProcessorInterface
 {
@@ -38,36 +38,36 @@ class Processor implements ProcessorInterface
      * @var string The ClassName of the object which is to be processed
      */
     private $productClass;
-    
+
     /**
      * The state interface for Heystack
      *
      * @uses State
-     * @var object State 
+     * @var object State
      */
     private $state;
-    
+
     /**
      * The event dispatcher for Heystack
      * @see EventDispatcher
-     * 
-     * @var object 
+     *
+     * @var object
      */
     private $eventDispatcher;
-    
+
     /**
      * PurchasableHolderInterface
-     * 
+     *
      * @var Interface
      */
     private $purchasableHolder;
 
     /**
      * Construct the processor
-     * 
-     * @param string $productClass
-     * @param \Heystack\Subsystem\Core\State\State $state
-     * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
+     *
+     * @param string                                                                          $productClass
+     * @param \Heystack\Subsystem\Core\State\State                                            $state
+     * @param \Symfony\Component\EventDispatcher\EventDispatcher                              $eventDispatcher
      * @param \Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface $purchasableHolder
      */
     public function __construct($productClass, State $state, EventDispatcher $eventDispatcher, PurchasableHolderInterface $purchasableHolder)
@@ -82,7 +82,7 @@ class Processor implements ProcessorInterface
 
     /**
      * Get the identifier for this processor
-     * 
+     *
      * @return string Identifier
      */
     public function getIdentifier()
@@ -94,9 +94,9 @@ class Processor implements ProcessorInterface
 
     /**
      * Process input requests which are relevant to products
-     * 
-     * @param \SS_HTTPRequest $request
-     * @return array Success/Failure
+     *
+     * @param  \SS_HTTPRequest $request
+     * @return array           Success/Failure
      */
     public function process(\SS_HTTPRequest $request)
     {

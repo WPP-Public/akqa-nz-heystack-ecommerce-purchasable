@@ -41,12 +41,12 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     public function getPrice()
     {
         $currencyService = Heystack\Subsystem\Core\ServiceStore::getService(Heystack\Subsystem\Ecommerce\Currency\CurrencyService::STATE_KEY);
-        
+
         $activeCurrencyCode = $currencyService->getActiveCurrency()->getIdentifier();
-        
+
         $price = $this->ID * 100.00;
-        
-        switch ($activeCurrencyCode){
+
+        switch ($activeCurrencyCode) {
             case 'NZD':
                 $price *= 1;
                 break;
@@ -57,7 +57,7 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
                 $price *= 3;
                 break;
         }
-        
+
         return $price;
     }
 

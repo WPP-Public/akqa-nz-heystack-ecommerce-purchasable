@@ -16,7 +16,7 @@ class Subscriber implements EventSubscriberInterface
 {
     protected $eventDispatcher;
     protected $purchasableHolder;
-    
+
     public function __construct(EventDispatcherInterface $eventDispatcher, PurchasableHolderInterface $purchasableHolder)
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -61,10 +61,10 @@ class Subscriber implements EventSubscriberInterface
     }
 
     public function onCurrencyChange(CurrencyEvent $event)
-    {        
+    {
         $this->purchasableHolder->updatePurchasablePrices();
         $this->purchasableHolder->updateTotal();
-        
+
         $this->eventDispatcher->dispatch(TransactionEvents::UPDATE_TRANSACTION);
     }
 
