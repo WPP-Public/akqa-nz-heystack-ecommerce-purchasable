@@ -26,38 +26,37 @@ class Subscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            Events::PRODUCTHOLDER_SAVE     => array('onSave', 0),
-            Events::PRODUCTHOLDER_ADD_PURCHASABLE     => array('onAdd', 0),
-            Events::PRODUCTHOLDER_CHANGE_PURCHASABLE     => array('onChange', 0),
-            Events::PRODUCTHOLDER_REMOVE_PURCHASABLE     => array('onRemove', 0),
-            CurrencyEvents::CURRENCY_CHANGE     => array('onCurrencyChange', 0),
+            Events::SAVE                        => array('onSave', 0),
+            Events::ADD_PURCHASABLE             => array('onAdd', 0),
+            Events::CHANGE_PURCHASABLE          => array('onChange', 0),
+            Events::REMOVE_PURCHASABLE          => array('onRemove', 0),
+            CurrencyEvents::CHANGE              => array('onCurrencyChange', 0),
         );
     }
 
     public function onSave()
     {
 
-        $productHolder = \Heystack\Subsystem\Core\ServiceStore::getService(ProductHolder::STATE_KEY);
-        $productHolder->saveToDatabase();
+        $this->purchasableHolder->saveToDatabase();
 
     }
 
     public function onChange(ProductHolderEvent $event)
     {
         $this->purchasableHolder->updateTotal();
-        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE_TRANSACTION);
+        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
     }
 
     public function onRemove(ProductHolderEvent $event)
     {
         $this->purchasableHolder->updateTotal();
-        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE_TRANSACTION);
+        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
     }
 
     public function onAdd(ProductHolderEvent $event)
     {
         $this->purchasableHolder->updateTotal();
-        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE_TRANSACTION);
+        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
     }
 
     public function onCurrencyChange(CurrencyEvent $event)
@@ -65,7 +64,7 @@ class Subscriber implements EventSubscriberInterface
         $this->purchasableHolder->updatePurchasablePrices();
         $this->purchasableHolder->updateTotal();
 
-        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE_TRANSACTION);
+        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
     }
 
 }
