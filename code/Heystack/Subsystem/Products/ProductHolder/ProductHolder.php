@@ -12,12 +12,16 @@ namespace Heystack\Subsystem\Products\ProductHolder;
 
 use Heystack\Subsystem\Core\State\State;
 use Heystack\Subsystem\Core\State\StateableInterface;
+
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
-use Heystack\Subsystem\Products\ProductHolder\Event\ProductHolderEvent;
 use Heystack\Subsystem\Ecommerce\Transaction\TransactionModifierTypes;
+use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierStateTrait;
+use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Heystack\Subsystem\Products\ProductHolder\Event\ProductHolderEvent;
+
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Purchasable Holder implementation for Ecommerce-Products
@@ -35,6 +39,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable
 {
+    use TransactionModifierStateTrait;
+    use TransactionModifierSerializeTrait;
 
     /**
      * State Key constant
@@ -62,9 +68,9 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      * get an instance of this class
      *
      * @param \Heystack\Subsystem\Core\State\State               $stateService
-     * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventService
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventService
      */
-    public function __construct(State $stateService, EventDispatcher $eventService)
+    public function __construct(State $stateService, EventDispatcherInterface $eventService)
     {
 
         $this->stateService = $stateService;
@@ -83,48 +89,6 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     public function getType()
     {
         return TransactionModifierTypes::CHARGEABLE;
-    }
-
-    /**
-     * Returns a serialized string from the purchasables array
-     * @return string
-     */
-    public function serialize()
-    {
-
-        return serialize($this->data);
-
-    }
-
-    /**
-     * Unserializes the data into the purchasables array
-     * @param string $data
-     */
-    public function unserialize($data)
-    {
-
-        $this->data = unserialize($data);
-
-    }
-
-    /**
-     * Uses the State service to restore the pruchasables array
-     */
-    public function restoreState()
-    {
-
-        $this->data = $this->stateService->getObj(self::STATE_KEY);
-
-    }
-
-    /**
-     * Saves the purchasables array on the State service
-     */
-    public function saveState()
-    {
-
-        $this->stateService->setObj(self::STATE_KEY, $this->data);
-
     }
 
     /**
