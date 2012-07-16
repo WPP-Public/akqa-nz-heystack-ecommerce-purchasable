@@ -15,6 +15,7 @@ use Heystack\Subsystem\Core\State\StateableInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Subsystem\Products\ProductHolder\Event\ProductHolderEvent;
+use Heystack\Subsystem\Ecommerce\Transaction\TransactionModifierTypes;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -74,6 +75,14 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     public function getIdentifier()
     {
         return self::STATE_KEY;
+    }
+    
+    /**
+     * Indicates that this modifier is chargeable
+     */
+    public function getType()
+    {
+        return TransactionModifierTypes::CHARGEABLE;
     }
 
     /**
