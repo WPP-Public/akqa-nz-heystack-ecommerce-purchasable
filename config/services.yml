@@ -19,6 +19,7 @@ services:
     arguments: [@event_dispatcher, @productholder]
 
   event_dispatcher:
+    class: %event_dispatcher.class%
     calls: 
       - [ addSubscriber, [ @product_subscriber ] ]
       - [ addSubscriber, [ @productholder_subscriber ] ]
@@ -38,10 +39,12 @@ services:
       - [ restoreState ]
 
   input_processor_handler:
+    class: %input_processor_handler.class%
     calls:
       - [ addProcessor, [ @product_input_processor ] ]
 
   output_processor_handler:
+    class: %output_processor_handler.class%
     calls:
       - [ addProcessor, [ @product_output_processor ] ]
 
@@ -49,5 +52,11 @@ services:
     class: %product.class%
 
   dataobject_storage_generator:
+    class: %dataobject_storage_generator.class%
     calls:
       - [ addDataObject, [ @product ] ]
+      
+  transaction:
+    class: %transaction.class%
+    calls:
+      - [ addModifier, [ @productholder ] ]

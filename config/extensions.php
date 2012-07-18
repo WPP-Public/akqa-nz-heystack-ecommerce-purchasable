@@ -1,5 +1,5 @@
 <?php
 
 return array(
-    '\Heystack\Subsystem\Products\ContainerExtension'
+    2 => '\Heystack\Subsystem\Products\ContainerExtension'
 );
