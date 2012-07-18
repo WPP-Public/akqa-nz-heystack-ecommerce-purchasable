@@ -6,7 +6,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Heystack\Subsystem\Ecommerce\Currency\Events as CurrencyEvents;
-use Heystack\Subsystem\Ecommerce\Currency\Event\CurrencyEvent;
 
 use Heystack\Subsystem\Ecommerce\Transaction\Events as TransactionEvents;
 
@@ -27,10 +26,10 @@ class Subscriber implements EventSubscriberInterface
     {
         return array(
             Events::SAVE                        => array('onSave', 0),
-            Events::ADD_PURCHASABLE             => array('onAdd', 0),
-            Events::CHANGE_PURCHASABLE          => array('onChange', 0),
-            Events::REMOVE_PURCHASABLE          => array('onRemove', 0),
-            CurrencyEvents::CHANGE              => array('onCurrencyChange', 0),
+            Events::PURCHASABLE_ADDED             => array('onAdd', 0),
+            Events::PURCHASABLE_CHANGED          => array('onChange', 0),
+            Events::PURCHASABLE_REMOVED          => array('onRemove', 0),
+            CurrencyEvents::CHANGED              => array('onCurrencyChange', 0),
         );
     }
 
@@ -41,25 +40,25 @@ class Subscriber implements EventSubscriberInterface
 
     }
 
-    public function onChange(ProductHolderEvent $event)
+    public function onChange()
     {
         $this->purchasableHolder->updateTotal();
         $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
     }
 
-    public function onRemove(ProductHolderEvent $event)
+    public function onRemove()
     {
         $this->purchasableHolder->updateTotal();
         $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
     }
 
-    public function onAdd(ProductHolderEvent $event)
+    public function onAdd()
     {
         $this->purchasableHolder->updateTotal();
         $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
     }
 
-    public function onCurrencyChange(CurrencyEvent $event)
+    public function onCurrencyChange()
     {
         $this->purchasableHolder->updatePurchasablePrices();
         $this->purchasableHolder->updateTotal();
