@@ -227,22 +227,39 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     public function updateTotal()
     {
-        $total = 0;
+        
+        if (isset($this->data[self::PURCHASABLES_KEY])) {
+            
+            $total = 0;
 
-        foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
-            $total += $purchasable->getTotal();
+            foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
+                
+                $total += $purchasable->getTotal();
+                
+            }
+
+            $this->data[self::TOTAL_KEY] = $total;
+            
         }
-
-        $this->data[self::TOTAL_KEY] = $total;
+        
         $this->saveState();
+        
     }
 
     public function updatePurchasablePrices()
     {
-        foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
-            $purchasable->setUnitPrice($purchasable->getPrice());
+        if (isset($this->data[self::PURCHASABLES_KEY])) {
+            
+            foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
+                
+                $purchasable->setUnitPrice($purchasable->getPrice());
+                
+            }     
+       
         }
-        $this->saveState();
+        
+         $this->saveState();
+         
     }
 
     public function saveToDatabase()
