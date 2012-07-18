@@ -123,7 +123,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
             $cachedPurchasable->setQuantity($quantity);
 
-            $this->eventService->dispatch(Events::CHANGE_PURCHASABLE, new ProductHolderEvent($this,$cachedPurchasable));
+            $this->eventService->dispatch(Events::PURCHASABLE_CHANGED);
 
         } else {
 
@@ -135,7 +135,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
             $this->data[self::PURCHASABLES_KEY][$purchasable->getIdentifier()] = $purchasable;
 
-            $this->eventService->dispatch(Events::ADD_PURCHASABLE, new ProductHolderEvent($this,$purchasable));
+            $this->eventService->dispatch(Events::PURCHASABLE_ADDED);
 
         }
 
@@ -167,7 +167,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
             unset($this->data[self::PURCHASABLES_KEY][$identifier]);
 
-            $this->eventService->dispatch(Events::REMOVE_PURCHASABLE, new ProductHolderEvent($this,$purchasable));
+            $this->eventService->dispatch(Events::PURCHASABLE_REMOVED);
 
         }
 
@@ -258,8 +258,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
        
         }
         
-         $this->saveState();
-         
+        $this->saveState(); 
     }
 
     public function saveToDatabase()
