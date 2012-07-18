@@ -1,5 +1,4 @@
 parameters:
-  product_subscriber.class: Heystack\Subsystem\Products\Product\Subscriber
   product_input_processor.class: Heystack\Subsystem\Products\Product\Input\Processor
   product_output_processor.class: Heystack\Subsystem\Products\Product\Output\Processor
 
@@ -11,8 +10,6 @@ parameters:
   
 services:
 
-  product_subscriber:
-    class: %product_subscriber.class%
 
   productholder_subscriber:
     class: %productholder_subscriber.class%
@@ -21,7 +18,6 @@ services:
   event_dispatcher:
     class: %event_dispatcher.class%
     calls: 
-      - [ addSubscriber, [ @product_subscriber ] ]
       - [ addSubscriber, [ @productholder_subscriber ] ]
 
   product_input_processor:
