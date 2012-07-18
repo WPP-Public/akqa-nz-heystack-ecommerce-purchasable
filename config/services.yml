@@ -60,3 +60,9 @@ services:
     class: %transaction.class%
     calls:
       - [ addModifier, [ @productholder ] ]
+      
+  dataobject_generator:
+    class: Heystack\Subsystem\Core\Generate\DataObjectGenerator
+    calls:
+#      - [ addYamlGenerator, [ ecommerce-products/config/product.yml ] ]
+      - [ addDataObjectGenerator, [ \Product ] ]
