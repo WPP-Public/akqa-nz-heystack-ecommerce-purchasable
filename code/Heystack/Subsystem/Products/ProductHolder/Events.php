@@ -28,4 +28,5 @@ final class Events
     const PURCHASABLE_CHANGED    = 'productholder.purchasablechanged';
     const PURCHASABLE_REMOVED    = 'productholder.purchasableremoved';
     const UPDATED               = 'productholder.updated';
+    const STORED               = 'productholder.stored';
 }

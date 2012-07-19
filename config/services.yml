@@ -13,7 +13,7 @@ services:
 
   productholder_subscriber:
     class: %productholder_subscriber.class%
-    arguments: [@event_dispatcher, @productholder]
+    arguments: [@event_dispatcher, @productholder, @storage_processor_handler]
 
   event_dispatcher:
     class: %event_dispatcher.class%

@@ -11,15 +11,19 @@ use Heystack\Subsystem\Ecommerce\Transaction\Events as TransactionEvents;
 
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 
+use Heystack\Subsystem\Products\ProductHolder\Event\ProductHolderStoredEvent;
+
 class Subscriber implements EventSubscriberInterface
 {
     protected $eventDispatcher;
     protected $purchasableHolder;
+    protected $storageService;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher, PurchasableHolderInterface $purchasableHolder)
+    public function __construct(EventDispatcherInterface $eventDispatcher, PurchasableHolderInterface $purchasableHolder, $storageService)
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->purchasableHolder = $purchasableHolder;
+        $this->storageService = $storageService;
     }
 
     public static function getSubscribedEvents()
@@ -30,6 +34,7 @@ class Subscriber implements EventSubscriberInterface
             Events::PURCHASABLE_CHANGED          => array('onChange', 0),
             Events::PURCHASABLE_REMOVED          => array('onRemove', 0),
             CurrencyEvents::CHANGED              => array('onCurrencyChange', 0),
+            TransactionEvents::STORED            => array('onTransactionStored', 0)
         );
     }
 
@@ -64,6 +69,21 @@ class Subscriber implements EventSubscriberInterface
         $this->purchasableHolder->updateTotal();
 
         $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
+    }
+    
+    public function onTransactionStored($transaction) 
+    {
+        
+        $purchasableHolderID = $this->storageService->process($this->purchasableHolder, false, $transaction->getTransactionID());
+        
+        foreach ($this->purchasableHolder->getPurchasables() as $purchaseable) {
+                    
+            $this->storageService->process($purchaseable, false, $purchasableHolderID);
+
+        }
+        
+        $this->eventDispatcher->dispatch(Events::STORED);
+        
     }
 
 }
