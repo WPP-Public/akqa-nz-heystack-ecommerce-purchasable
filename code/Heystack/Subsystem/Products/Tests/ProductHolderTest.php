@@ -2,7 +2,7 @@
 
 namespace Heystack\Subsystem\Products\Tests;
 
-class CurrencyTest extends \PHPUnit_Framework_TestCase
+class ProductHolderTest extends \PHPUnit_Framework_TestCase
 {
 
     protected function setUp()
