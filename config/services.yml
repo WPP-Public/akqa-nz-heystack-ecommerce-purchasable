@@ -43,14 +43,6 @@ services:
     class: %output_processor_handler.class%
     calls:
       - [ addProcessor, [ @product_output_processor ] ]
-
-  product:
-    class: %product.class%
-
-  dataobject_storage_generator:
-    class: %dataobject_storage_generator.class%
-    calls:
-      - [ addDataObject, [ @product ] ]
       
   transaction:
     class: %transaction.class%
@@ -58,7 +50,8 @@ services:
       - [ addModifier, [ @productholder ] ]
       
   dataobject_generator:
-    class: Heystack\Subsystem\Core\Generate\DataObjectGenerator
+    class: %dataobject_generator.class%
     calls:
-#      - [ addYamlGenerator, [ ecommerce-products/config/product.yml ] ]
-      - [ addDataObjectGenerator, [ \Product ] ]
+      - [ addYamlSchema, [ ecommerce-products/config/storage/product.yml ] ]
+      - [ addYamlSchema, [ ecommerce-products/config/storage/productholder.yml ] ]
+#      - [ addDataObjectGenerator, [ \Product ] ]

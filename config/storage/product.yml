@@ -1,0 +1,9 @@
+id: Product
+flat:
+  Name: Varchar(255)
+  TestStuff: Varchar(255)
+related:
+  TestManyStorableName: Varchar(255)
+  TestManyManyStorableName: Varchar(255)
+parent:
+  Parent: StoredProductHolder

@@ -1,6 +1,0 @@
-id: Product
-flat:
-  Name: Varchar(255)
-  SomethingElse: Text
-related:
-  resource: "@something.yml"

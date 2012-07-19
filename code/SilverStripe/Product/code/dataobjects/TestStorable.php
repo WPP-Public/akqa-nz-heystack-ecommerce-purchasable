@@ -2,7 +2,7 @@
 
 use Heystack\Subsystem\Core\Storage\DataObjectStorage\Interfaces\DataObjectStorageInterface;
 
-class TestStorable extends DataObject implements Serializable, DataObjectStorageInterface
+class TestStorable extends DataObject implements Serializable
 {
 
     use Heystack\Subsystem\Products\Product\DataObjectTrait;

@@ -1,8 +1,8 @@
 <?php
 
-use Heystack\Subsystem\Core\Storage\DataObjectStorage\Interfaces\DataObjectStorageInterface;
+use Heystack\Subsystem\Core\Storage\StorableInterface;
 
-class TestManyStorable extends DataObject implements Serializable, DataObjectStorageInterface
+class TestManyStorable extends DataObject implements Serializable, StorableInterface
 {
 
     use Heystack\Subsystem\Products\Product\DataObjectTrait;
@@ -51,24 +51,18 @@ class TestManyStorable extends DataObject implements Serializable, DataObjectSto
 
     public function getStorableData()
     {
-        return array(
-            'TestStuff' => 'Varchar(255)'
+        $data = array();
+        
+        $data['id'] = "TestManyStorable";
+        
+        $data['flat'] = array(
+            'Name' => $this->Name,
+            'TestStuff' => $this->TestStuff
+            
         );
+        
+        return $data;
     }
 
-    public function getStorableSingleRelations()
-    {
-
-        //return self::$has_one;
-
-    }
-
-    public function getStorableManyRelations()
-    {
-
-        //return self::$has_many;
-        //return array_merge(self::$has_many, self::$many_many);
-
-    }
 
 }

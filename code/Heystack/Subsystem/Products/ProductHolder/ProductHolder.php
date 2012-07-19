@@ -20,6 +20,7 @@ use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierStateTrai
 use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
 
 use Heystack\Subsystem\Products\ProductHolder\Event\ProductHolderEvent;
+use Heystack\Subsystem\Core\Storage\StorableInterface;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -37,7 +38,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @package Ecommerce-Products
  *
  */
-class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable
+class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable, StorableInterface
 {
     use TransactionModifierStateTrait;
     use TransactionModifierSerializeTrait;
@@ -261,19 +262,28 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         $this->saveState(); 
     }
 
-    public function saveToDatabase()
+    
+    
+    public function getStorableData()
     {
 
-        $storage = \Heystack\Subsystem\Core\ServiceStore::getService('storage_processor_handler');
+       $data = array();
+       
+       $data['id'] = 'ProductHolder';
+       
+       $data['flat'] = array(
+           'Total' => $this->getTotal()
+       );
+       
+       $data['parent'] = true;
+       
+       return $data;
 
-        $purchaseables = $this->getPurchasables(NULL);
-
-        foreach ($purchaseables as $purchaseable) {
-
-            $storage->process($purchaseable);
-
-        }
-
+    }
+    
+    public function getStorageIdentifier() 
+    {
+        return 'dataobject';
     }
 
 }

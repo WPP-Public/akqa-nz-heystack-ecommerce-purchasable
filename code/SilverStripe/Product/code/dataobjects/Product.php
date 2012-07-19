@@ -2,8 +2,10 @@
 
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Subsystem\Core\State\ExtraDataInterface;
+use Heystack\Subsystem\Core\Storage\StorableInterface;
 
-class Product extends DataObject implements PurchasableInterface, Serializable, ExtraDataInterface
+
+class Product extends DataObject implements PurchasableInterface, Serializable, ExtraDataInterface, StorableInterface
 {
 
     use Heystack\Subsystem\Products\Product\DataObjectTrait;
@@ -83,6 +85,37 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     public function getTotal()
     {
         return $this->getQuantity() * $this->getUnitPrice();
+    }
+    
+    public function getStorableData() {
+        
+        $data = array();
+        
+        $data['id'] = "Product";
+        
+        $data['flat'] = array(
+            'Name' => $this->Name,
+            'TestStuff' => $this->TestStuff,
+            'Total' => $this->getTotal(),
+            'Quantity' => $this->getQuantity(),
+            'UnitPrice' => $this->getUnitPrice(),
+        );
+        
+        $data['parent'] = true;
+        
+        foreach ($this->HasyManyStore() as $related) {
+            
+            $relatedData = $related->getStorableData();
+            
+            $data['related'][] = array(
+                'flat' => $relatedData['flat'],
+                'id' => $relatedData['id']
+            );
+
+        }
+
+        return $data;
+        
     }
 
 }

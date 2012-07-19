@@ -8,7 +8,7 @@ class ProductsAdmin extends ModelAdmin
         'TestStorable',
         'TestManyStorable',
         'TestManyManyStorable',
-        'StoredProduct'
+        'StoredTransaction'
     );
 
     public static $url_segment = 'products';
