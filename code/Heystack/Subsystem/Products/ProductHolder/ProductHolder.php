@@ -272,7 +272,8 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
        $data['id'] = 'ProductHolder';
        
        $data['flat'] = array(
-           'Total' => $this->getTotal()
+           'Total' => $this->getTotal(),
+           'NoOfItems' => count($this->getPurchasables())
        );
        
        $data['parent'] = true;

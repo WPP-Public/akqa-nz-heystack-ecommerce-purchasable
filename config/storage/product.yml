@@ -1,7 +1,9 @@
 id: Product
 flat:
   Name: Varchar(255)
-  TestStuff: Varchar(255)
+  UnitPrice: Varchar(255)
+  Quantity: Varchar(255)
+  Total: Varchar(255)
 related:
   TestManyStorableName: Varchar(255)
   TestManyManyStorableName: Varchar(255)
