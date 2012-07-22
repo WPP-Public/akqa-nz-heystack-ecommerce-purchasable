@@ -76,10 +76,14 @@ class Subscriber implements EventSubscriberInterface
         
         $purchasableHolderID = $this->storageService->process($this->purchasableHolder, false, $transaction->getTransactionID());
         
-        foreach ($this->purchasableHolder->getPurchasables() as $purchaseable) {
-                    
-            $this->storageService->process($purchaseable, false, $purchasableHolderID);
+        if ($this->purchasableHolder->getPurchasables()) {
+            
+            foreach ($this->purchasableHolder->getPurchasables() as $purchaseable) {
 
+                $this->storageService->process($purchaseable, false, $purchasableHolderID);
+
+            }
+            
         }
         
         $this->eventDispatcher->dispatch(Events::STORED);
