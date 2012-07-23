@@ -16,6 +16,8 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
+use Heystack\Subsystem\Core\ContainerExtensionConfigProcessor;
+
 /**
  * Container extension for Heystack.
  *
@@ -25,10 +27,11 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  *
  * @copyright  Heyday
  * @author Cam Spiers <cameron@heyday.co.nz>
+ * @author Glenn Bautista <glenn@heyday.co.nz>
  * @package Ecommerce-Products
  *
  */
-class ContainerExtension implements ExtensionInterface
+class ContainerExtension extends ContainerExtensionConfigProcessor implements ExtensionInterface
 {
 
     /**
@@ -48,6 +51,8 @@ class ContainerExtension implements ExtensionInterface
         );
 
         $loader->load('services.yml');
+        
+        $this->processConfig($config, $container);
 
     }
 
