@@ -5,9 +5,5 @@ flat:
   Quantity: Varchar(255)
   Total: Varchar(255)
 related:
-  TestManyStorableName: Varchar(255)
-  TestManyManyStorableName: Varchar(255)
-  # TestManyStorableName: Varchar(255)
-  # TestManyManyStorableName: Varchar(255)
 parent:
   Parent: @ProductHolder

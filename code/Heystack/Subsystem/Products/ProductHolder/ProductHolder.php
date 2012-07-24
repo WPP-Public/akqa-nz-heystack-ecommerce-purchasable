@@ -282,9 +282,11 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
     
-    public function getStorageIdentifier() 
+    public function getStorageBackendIdentifiers()
     {
-        return 'dataobject';
+        return array(
+            'silverstripe_orm'
+        );
     }
 
 }

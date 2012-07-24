@@ -117,5 +117,12 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
         return $data;
         
     }
+    
+    public function getStorageBackendIdentifiers()
+    {
+        return array(
+            'silverstripe_orm'
+        );
+    }
 
 }
