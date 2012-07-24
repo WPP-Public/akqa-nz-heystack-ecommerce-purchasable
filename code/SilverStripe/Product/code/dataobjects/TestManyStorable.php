@@ -63,6 +63,13 @@ class TestManyStorable extends DataObject implements Serializable, StorableInter
         
         return $data;
     }
+    
+    public function getStorageBackendIdentifiers()
+    {
+        return array(
+            'silverstripe_orm'
+        );
+    }
 
 
 }
