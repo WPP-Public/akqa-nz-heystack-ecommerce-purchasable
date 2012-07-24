@@ -7,5 +7,7 @@ flat:
 related:
   TestManyStorableName: Varchar(255)
   TestManyManyStorableName: Varchar(255)
+  # TestManyStorableName: Varchar(255)
+  # TestManyManyStorableName: Varchar(255)
 parent:
-  Parent: StoredProductHolder
+  Parent: @ProductHolder
