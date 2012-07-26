@@ -1,7 +1,5 @@
 <?php
 
-use Heystack\Subsystem\Core\Storage\DataObjectStorage\Interfaces\DataObjectStorageInterface;
-
 class TestStorable extends DataObject implements Serializable
 {
 

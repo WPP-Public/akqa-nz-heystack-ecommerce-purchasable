@@ -11,8 +11,6 @@ use Heystack\Subsystem\Ecommerce\Transaction\Events as TransactionEvents;
 
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 
-use Heystack\Subsystem\Products\ProductHolder\Event\ProductHolderStoredEvent;
-
 class Subscriber implements EventSubscriberInterface
 {
     protected $eventDispatcher;
@@ -70,24 +68,24 @@ class Subscriber implements EventSubscriberInterface
 
         $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
     }
-    
-    public function onTransactionStored($transaction) 
+
+    public function onTransactionStored($transaction)
     {
-        
+
         $purchasableHolderID = $this->storageService->process($this->purchasableHolder, false, $transaction->getTransactionID());
-        
+
         if ($this->purchasableHolder->getPurchasables()) {
-            
+
             foreach ($this->purchasableHolder->getPurchasables() as $purchaseable) {
 
                 $this->storageService->process($purchaseable, false, $purchasableHolderID);
 
             }
-            
+
         }
-        
+
         $this->eventDispatcher->dispatch(Events::STORED);
-        
+
     }
 
 }

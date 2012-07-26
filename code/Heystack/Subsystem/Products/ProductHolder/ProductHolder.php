@@ -67,7 +67,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      * ProductHolder Constructor. Not directly called, use the ServiceStore to
      * get an instance of this class
      *
-     * @param \Heystack\Subsystem\Core\State\State               $stateService
+     * @param \Heystack\Subsystem\Core\State\State                        $stateService
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventService
      */
     public function __construct(State $stateService, EventDispatcherInterface $eventService)
@@ -82,7 +82,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     {
         return self::STATE_KEY;
     }
-    
+
     /**
      * Indicates that this modifier is chargeable
      */
@@ -227,62 +227,60 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     public function updateTotal()
     {
-        
+
         if (isset($this->data[self::PURCHASABLES_KEY])) {
-            
+
             $total = 0;
 
             foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
-                
+
                 $total += $purchasable->getTotal();
-                
+
             }
 
             $this->data[self::TOTAL_KEY] = $total;
-            
+
             $this->eventService->dispatch(Events::UPDATED);
-            
+
         }
-        
+
         $this->saveState();
-        
+
     }
 
     public function updatePurchasablePrices()
     {
         if (isset($this->data[self::PURCHASABLES_KEY])) {
-            
+
             foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
-                
+
                 $purchasable->setUnitPrice($purchasable->getPrice());
-                
-            }     
-       
+
+            }
+
         }
-        
-        $this->saveState(); 
+
+        $this->saveState();
     }
 
-    
-    
     public function getStorableData()
     {
 
        $data = array();
-       
+
        $data['id'] = 'ProductHolder';
-       
+
        $data['flat'] = array(
            'Total' => $this->getTotal(),
            'NoOfItems' => count($this->getPurchasables())
        );
-       
+
        $data['parent'] = true;
-       
+
        return $data;
 
     }
-    
+
     public function getStorageBackendIdentifiers()
     {
         return array(

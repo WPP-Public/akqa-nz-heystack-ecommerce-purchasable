@@ -1,7 +1,5 @@
 <?php
 
-use Heystack\Subsystem\Core\Storage\DataObjectStorage\Interfaces\DataObjectStorageInterface;
-
 class TestManyManyStorable extends DataObject implements Serializable
 {
 
@@ -60,15 +58,15 @@ class TestManyManyStorable extends DataObject implements Serializable
      public function getStorableData()
     {
         $data = array();
-        
+
         $data['id'] = "TestManyManyStorable";
-        
+
         $data['flat'] = array(
             'Name' => $this->Name,
             'TestStuff' => $this->TestStuff
-            
+
         );
-        
+
         return $data;
     }
 

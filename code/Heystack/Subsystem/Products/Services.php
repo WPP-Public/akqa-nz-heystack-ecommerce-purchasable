@@ -18,13 +18,13 @@ namespace Heystack\Subsystem\Products;
  * @package Ecommerce-Products
  */
 final class Services
-{    
+{
     /**
      * Holds the identfier of the product holder
      * For use with the ServiceStore::getService($identifier) call
      */
     const PRODUCTHOLDER = 'productholder';
-    
+
     /**
      * Holds the identifier of the product holder subscriber
      * For use with the ServiceStore::getService($identifier) call
@@ -36,7 +36,7 @@ final class Services
      * For use with the ServiceStore::getService($identifier) call
      */
     const PRODUCT_INPUT_PROCESSOR = 'product_input_processor';
-    
+
     /**
      * Holds the identifier of the product output processor
      * For use with the ServiceStore::getService($identifier) call
