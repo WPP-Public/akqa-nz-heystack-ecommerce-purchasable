@@ -240,6 +240,8 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
             $this->data[self::TOTAL_KEY] = $total;
             
+            $this->eventService->dispatch(Events::UPDATED);
+            
         }
         
         $this->saveState();
