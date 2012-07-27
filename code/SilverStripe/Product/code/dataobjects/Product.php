@@ -2,7 +2,9 @@
 
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Subsystem\Core\State\ExtraDataInterface;
+
 use Heystack\Subsystem\Core\Storage\StorableInterface;
+use Heystack\Subsystem\Core\Storage\Backends\SilverStripeOrm\Backend;
 
 
 class Product extends DataObject implements PurchasableInterface, Serializable, ExtraDataInterface, StorableInterface
@@ -11,26 +13,17 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     use Heystack\Subsystem\Products\Product\DataObjectTrait;
     use Heystack\Subsystem\Core\State\Traits\ExtraDataTrait;
 
+    const IDENTIFIER = 'product';
+
     protected $quantity = 0;
     protected $unitPrice = 0;
+	protected $parentID = 0;
 
     public static $db = array(
         'Name' => 'Varchar(255)',
         'TestStuff' => 'Varchar(255)'
     );
-
-    public static $has_one = array(
-        'SingleStorable' => 'TestStorable'
-    );
-
-    public static $has_many = array(
-        'HasyManyStore' => 'TestManyStorable'
-    );
-
-    public static $many_many = array(
-        'ManyManyStorable'=> 'TestManyManyStorable'
-    );
-
+	
     public function getExtraData()
     {
         return array(
@@ -86,6 +79,20 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     {
         return $this->getQuantity() * $this->getUnitPrice();
     }
+
+    public function setParentID($parentID)
+    {
+
+        $this->parentID = $parentID;
+
+    }
+    
+    public function getStorableIdentifier()
+    {
+
+        return self::IDENTIFIER;
+
+    }
     
     public function getStorableData() {
         
@@ -99,29 +106,25 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
             'Total' => $this->getTotal(),
             'Quantity' => $this->getQuantity(),
             'UnitPrice' => $this->getUnitPrice(),
+			'ParentID' => $this->parentID
         );
         
         $data['parent'] = true;
         
-        foreach ($this->HasyManyStore() as $related) {
-            
-            $relatedData = $related->getStorableData();
-            
-            $data['related'][] = array(
-                'flat' => $relatedData['flat'],
-                'id' => $relatedData['id']
-            );
-
-        }
+        $data['related'] = false;
 
         return $data;
         
     }
     
-    public function getStorageBackendIdentifiers()
+    /**
+     * @todo document this
+     * @return string
+     */
+    public function getStorableBackendIdentifiers()
     {
         return array(
-            'silverstripe_orm'
+            Backend::IDENTIFIER
         );
     }
 

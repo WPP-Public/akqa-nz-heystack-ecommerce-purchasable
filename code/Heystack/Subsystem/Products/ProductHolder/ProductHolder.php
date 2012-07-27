@@ -13,14 +13,14 @@ namespace Heystack\Subsystem\Products\ProductHolder;
 use Heystack\Subsystem\Core\State\State;
 use Heystack\Subsystem\Core\State\StateableInterface;
 
+use Heystack\Subsystem\Core\Storage\StorableInterface;
+use Heystack\Subsystem\Core\Storage\Backends\SilverStripeOrm\Backend;
+
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Subsystem\Ecommerce\Transaction\TransactionModifierTypes;
 use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierStateTrait;
 use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
-
-use Heystack\Subsystem\Products\ProductHolder\Event\ProductHolderEvent;
-use Heystack\Subsystem\Core\Storage\StorableInterface;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -46,7 +46,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     /**
      * State Key constant
      */
-    const STATE_KEY = 'productholder';
+    const IDENTIFIER = 'productholder';
     const PURCHASABLES_KEY = 'purchasables';
     const TOTAL_KEY = 'total';
 
@@ -63,6 +63,8 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     protected $eventService;
 
     protected $data = array();
+
+    protected $parentID = 0;
 
     /**
      * ProductHolder Constructor. Not directly called, use the ServiceStore to
@@ -81,7 +83,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     public function getIdentifier()
     {
-        return self::STATE_KEY;
+        return self::IDENTIFIER;
     }
     
     /**
@@ -262,7 +264,12 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         $this->saveState(); 
     }
 
-    
+    public function setParentID($parentID)
+    {
+
+        $this->parentID = $parentID;
+
+    }
     
     public function getStorableData()
     {
@@ -273,7 +280,8 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
        
        $data['flat'] = array(
            'Total' => $this->getTotal(),
-           'NoOfItems' => count($this->getPurchasables())
+           'NoOfItems' => count($this->getPurchasables()),
+           'ParentID' => $this->parentID
        );
        
        $data['parent'] = true;
@@ -281,11 +289,18 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
        return $data;
 
     }
+
+    public function getStorableIdentifier()
+    {
+
+        return self::IDENTIFIER;
+
+    }
     
-    public function getStorageBackendIdentifiers()
+    public function getStorableBackendIdentifiers()
     {
         return array(
-            'silverstripe_orm'
+            Backend::IDENTIFIER
         );
     }
 

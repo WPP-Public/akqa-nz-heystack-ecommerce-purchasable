@@ -23,7 +23,6 @@ namespace Heystack\Subsystem\Products\ProductHolder;
  */
 final class Events
 {
-    const SAVE                  = 'productholder.save';
     const PURCHASABLE_ADDED       = 'productholder.purchasableadded';
     const PURCHASABLE_CHANGED    = 'productholder.purchasablechanged';
     const PURCHASABLE_REMOVED    = 'productholder.purchasableremoved';

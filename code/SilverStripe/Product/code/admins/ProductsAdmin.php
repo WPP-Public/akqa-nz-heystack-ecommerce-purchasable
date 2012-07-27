@@ -4,11 +4,7 @@ class ProductsAdmin extends ModelAdmin
 {
 
     public static $managed_models = array(
-        'Product',
-        'TestStorable',
-        'TestManyStorable',
-        'TestManyManyStorable',
-        'StoredTransaction'
+        'Product'
     );
 
     public static $url_segment = 'products';

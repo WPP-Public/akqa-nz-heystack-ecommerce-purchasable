@@ -11,7 +11,9 @@ use Heystack\Subsystem\Ecommerce\Transaction\Events as TransactionEvents;
 
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 
-use Heystack\Subsystem\Products\ProductHolder\Event\ProductHolderStoredEvent;
+use Heystack\Subsystem\Core\Storage\Storage;
+use Heystack\Subsystem\Core\Storage\Backends\SilverStripeOrm\Backend;
+use Heystack\Subsystem\Core\Storage\Event as StorageEvent;
 
 class Subscriber implements EventSubscriberInterface
 {
@@ -19,7 +21,7 @@ class Subscriber implements EventSubscriberInterface
     protected $purchasableHolder;
     protected $storageService;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher, PurchasableHolderInterface $purchasableHolder, $storageService)
+    public function __construct(EventDispatcherInterface $eventDispatcher, PurchasableHolderInterface $purchasableHolder, Storage $storageService)
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->purchasableHolder = $purchasableHolder;
@@ -29,20 +31,13 @@ class Subscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            Events::SAVE                        => array('onSave', 0),
-            Events::PURCHASABLE_ADDED             => array('onAdd', 0),
+            Events::PURCHASABLE_ADDED            => array('onAdd', 0),
             Events::PURCHASABLE_CHANGED          => array('onChange', 0),
             Events::PURCHASABLE_REMOVED          => array('onRemove', 0),
             CurrencyEvents::CHANGED              => array('onCurrencyChange', 0),
-            TransactionEvents::STORED            => array('onTransactionStored', 0)
+            Backend::IDENTIFIER . '.' . TransactionEvents::STORED  => array('onTransactionStored', 0),
+            Backend::IDENTIFIER . '.' . Events::STORED  => array('onProductHolderStored', 0)			
         );
-    }
-
-    public function onSave()
-    {
-
-        $this->purchasableHolder->saveToDatabase();
-
     }
 
     public function onChange()
@@ -71,22 +66,32 @@ class Subscriber implements EventSubscriberInterface
         $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
     }
     
-    public function onTransactionStored($transaction) 
+    public function onTransactionStored(StorageEvent $storageEvent) 
     {
-        
-        $purchasableHolderID = $this->storageService->process($this->purchasableHolder, false, $transaction->getTransactionID());
-        
-        if ($this->purchasableHolder->getPurchasables()) {
-            
-            foreach ($this->purchasableHolder->getPurchasables() as $purchaseable) {
+		
+        $this->purchasableHolder->setParentID($storageEvent->getParentReference());
 
-                $this->storageService->process($purchaseable, false, $purchasableHolderID);
+        $this->storageService->process($this->purchasableHolder);
+        
+    }
+    
+    public function onProductHolderStored(StorageEvent $storageEvent) 
+    {
+		
+		$parentID = $storageEvent->getParentReference();
+		$purchasables = $this->purchasableHolder->getPurchasables();
+        
+        if ($purchasables) {
+            
+            foreach ($purchasables as $purchaseable) {
+				
+				$purchaseable->setParentID($parentID);
+
+                $this->storageService->process($purchaseable);
 
             }
             
         }
-        
-        $this->eventDispatcher->dispatch(Events::STORED);
         
     }
 
