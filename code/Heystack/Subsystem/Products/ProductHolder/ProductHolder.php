@@ -22,8 +22,6 @@ use Heystack\Subsystem\Ecommerce\Transaction\TransactionModifierTypes;
 use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierStateTrait;
 use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
 
-use Heystack\Subsystem\Core\Storage\StorableInterface;
-
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
