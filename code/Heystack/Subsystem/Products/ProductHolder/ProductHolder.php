@@ -22,6 +22,8 @@ use Heystack\Subsystem\Ecommerce\Transaction\TransactionModifierTypes;
 use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierStateTrait;
 use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
 
+use Heystack\Subsystem\Core\Storage\StorableInterface;
+
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -70,7 +72,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      * ProductHolder Constructor. Not directly called, use the ServiceStore to
      * get an instance of this class
      *
-     * @param \Heystack\Subsystem\Core\State\State               $stateService
+     * @param \Heystack\Subsystem\Core\State\State                        $stateService
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventService
      */
     public function __construct(State $stateService, EventDispatcherInterface $eventService)
@@ -85,7 +87,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     {
         return self::IDENTIFIER;
     }
-    
+
     /**
      * Indicates that this modifier is chargeable
      */
@@ -230,38 +232,40 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     public function updateTotal()
     {
-        
+
         if (isset($this->data[self::PURCHASABLES_KEY])) {
-            
+
             $total = 0;
 
             foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
-                
+
                 $total += $purchasable->getTotal();
-                
+
             }
 
             $this->data[self::TOTAL_KEY] = $total;
-            
+
+            $this->eventService->dispatch(Events::UPDATED);
+
         }
-        
+
         $this->saveState();
-        
+
     }
 
     public function updatePurchasablePrices()
     {
         if (isset($this->data[self::PURCHASABLES_KEY])) {
-            
+
             foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
-                
+
                 $purchasable->setUnitPrice($purchasable->getPrice());
-                
-            }     
-       
+
+            }
+
         }
-        
-        $this->saveState(); 
+
+        $this->saveState();
     }
 
     public function setParentID($parentID)
@@ -275,17 +279,17 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     {
 
        $data = array();
-       
+
        $data['id'] = 'ProductHolder';
-       
+
        $data['flat'] = array(
            'Total' => $this->getTotal(),
            'NoOfItems' => count($this->getPurchasables()),
            'ParentID' => $this->parentID
        );
-       
+
        $data['parent'] = true;
-       
+
        return $data;
 
     }

@@ -97,9 +97,9 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     public function getStorableData() {
         
         $data = array();
-        
+
         $data['id'] = "Product";
-        
+
         $data['flat'] = array(
             'Name' => $this->Name,
             'TestStuff' => $this->TestStuff,
@@ -108,13 +108,13 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
             'UnitPrice' => $this->getUnitPrice(),
 			'ParentID' => $this->parentID
         );
-        
+
         $data['parent'] = true;
         
         $data['related'] = false;
 
         return $data;
-        
+
     }
     
     /**
