@@ -1,0 +1,6 @@
+id: Transaction
+flat:
+parent:
+related:
+children:
+  ProductHolder: +ProductHolder

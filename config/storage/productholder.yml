@@ -4,6 +4,6 @@ flat:
   NoOfItems: Varchar(3)
 related:
 parent:
-  Parent: @Transaction
+  Parent: +Transaction
 children:
-  Products: @Product
+  Products: +Product

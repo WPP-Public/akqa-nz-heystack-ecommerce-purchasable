@@ -68,8 +68,8 @@ class Subscriber implements EventSubscriberInterface
     
     public function onTransactionStored(StorageEvent $storageEvent) 
     {
-		
-        $this->purchasableHolder->setParentID($storageEvent->getParentReference());
+        
+        $this->purchasableHolder->setParentReference($storageEvent->getParentReference());
 
         $this->storageService->process($this->purchasableHolder);
         
@@ -78,14 +78,14 @@ class Subscriber implements EventSubscriberInterface
     public function onProductHolderStored(StorageEvent $storageEvent) 
     {
 		
-		$parentID = $storageEvent->getParentReference();
+		$parentReference = $storageEvent->getParentReference();
 		$purchasables = $this->purchasableHolder->getPurchasables();
         
         if ($purchasables) {
             
             foreach ($purchasables as $purchaseable) {
 				
-				$purchaseable->setParentID($parentID);
+				$purchaseable->setParentReference($parentReference);
 
                 $this->storageService->process($purchaseable);
 

@@ -54,3 +54,4 @@ services:
     calls:
       - [ addYamlSchema, [ ecommerce-products/config/storage/product.yml ] ]
       - [ addYamlSchema, [ ecommerce-products/config/storage/productholder.yml ] ]
+      - [ addYamlSchema, [ ecommerce-products/config/storage/transaction_productholder.yml ] ]

@@ -15,9 +15,11 @@ use Heystack\Subsystem\Core\State\StateableInterface;
 
 use Heystack\Subsystem\Core\Storage\StorableInterface;
 use Heystack\Subsystem\Core\Storage\Backends\SilverStripeOrm\Backend;
+use Heystack\Subsystem\Core\Storage\Traits\ParentReferenceTrait;
 
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
+
 use Heystack\Subsystem\Ecommerce\Transaction\TransactionModifierTypes;
 use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierStateTrait;
 use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
@@ -42,6 +44,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 {
     use TransactionModifierStateTrait;
     use TransactionModifierSerializeTrait;
+    use ParentReferenceTrait;
 
     /**
      * State Key constant
@@ -63,8 +66,6 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     protected $eventService;
 
     protected $data = array();
-
-    protected $parentID = 0;
 
     /**
      * ProductHolder Constructor. Not directly called, use the ServiceStore to
@@ -265,13 +266,6 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
         $this->saveState();
     }
-
-    public function setParentID($parentID)
-    {
-
-        $this->parentID = $parentID;
-
-    }
     
     public function getStorableData()
     {
@@ -283,7 +277,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
        $data['flat'] = array(
            'Total' => $this->getTotal(),
            'NoOfItems' => count($this->getPurchasables()),
-           'ParentID' => $this->parentID
+           'ParentID' => $this->parentReference
        );
 
        $data['parent'] = true;

@@ -3,21 +3,25 @@
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Subsystem\Core\State\ExtraDataInterface;
 
+use Heystack\Subsystem\Products\Product\DataObjectTrait;
+use Heystack\Subsystem\Core\State\Traits\ExtraDataTrait;
+
 use Heystack\Subsystem\Core\Storage\StorableInterface;
 use Heystack\Subsystem\Core\Storage\Backends\SilverStripeOrm\Backend;
+use Heystack\Subsystem\Core\Storage\Traits\ParentReferenceTrait;
 
 
 class Product extends DataObject implements PurchasableInterface, Serializable, ExtraDataInterface, StorableInterface
 {
 
-    use Heystack\Subsystem\Products\Product\DataObjectTrait;
-    use Heystack\Subsystem\Core\State\Traits\ExtraDataTrait;
+    use DataObjectTrait;
+    use ExtraDataTrait;
+    use ParentReferenceTrait;
 
     const IDENTIFIER = 'product';
 
     protected $quantity = 0;
     protected $unitPrice = 0;
-	protected $parentID = 0;
 
     public static $db = array(
         'Name' => 'Varchar(255)',
@@ -79,13 +83,6 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     {
         return $this->getQuantity() * $this->getUnitPrice();
     }
-
-    public function setParentID($parentID)
-    {
-
-        $this->parentID = $parentID;
-
-    }
     
     public function getStorableIdentifier()
     {
@@ -106,7 +103,7 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
             'Total' => $this->getTotal(),
             'Quantity' => $this->getQuantity(),
             'UnitPrice' => $this->getUnitPrice(),
-			'ParentID' => $this->parentID
+			'ParentID' => $this->parentReference
         );
         
         $data['parent'] = true;
