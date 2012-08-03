@@ -10,6 +10,8 @@ parameters:
   
 services:
 
+  product:
+    class: %product.class%
 
   productholder_subscriber:
     class: %productholder_subscriber.class%
@@ -55,3 +57,9 @@ services:
       - [ addYamlSchema, [ ecommerce-products/config/storage/product.yml ] ]
       - [ addYamlSchema, [ ecommerce-products/config/storage/productholder.yml ] ]
       - [ addYamlSchema, [ ecommerce-products/config/storage/transaction_productholder.yml ] ]
+      
+  ss_orm_backend:
+    class: %ss_orm_backend.class%
+    calls:
+      - [ addDataProvider, [ @product ] ]
+      - [ addDataProvider, [ @productholder ] ]

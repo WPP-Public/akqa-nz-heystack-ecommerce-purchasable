@@ -1,9 +1,10 @@
+data_provider_id: productholder
 id: ProductHolder
 flat:
   Total: Varchar(255)
   NoOfItems: Varchar(3)
 related:
 parent:
-  Parent: +Transaction
+  Parent: +transaction
 children:
-  Products: +Product
+  Products: +product
