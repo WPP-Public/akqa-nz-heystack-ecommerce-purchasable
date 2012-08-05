@@ -99,7 +99,6 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
         
         $data['flat'] = array(
             'Name' => $this->Name,
-            'TestStuff' => $this->TestStuff,
             'Total' => $this->getTotal(),
             'Quantity' => $this->getQuantity(),
             'UnitPrice' => $this->getUnitPrice(),
@@ -109,10 +108,10 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
         $data['parent'] = true;
         
         $data['related'] = false;
-
+        
         return $data;
         
-    }
+    } 
     
     /**
      * @todo document this

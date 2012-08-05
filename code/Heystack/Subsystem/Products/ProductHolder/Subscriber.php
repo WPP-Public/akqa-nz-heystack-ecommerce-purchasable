@@ -135,7 +135,7 @@ class Subscriber implements EventSubscriberInterface
     {
         
         $this->purchasableHolder->setParentReference($storageEvent->getParentReference());
-
+        
         $this->storageService->process($this->purchasableHolder);
         
     }
@@ -155,7 +155,7 @@ class Subscriber implements EventSubscriberInterface
             foreach ($purchasables as $purchaseable) {
 				
 				$purchaseable->setParentReference($parentReference);
-
+                
                 $this->storageService->process($purchaseable);
 
             }
