@@ -7,4 +7,4 @@ flat:
   Total: Varchar(255)
 related:
 parent:
-  Parent: +productholder
+  Parent: +ProductHolder

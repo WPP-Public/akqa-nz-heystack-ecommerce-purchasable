@@ -1,7 +1,7 @@
-data_provider_id: transaction_productholder
+data_provider_id: transaction
 id: Transaction
 flat:
 parent:
 related:
 children:
-  ProductHolder: +productholder
+  ProductHolder: +ProductHolder
