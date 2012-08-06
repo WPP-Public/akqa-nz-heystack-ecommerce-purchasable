@@ -31,13 +31,13 @@ class Processor implements ProcessorInterface
      * @var string
      */
     private $productClass;
-    
+
     /**
      * The application state
      * @var object
      */
     private $state;
-    
+
     /**
      * This application productholder
      * @var object
@@ -46,9 +46,9 @@ class Processor implements ProcessorInterface
 
     /**
      * Creates the Product input processor
-     * 
-     * @param string $productClass
-     * @param \Heystack\Subsystem\Core\State\State $state
+     *
+     * @param string                                                   $productClass
+     * @param \Heystack\Subsystem\Core\State\State                     $state
      * @param \Heystack\Subsystem\Products\ProductHolder\ProductHolder $productHolder
      */
     public function __construct($productClass, State $state, ProductHolder $productHolder)
@@ -72,9 +72,9 @@ class Processor implements ProcessorInterface
     }
 
     /**
-     * Determines what to do with the result from the input processor 
-     * @param \Controller $controller
-     * @param type $result
+     * Determines what to do with the result from the input processor
+     * @param  \Controller $controller
+     * @param  type        $result
      * @return mixed
      */
     public function process(\Controller $controller, $result = null)

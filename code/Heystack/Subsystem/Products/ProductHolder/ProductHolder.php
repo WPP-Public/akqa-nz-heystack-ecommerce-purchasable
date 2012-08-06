@@ -276,7 +276,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
         $this->saveState();
     }
-    
+
     /**
      * Get the data to store for the productholder
      * @return array
@@ -310,7 +310,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         return self::IDENTIFIER;
 
     }
-    
+
     /**
      * Get the type of storage that this object is using
      * @return string

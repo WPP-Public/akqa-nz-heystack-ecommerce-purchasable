@@ -26,7 +26,7 @@ use Heystack\Subsystem\Core\Storage\Event as StorageEvent;
 /**
  * ProductHolder Subscriber
  *
- * Handles both subscribing to events and acting on those events for all 
+ * Handles both subscribing to events and acting on those events for all
  * information which is related to the productholder.
  *
  * @copyright  Heyday
@@ -38,19 +38,19 @@ use Heystack\Subsystem\Core\Storage\Event as StorageEvent;
  */
 class Subscriber implements EventSubscriberInterface
 {
-    
+
     /**
      * The Event Dispatcher
      * @var object
      */
     protected $eventDispatcher;
-    
+
     /**
      * The purchasableholder which this subscriber will act on
      * @var object
      */
     protected $purchasableHolder;
-    
+
     /**
      * The storage service which will be used in cases where storage is needed.
      * @var object
@@ -59,9 +59,9 @@ class Subscriber implements EventSubscriberInterface
 
     /**
      * Construct the subscriber
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface                     $eventDispatcher
      * @param \Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface $purchasableHolder
-     * @param \Heystack\Subsystem\Core\Storage\Storage $storageService
+     * @param \Heystack\Subsystem\Core\Storage\Storage                                        $storageService
      */
     public function __construct(EventDispatcherInterface $eventDispatcher, PurchasableHolderInterface $purchasableHolder, Storage $storageService)
     {
@@ -82,7 +82,7 @@ class Subscriber implements EventSubscriberInterface
             Events::PURCHASABLE_REMOVED          => array('onRemove', 0),
             CurrencyEvents::CHANGED              => array('onCurrencyChange', 0),
             Backend::IDENTIFIER . '.' . TransactionEvents::STORED  => array('onTransactionStored', 0),
-            Backend::IDENTIFIER . '.' . Events::STORED  => array('onProductHolderStored', 0)			
+            Backend::IDENTIFIER . '.' . Events::STORED  => array('onProductHolderStored', 0)
         );
     }
 
@@ -95,7 +95,7 @@ class Subscriber implements EventSubscriberInterface
         $this->purchasableHolder->updateTotal();
         $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
     }
-    
+
     /**
      * Updates the total of the holder and lets the transaction know it has to
      * update
@@ -127,41 +127,41 @@ class Subscriber implements EventSubscriberInterface
 
         $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
     }
-    
+
     /**
      * Stores the purchasable holder permanently
      */
-    public function onTransactionStored(StorageEvent $storageEvent) 
+    public function onTransactionStored(StorageEvent $storageEvent)
     {
-        
+
         $this->purchasableHolder->setParentReference($storageEvent->getParentReference());
-        
+
         $this->storageService->process($this->purchasableHolder);
-        
+
     }
-    
+
     /**
      * Stores the purchasables which are attached to the purchasable holder
      * @param \Heystack\Subsystem\Core\Storage\Event $storageEvent
      */
-    public function onProductHolderStored(StorageEvent $storageEvent) 
+    public function onProductHolderStored(StorageEvent $storageEvent)
     {
-		
-		$parentReference = $storageEvent->getParentReference();
-		$purchasables = $this->purchasableHolder->getPurchasables();
-        
+
+        $parentReference = $storageEvent->getParentReference();
+        $purchasables = $this->purchasableHolder->getPurchasables();
+
         if ($purchasables) {
-            
+
             foreach ($purchasables as $purchaseable) {
-				
-				$purchaseable->setParentReference($parentReference);
-                
+
+                $purchaseable->setParentReference($parentReference);
+
                 $this->storageService->process($purchaseable);
 
             }
-            
+
         }
-        
+
     }
 
 }

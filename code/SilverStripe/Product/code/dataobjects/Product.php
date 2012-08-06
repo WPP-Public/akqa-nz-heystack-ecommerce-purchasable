@@ -10,7 +10,6 @@ use Heystack\Subsystem\Core\Storage\StorableInterface;
 use Heystack\Subsystem\Core\Storage\Backends\SilverStripeOrm\Backend;
 use Heystack\Subsystem\Core\Storage\Traits\ParentReferenceTrait;
 
-
 class Product extends DataObject implements PurchasableInterface, Serializable, ExtraDataInterface, StorableInterface
 {
 
@@ -27,7 +26,7 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
         'Name' => 'Varchar(255)',
         'TestStuff' => 'Varchar(255)'
     );
-	
+
     public function getExtraData()
     {
         return array(
@@ -83,36 +82,36 @@ class Product extends DataObject implements PurchasableInterface, Serializable, 
     {
         return $this->getQuantity() * $this->getUnitPrice();
     }
-    
+
     public function getStorableIdentifier()
     {
 
         return self::IDENTIFIER;
 
     }
-    
-    public function getStorableData() {
-        
+
+    public function getStorableData()
+    {
         $data = array();
-        
+
         $data['id'] = "Product";
-        
+
         $data['flat'] = array(
             'Name' => $this->Name,
             'Total' => $this->getTotal(),
             'Quantity' => $this->getQuantity(),
             'UnitPrice' => $this->getUnitPrice(),
-			'ParentID' => $this->parentReference
+            'ParentID' => $this->parentReference
         );
-        
+
         $data['parent'] = true;
-        
+
         $data['related'] = false;
-        
+
         return $data;
-        
-    } 
-    
+
+    }
+
     /**
      * @todo document this
      * @return string
