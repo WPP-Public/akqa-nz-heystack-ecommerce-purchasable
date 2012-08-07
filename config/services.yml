@@ -6,7 +6,7 @@ parameters:
 
   productholder.class: Heystack\Subsystem\Products\ProductHolder\ProductHolder
 
-  product.class: Product
+  product.class: $$$
   
 services:
 
