@@ -310,16 +310,16 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         return self::IDENTIFIER;
 
     }
-    
+
     /**
      * Get the name of the schema this system relates to
      * @return string
      */
     public function getSchemaName()
     {
-        
+
         return 'ProductHolder';
-        
+
     }
 
     /**
