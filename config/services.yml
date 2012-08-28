@@ -53,10 +53,6 @@ services:
       
   dataobject_generator:
     class: %dataobject_generator.class%
-    calls:
-      - [ addYamlSchema, [ ecommerce-products/config/storage/product.yml ] ]
-      - [ addYamlSchema, [ ecommerce-products/config/storage/productholder.yml ] ]
-      - [ addYamlSchema, [ ecommerce-products/config/storage/transaction_productholder.yml ] ]
       
   ss_orm_backend:
     class: %ss_orm_backend.class%

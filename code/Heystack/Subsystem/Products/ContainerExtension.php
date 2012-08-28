@@ -17,6 +17,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 use Heystack\Subsystem\Core\ContainerExtensionConfigProcessor;
+use Heystack\Subsystem\Core\Services as CoreServices;
 
 /**
  * Container extension for Heystack.
@@ -53,6 +54,39 @@ class ContainerExtension extends ContainerExtensionConfigProcessor implements Ex
         $loader->load('services.yml');
 
         $this->processConfig($config, $container);
+        
+        $dataObjectGenerator =
+            $container->hasDefinition(CoreServices::DATAOBJECT_GENERATOR)
+            ? $container->getDefinition(CoreServices::DATAOBJECT_GENERATOR)
+            : false;        
+        
+        $config = array_pop($config);
+            
+        if ($dataObjectGenerator) {
+            $dataObjectGenerator->addMethodCall(
+                'addYamlSchema', array(
+                    isset($config['yml.product'])
+                        ? $config['yml.product']
+                        : 'ecommerce-products/config/storage/product.yml'
+                )
+            );
+
+            $dataObjectGenerator->addMethodCall(
+                'addYamlSchema', array(
+                    isset($config['yml.productholder'])
+                        ? $config['yml.productholder']
+                        : 'ecommerce-products/config/storage/productholder.yml'
+                )
+            );
+            
+            $dataObjectGenerator->addMethodCall(
+                'addYamlSchema', array(
+                    isset($config['yml.transaction_productholder'])
+                        ? $config['yml.transaction_productholder']
+                        : 'ecommerce-products/config/storage/transaction_productholder.yml'
+                )
+            );
+        }
 
     }
 
