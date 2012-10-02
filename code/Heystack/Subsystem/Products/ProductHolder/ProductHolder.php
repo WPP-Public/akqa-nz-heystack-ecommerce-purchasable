@@ -224,11 +224,18 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
+    /**
+     * Get the current purchasable total on the product holder
+     * @return float
+     */
     public function getTotal()
     {
         return isset($this->data[self::TOTAL_KEY]) ? $this->data[self::TOTAL_KEY] : 0;
     }
 
+    /**
+     * Update the purchasable total on the product holder
+     */
     public function updateTotal()
     {
 
@@ -252,6 +259,9 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
+    /**
+     * Update the purchasable prices on the holder
+     */
     public function updatePurchasablePrices()
     {
         if (isset($this->data[self::PURCHASABLES_KEY])) {
@@ -266,7 +276,11 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
         $this->saveState();
     }
-    
+
+    /**
+     * Get the data to store for the productholder
+     * @return array
+     */
     public function getStorableData()
     {
 
@@ -286,13 +300,32 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
 
+    /**
+     * Get the identifier for this storage system
+     * @return string
+     */
     public function getStorableIdentifier()
     {
 
         return self::IDENTIFIER;
 
     }
-    
+
+    /**
+     * Get the name of the schema this system relates to
+     * @return string
+     */
+    public function getSchemaName()
+    {
+
+        return 'ProductHolder';
+
+    }
+
+    /**
+     * Get the type of storage that this object is using
+     * @return string
+     */
     public function getStorableBackendIdentifiers()
     {
         return array(

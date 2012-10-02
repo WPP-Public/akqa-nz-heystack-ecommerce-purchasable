@@ -37,7 +37,7 @@ class Processor implements ProcessorInterface
      *
      * @var string The ClassName of the object which is to be processed
      */
-    private $productClass;
+    protected $productClass;
 
     /**
      * The state interface for Heystack
@@ -45,7 +45,7 @@ class Processor implements ProcessorInterface
      * @uses State
      * @var object State
      */
-    private $state;
+    protected $state;
 
     /**
      * The event dispatcher for Heystack
@@ -53,14 +53,14 @@ class Processor implements ProcessorInterface
      *
      * @var object
      */
-    private $eventDispatcher;
+    protected $eventDispatcher;
 
     /**
      * PurchasableHolderInterface
      *
      * @var Interface
      */
-    private $purchasableHolder;
+    protected $purchasableHolder;
 
     /**
      * Construct the processor

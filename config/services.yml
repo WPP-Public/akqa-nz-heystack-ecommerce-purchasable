@@ -6,10 +6,12 @@ parameters:
 
   productholder.class: Heystack\Subsystem\Products\ProductHolder\ProductHolder
 
-  product.class: Product
+  product.class: $$$
   
 services:
 
+  product:
+    class: %product.class%
 
   productholder_subscriber:
     class: %productholder_subscriber.class%
@@ -51,7 +53,9 @@ services:
       
   dataobject_generator:
     class: %dataobject_generator.class%
+      
+  ss_orm_backend:
+    class: %ss_orm_backend.class%
     calls:
-      - [ addYamlSchema, [ ecommerce-products/config/storage/product.yml ] ]
-      - [ addYamlSchema, [ ecommerce-products/config/storage/productholder.yml ] ]
-      - [ addYamlSchema, [ ecommerce-products/config/storage/transaction_productholder.yml ] ]
+      - [ addDataProvider, [ @product ] ]
+      - [ addDataProvider, [ @productholder ] ]
