@@ -278,6 +278,31 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     }
 
     /**
+     * Get tax exemptions from products if they exist
+     */
+    public function getTaxExemptTotal()
+    {
+        $total = 0;
+
+        if (isset($this->data[self::PURCHASABLES_KEY])) {
+
+            foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
+
+                if (method_exists($purchasable, 'isTaxExempt') && $purchasable->isTaxExempt()) {
+
+                    $total += $purchasable->getTotal();
+
+                }
+
+            }
+
+        }
+
+        return $total;
+
+    }
+
+    /**
      * Get the data to store for the productholder
      * @return array
      */
