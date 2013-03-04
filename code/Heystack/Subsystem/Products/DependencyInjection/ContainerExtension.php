@@ -8,7 +8,7 @@
 /**
  * Products namespace
  */
-namespace Heystack\Subsystem\Products;
+namespace Heystack\Subsystem\Products\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -16,8 +16,7 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-use Heystack\Subsystem\Core\ContainerExtensionConfigProcessor;
-use Heystack\Subsystem\Core\Services as CoreServices;
+use Heystack\Subsystem\Core\DependencyInjection\ContainerExtensionConfigProcessor;
 
 /**
  * Container extension for Heystack.
@@ -55,37 +54,30 @@ class ContainerExtension extends ContainerExtensionConfigProcessor implements Ex
 
         $this->processConfig($config, $container);
         
-        $dataObjectGenerator =
-            $container->hasDefinition(CoreServices::DATAOBJECT_GENERATOR)
-            ? $container->getDefinition(CoreServices::DATAOBJECT_GENERATOR)
-            : false;        
-        
         $config = array_pop($config);
+        
+        if(isset($config['yml.product']) && $container->hasDefinition('product_schema')){
             
-        if ($dataObjectGenerator) {
-            $dataObjectGenerator->addMethodCall(
-                'addYamlSchema', array(
-                    isset($config['yml.product'])
-                        ? $config['yml.product']
-                        : 'ecommerce-products/config/storage/product.yml'
-                )
-            );
-
-            $dataObjectGenerator->addMethodCall(
-                'addYamlSchema', array(
-                    isset($config['yml.productholder'])
-                        ? $config['yml.productholder']
-                        : 'ecommerce-products/config/storage/productholder.yml'
-                )
-            );
+            $definition = $container->getDefinition('product_schema');
             
-            $dataObjectGenerator->addMethodCall(
-                'addYamlSchema', array(
-                    isset($config['yml.transaction_productholder'])
-                        ? $config['yml.transaction_productholder']
-                        : 'ecommerce-products/config/storage/transaction_productholder.yml'
-                )
-            );
+            $definition->replaceArgument(0, $config['yml.product']);
+            
+        }
+        
+        if(isset($config['yml.productholder']) && $container->hasDefinition('product_holder_schema')){
+            
+            $definition = $container->getDefinition('product_holder_schema');
+            
+            $definition->replaceArgument(0, $config['yml.productholder']);
+            
+        }
+        
+        if(isset($config['yml.transaction_productholder']) && $container->hasDefinition('transaction_product_holder_schema')){
+            
+            $definition = $container->getDefinition('transaction_product_holder_schema');
+            
+            $definition->replaceArgument(0, $config['yml.transaction_productholder']);
+            
         }
 
     }

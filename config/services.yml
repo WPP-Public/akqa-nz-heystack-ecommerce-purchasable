@@ -12,50 +12,50 @@ services:
 
   product:
     class: %product.class%
+    tags:
+      - { name: ss_orm_backend.data_provider }
 
   productholder_subscriber:
     class: %productholder_subscriber.class%
     arguments: [@event_dispatcher, @productholder, @storage]
-
-  event_dispatcher:
-    class: %event_dispatcher.class%
-    calls: 
-      - [ addSubscriber, [ @productholder_subscriber ] ]
+    tags:
+      - { name: event_dispatcher.subscriber }
 
   product_input_processor:
     class: %product_input_processor.class%
     arguments: [%product.class%, @state, @event_dispatcher, @productholder]
+    tags:
+      - { name: input_processor_handler.processor }
     
   product_output_processor:
     class: %product_output_processor.class%
     arguments: [%product.class%, @state, @productholder]
+    tags:
+      - { name: output_processor_handler.processor }
 
   productholder:
     class: %productholder.class%
     arguments: [ @state, @event_dispatcher ]
     calls:
       - [ restoreState ]
+    tags:
+      - { name: ss_orm_backend.data_provider }
+      - { name: transaction.modifier }
 
-  input_processor_handler:
-    class: %input_processor_handler.class%
-    calls:
-      - [ addProcessor, [ @product_input_processor ] ]
-
-  output_processor_handler:
-    class: %output_processor_handler.class%
-    calls:
-      - [ addProcessor, [ @product_output_processor ] ]
+  product_schema:
+    class: %yaml_data_object_schema.class%
+    arguments: [ ecommerce-products/config/storage/product.yml, @state_global ]
+    tags:
+      - { name: dataobject_generator.schema }
       
-  transaction:
-    class: %transaction.class%
-    calls:
-      - [ addModifier, [ @productholder ] ]
+  product_holder_schema:
+    class: %yaml_data_object_schema.class%
+    arguments: [ ecommerce-products/config/storage/productholder.yml, @state_global ]
+    tags:
+      - { name: dataobject_generator.schema }
       
-  dataobject_generator:
-    class: %dataobject_generator.class%
-      
-  ss_orm_backend:
-    class: %ss_orm_backend.class%
-    calls:
-      - [ addDataProvider, [ @product ] ]
-      - [ addDataProvider, [ @productholder ] ]
+  transaction_product_holder_schema:
+    class: %yaml_data_object_schema.class%
+    arguments: [ ecommerce-products/config/storage/transaction_productholder.yml, @state_global ]
+    tags:
+      - { name: dataobject_generator.schema }
