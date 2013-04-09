@@ -1,12 +1,8 @@
 parameters:
   product_input_processor.class: Heystack\Subsystem\Products\Product\Input\Processor
   product_output_processor.class: Heystack\Subsystem\Products\Product\Output\Processor
-
   productholder_subscriber.class: Heystack\Subsystem\Products\ProductHolder\Subscriber
-
   productholder.class: Heystack\Subsystem\Products\ProductHolder\ProductHolder
-
-  product.class: $$$
   
 services:
 
