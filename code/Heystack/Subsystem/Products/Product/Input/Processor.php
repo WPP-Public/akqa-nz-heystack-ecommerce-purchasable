@@ -10,6 +10,7 @@
  */
 namespace Heystack\Subsystem\Products\Product\Input;
 
+use Heystack\Subsystem\Core\Identifier\Identifier;
 use Heystack\Subsystem\Core\Input\ProcessorInterface;
 use Heystack\Subsystem\Core\State\State;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
@@ -70,8 +71,12 @@ class Processor implements ProcessorInterface
      * @param \Symfony\Component\EventDispatcher\EventDispatcher                              $eventDispatcher
      * @param \Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface $purchasableHolder
      */
-    public function __construct($productClass, State $state, EventDispatcher $eventDispatcher, PurchasableHolderInterface $purchasableHolder)
-    {
+    public function __construct(
+        $productClass,
+        State $state,
+        EventDispatcher $eventDispatcher,
+        PurchasableHolderInterface $purchasableHolder
+    ) {
 
         $this->productClass = $productClass;
         $this->state = $state;
@@ -82,14 +87,13 @@ class Processor implements ProcessorInterface
 
     /**
      * Get the identifier for this processor
-     *
-     * @return string Identifier
+     * @return \Heystack\Subsystem\Core\Identifier\Identifier
      */
     public function getIdentifier()
     {
-
-        return strtolower($this->productClass);
-
+        return new Identifier(
+            strtolower($this->productClass)
+        );
     }
 
     /**
@@ -115,7 +119,7 @@ class Processor implements ProcessorInterface
                         $this->purchasableHolder->addPurchasable($product,$quantity);
                         break;
                     case 'remove':
-                        $this->purchasableHolder->removePurchasable($product->getIdentifier());
+                        $this->purchasableHolder->removePurchasable($product->getIdentifier()->getPrimary());
                         break;
                     case 'set':
                         $this->purchasableHolder->setPurchasable($product,$quantity);

@@ -10,6 +10,7 @@
  */
 namespace Heystack\Subsystem\Products\ProductHolder;
 
+use Heystack\Subsystem\Core\Identifier\Identifier;
 use Heystack\Subsystem\Core\State\State;
 use Heystack\Subsystem\Core\State\StateableInterface;
 
@@ -61,7 +62,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     /**
      * Holds the EventDispatcher Service
-     * @var EventDispatcher
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
     protected $eventService;
 
@@ -81,10 +82,12 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         $this->eventService = $eventService;
 
     }
-
+    /**
+     * @return \Heystack\Subsystem\Core\Identifier\Identifier
+     */
     public function getIdentifier()
     {
-        return self::IDENTIFIER;
+        return new Identifier(self::IDENTIFIER);
     }
 
     /**
@@ -104,7 +107,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     public function addPurchasable(PurchasableInterface $purchasable, $quantity)
     {
 
-        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
+        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier()->getPrimary())) {
 
             $this->setPurchasable($cachedPurchasable, $cachedPurchasable->getQuantity() + $quantity);
 
@@ -123,7 +126,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      */
     public function setPurchasable(PurchasableInterface $purchasable, $quantity)
     {
-        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
+        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier()->getPrimary())) {
 
             $cachedPurchasable->setQuantity($quantity);
 
@@ -137,7 +140,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
             $purchasable->setQuantity($quantity);
             $purchasable->setUnitPrice($purchasable->getPrice());
 
-            $this->data[self::PURCHASABLES_KEY][$purchasable->getIdentifier()] = $purchasable;
+            $this->data[self::PURCHASABLES_KEY][$purchasable->getIdentifier()->getPrimary()] = $purchasable;
 
             $this->eventService->dispatch(Events::PURCHASABLE_ADDED);
 
@@ -166,8 +169,6 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     {
 
         if (isset($this->data[self::PURCHASABLES_KEY][$identifier])) {
-
-            $purchasable = $this->data[self::PURCHASABLES_KEY][$identifier];
 
             unset($this->data[self::PURCHASABLES_KEY][$identifier]);
 

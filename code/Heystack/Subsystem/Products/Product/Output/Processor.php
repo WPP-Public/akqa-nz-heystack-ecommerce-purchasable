@@ -10,6 +10,7 @@
  */
 namespace Heystack\Subsystem\Products\Product\Output;
 
+use Heystack\Subsystem\Core\Identifier\Identifier;
 use Heystack\Subsystem\Core\Output\ProcessorInterface;
 use Heystack\Subsystem\Core\State\State;
 use Heystack\Subsystem\Products\ProductHolder\ProductHolder;
@@ -53,22 +54,18 @@ class Processor implements ProcessorInterface
      */
     public function __construct($productClass, State $state, ProductHolder $productHolder)
     {
-
         $this->productClass = $productClass;
         $this->state = $state;
         $this->productHolder = $productHolder;
-
     }
 
     /**
      * Get the identifier for this processor
-     * @return string
+     * @return \Heystack\Subsystem\Core\Identifier\Identifier
      */
     public function getIdentifier()
     {
-
-        return strtolower($this->productClass);
-
+        return new Identifier(strtolower($this->productClass));
     }
 
     /**
