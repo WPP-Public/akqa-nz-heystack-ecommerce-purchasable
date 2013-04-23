@@ -10,8 +10,9 @@
  */
 namespace Heystack\Subsystem\Products\ProductHolder;
 
-use Heystack\Subsystem\Core\Identifier\Identifier;
 use Heystack\Subsystem\Core\State\State;
+use Heystack\Subsystem\Core\Identifier\IdentifierInterface;
+use Heystack\Subsystem\Core\Identifier\Identifier;
 use Heystack\Subsystem\Core\State\StateableInterface;
 
 use Heystack\Subsystem\Core\Storage\StorableInterface;
@@ -83,7 +84,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     }
     /**
-     * @return \Heystack\Subsystem\Core\Identifier\Identifier
+     * @return \Heystack\Subsystem\Core\Identifier\IdentifierInterface
      */
     public function getIdentifier()
     {
@@ -104,10 +105,10 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      * @param PurchasableInterface $purchasable The purchasable object
      * @param integer              $quantity    quantity of the object to add
      */
-    public function addPurchasable(PurchasableInterface $purchasable, $quantity)
+    public function addPurchasable(PurchasableInterface $purchasable, $quantity = 1)
     {
 
-        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier()->getFull())) {
+        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
 
             $this->setPurchasable($cachedPurchasable, $cachedPurchasable->getQuantity() + $quantity);
 
@@ -126,7 +127,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      */
     public function setPurchasable(PurchasableInterface $purchasable, $quantity)
     {
-        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier()->getFull())) {
+        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
 
             $cachedPurchasable->setQuantity($quantity);
 
@@ -150,27 +151,40 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
     /**
      * Returns a purchasable by its identifier
-     * @param  string                     $identifier The identifier of the purchasable
+     * @param  \Heystack\Subsystem\Core\Identifier\IdentifierInterface $identifier The identifier of the purchasable
      * @return PurchasableInterface|false The Purchasable object if found
      */
-    public function getPurchasable($identifier)
+    public function getPurchasable(IdentifierInterface $identifier)
     {
+        $fullIdentifier = $identifier->getFull();
 
-        return isset($this->data[self::PURCHASABLES_KEY][$identifier]) ? $this->data[self::PURCHASABLES_KEY][$identifier] : false;
+        return isset($this->data[self::PURCHASABLES_KEY][$fullIdentifier]) ? $this->data[self::PURCHASABLES_KEY][$fullIdentifier] : false;
+    }
 
+    public function getPurchasableByPrimaryIdentifier(IdentifierInterface $identifier)
+    {
+        foreach($this->data[self::PURCHASABLES_KEY] as $purchasable)
+        {
+            if($purchasable->getIdentifier()->isMatch($identifier)){
+                return $purchasable;
+            }
+        }
+
+        return false;
     }
 
     /**
      * Removes a purchasable from the product holder if found
-     * @param  string $identifier The identifier of the purchasable to remove
+     * @param  \Heystack\Subsystem\Core\Identifier\IdentifierInterface $identifier The identifier of the purchasable to remove
      * @return null
      */
-    public function removePurchasable($identifier)
+    public function removePurchasable(IdentifierInterface $identifier)
     {
+        $fullIdentifier = $identifier->getFull();
 
-        if (isset($this->data[self::PURCHASABLES_KEY][$identifier])) {
+        if (isset($this->data[self::PURCHASABLES_KEY][$fullIdentifier])) {
 
-            unset($this->data[self::PURCHASABLES_KEY][$identifier]);
+            unset($this->data[self::PURCHASABLES_KEY][$fullIdentifier]);
 
             $this->eventService->dispatch(Events::PURCHASABLE_REMOVED);
 
