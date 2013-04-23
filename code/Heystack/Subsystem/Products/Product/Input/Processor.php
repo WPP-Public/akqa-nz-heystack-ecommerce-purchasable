@@ -119,7 +119,7 @@ class Processor implements ProcessorInterface
                         $this->purchasableHolder->addPurchasable($product,$quantity);
                         break;
                     case 'remove':
-                        $this->purchasableHolder->removePurchasable($product->getIdentifier()->getPrimary());
+                        $this->purchasableHolder->removePurchasable($product->getIdentifier()->getFull());
                         break;
                     case 'set':
                         $this->purchasableHolder->setPurchasable($product,$quantity);

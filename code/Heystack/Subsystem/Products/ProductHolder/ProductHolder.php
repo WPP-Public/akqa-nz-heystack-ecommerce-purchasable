@@ -107,7 +107,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     public function addPurchasable(PurchasableInterface $purchasable, $quantity)
     {
 
-        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier()->getPrimary())) {
+        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier()->getFull())) {
 
             $this->setPurchasable($cachedPurchasable, $cachedPurchasable->getQuantity() + $quantity);
 
@@ -126,7 +126,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      */
     public function setPurchasable(PurchasableInterface $purchasable, $quantity)
     {
-        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier()->getPrimary())) {
+        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier()->getFull())) {
 
             $cachedPurchasable->setQuantity($quantity);
 
@@ -140,7 +140,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
             $purchasable->setQuantity($quantity);
             $purchasable->setUnitPrice($purchasable->getPrice());
 
-            $this->data[self::PURCHASABLES_KEY][$purchasable->getIdentifier()->getPrimary()] = $purchasable;
+            $this->data[self::PURCHASABLES_KEY][$purchasable->getIdentifier()->getFull()] = $purchasable;
 
             $this->eventService->dispatch(Events::PURCHASABLE_ADDED);
 
