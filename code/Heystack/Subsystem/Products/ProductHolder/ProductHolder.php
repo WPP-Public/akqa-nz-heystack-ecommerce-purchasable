@@ -161,13 +161,19 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         return isset($this->data[self::PURCHASABLES_KEY][$fullIdentifier]) ? $this->data[self::PURCHASABLES_KEY][$fullIdentifier] : false;
     }
 
-    public function getPurchasableByPrimaryIdentifier(IdentifierInterface $identifier)
+    public function getPurchasablesByPrimaryIdentifier(IdentifierInterface $identifier)
     {
+        $matches = array();
+
         foreach($this->data[self::PURCHASABLES_KEY] as $purchasable)
         {
             if($purchasable->getIdentifier()->isMatch($identifier)){
-                return $purchasable;
+                $matches[] = $purchasable;
             }
+        }
+
+        if(count($matches)){
+            return $matches;
         }
 
         return false;
