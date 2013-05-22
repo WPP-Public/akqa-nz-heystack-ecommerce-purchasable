@@ -19,7 +19,7 @@ services:
 
   product_input_processor:
     class: %product_input_processor.class%
-    arguments: [%product.class%, @state, @event_dispatcher, @productholder]
+    arguments: [%product.class%, @state, @event_dispatcher, @productholder, @dataobject_handler]
     tags:
       - { name: input_processor_handler.processor }
     

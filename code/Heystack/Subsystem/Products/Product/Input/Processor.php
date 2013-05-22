@@ -10,6 +10,7 @@
  */
 namespace Heystack\Subsystem\Products\Product\Input;
 
+use Heystack\Subsystem\Core\DataObjectHandler\DataObjectHandlerInterface;
 use Heystack\Subsystem\Core\Identifier\Identifier;
 use Heystack\Subsystem\Core\Input\ProcessorInterface;
 use Heystack\Subsystem\Core\State\State;
@@ -64,25 +65,32 @@ class Processor implements ProcessorInterface
     protected $purchasableHolder;
 
     /**
+     * @var \Heystack\Subsystem\Core\DataObjectHandler\DataObjectHandlerInterface
+     */
+    protected $dataObjectHandler;
+
+    /**
      * Construct the processor
      *
-     * @param string                                                                          $productClass
-     * @param \Heystack\Subsystem\Core\State\State                                            $state
-     * @param \Symfony\Component\EventDispatcher\EventDispatcher                              $eventDispatcher
-     * @param \Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface $purchasableHolder
+     * @param $productClass
+     * @param State $state
+     * @param EventDispatcher $eventDispatcher
+     * @param PurchasableHolderInterface $purchasableHolder
+     * @param DataObjectHandlerInterface $dataObjectHandler
      */
     public function __construct(
         $productClass,
         State $state,
         EventDispatcher $eventDispatcher,
-        PurchasableHolderInterface $purchasableHolder
+        PurchasableHolderInterface $purchasableHolder,
+        DataObjectHandlerInterface $dataObjectHandler
     ) {
 
         $this->productClass = $productClass;
         $this->state = $state;
         $this->eventDispatcher = $eventDispatcher;
         $this->purchasableHolder = $purchasableHolder;
-
+        $this->dataObjectHandler = $dataObjectHandler;
     }
 
     /**
@@ -107,7 +115,7 @@ class Processor implements ProcessorInterface
 
         if ($id = $request->param('OtherID')) {
 
-            $product = \DataObject::get_by_id($this->productClass, $request->param('OtherID'));
+            $product = $this->dataObjectHandler->getDataObjectById($this->productClass, $request->param('OtherID'));
 
             $quantity = $request->param('ExtraID') ? $request->param('ExtraID') : 1 ;
 
