@@ -205,7 +205,6 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      */
     public function getPurchasables(array $identifiers = null)
     {
-
         $purchasables = array();
 
         if (!is_null($identifiers) && $identifiers == (array) $identifiers) {
@@ -227,7 +226,6 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         }
 
         return $purchasables;
-
     }
 
     /**
