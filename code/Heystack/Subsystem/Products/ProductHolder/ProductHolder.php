@@ -78,10 +78,8 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      */
     public function __construct(State $stateService, EventDispatcherInterface $eventService)
     {
-
         $this->stateService = $stateService;
         $this->eventService = $eventService;
-
     }
     /**
      * @return \Heystack\Subsystem\Core\Identifier\IdentifierInterface
@@ -107,17 +105,11 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      */
     public function addPurchasable(PurchasableInterface $purchasable, $quantity = 1)
     {
-
         if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
-
             $this->setPurchasable($cachedPurchasable, $cachedPurchasable->getQuantity() + $quantity);
-
         } else {
-
             $this->setPurchasable($purchasable, $quantity);
-
         }
-
     }
 
     /**
@@ -165,8 +157,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     {
         $matches = array();
 
-        foreach($this->data[self::PURCHASABLES_KEY] as $purchasable)
-        {
+        foreach($this->data[self::PURCHASABLES_KEY] as $purchasable) {
             if($purchasable->getIdentifier()->isMatch($identifier)){
                 $matches[] = $purchasable;
             }
@@ -234,13 +225,11 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      */
     public function setPurchasables(array $purchasables)
     {
-
         foreach ($purchasables as $purchasable) {
 
             $this->addPurchasable($purchasable);
 
         }
-
     }
 
     /**
