@@ -67,8 +67,6 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      */
     protected $eventService;
 
-    protected $data = array();
-
     /**
      * ProductHolder Constructor. Not directly called, use the ServiceStore to
      * get an instance of this class
