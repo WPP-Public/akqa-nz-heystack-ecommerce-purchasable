@@ -10,6 +10,7 @@
  */
 namespace Heystack\Subsystem\Products\ProductHolder;
 
+use Heystack\Subsystem\Core\Interfaces\HasStateServiceInterface;
 use Heystack\Subsystem\Core\State\State;
 use Heystack\Subsystem\Core\Identifier\IdentifierInterface;
 use Heystack\Subsystem\Core\Identifier\Identifier;
@@ -22,6 +23,7 @@ use Heystack\Subsystem\Core\Storage\Traits\ParentReferenceTrait;
 use Heystack\Subsystem\Core\Traits\HasEventService;
 use Heystack\Subsystem\Core\Interfaces\HasEventServiceInterface;
 
+use Heystack\Subsystem\Core\Traits\HasStateService;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 
@@ -45,12 +47,13 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @package Ecommerce-Products
  *
  */
-class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable, StorableInterface, HasEventServiceInterface
+class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable, StorableInterface, HasEventServiceInterface, HasStateServiceInterface
 {
     use TransactionModifierStateTrait;
     use TransactionModifierSerializeTrait;
     use ParentReferenceTrait;
     use HasEventService;
+    use HasStateService;
 
     /**
      * State Key constant
@@ -112,6 +115,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         } else {
             $this->setPurchasable($purchasable, $quantity);
         }
+
     }
 
     /**
@@ -128,15 +132,15 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
                 $cachedPurchasable->setQuantity($quantity);
 
 
-                $this->eventService->dispatch(Events::PURCHASABLE_CHANGED);
+                $this->getEventService()->dispatch(Events::PURCHASABLE_CHANGED);
 
 
             }
 
         } else {
 
-            $purchasable->addStateService($this->stateService);
-            $purchasable->addEventService($this->eventService);
+            $purchasable->addStateService($this->getStateService());
+            $purchasable->addEventService($this->getEventService());
 
             $purchasable->setQuantity($quantity);
             $purchasable->setUnitPrice($purchasable->getPrice());
@@ -145,7 +149,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
 
 
-            $this->eventService->dispatch(Events::PURCHASABLE_ADDED);
+            $this->getEventService()->dispatch(Events::PURCHASABLE_ADDED);
 
 
         }
@@ -195,7 +199,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
             unset($this->data[self::PURCHASABLES_KEY][$fullIdentifier]);
 
 
-            $this->eventService->dispatch(Events::PURCHASABLE_REMOVED);
+            $this->getEventService()->dispatch(Events::PURCHASABLE_REMOVED);
 
 
         }
@@ -271,7 +275,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
             }
 
             $this->data[self::TOTAL_KEY] = $total;
-            $this->eventService->dispatch(Events::UPDATED);
+            $this->getEventService()->dispatch(Events::UPDATED);
 
 
         }
