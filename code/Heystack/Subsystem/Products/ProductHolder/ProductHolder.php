@@ -19,6 +19,9 @@ use Heystack\Subsystem\Core\Storage\StorableInterface;
 use Heystack\Subsystem\Core\Storage\Backends\SilverStripeOrm\Backend;
 use Heystack\Subsystem\Core\Storage\Traits\ParentReferenceTrait;
 
+use Heystack\Subsystem\Core\Traits\HasEventService;
+use Heystack\Subsystem\Core\Interfaces\HasEventServiceInterface;
+
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 
@@ -42,11 +45,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @package Ecommerce-Products
  *
  */
-class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable, StorableInterface
+class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable, StorableInterface, HasEventServiceInterface
 {
     use TransactionModifierStateTrait;
     use TransactionModifierSerializeTrait;
     use ParentReferenceTrait;
+    use HasEventService;
 
     /**
      * State Key constant
@@ -119,9 +123,15 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     {
         if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
 
-            $cachedPurchasable->setQuantity($quantity);
+            if ($cachedPurchasable->getQuantity() != $quantity) {
 
-            $this->eventService->dispatch(Events::PURCHASABLE_CHANGED);
+                $cachedPurchasable->setQuantity($quantity);
+
+
+                $this->eventService->dispatch(Events::PURCHASABLE_CHANGED);
+
+
+            }
 
         } else {
 
@@ -133,7 +143,10 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
             $this->data[self::PURCHASABLES_KEY][$purchasable->getIdentifier()->getFull()] = $purchasable;
 
+
+
             $this->eventService->dispatch(Events::PURCHASABLE_ADDED);
+
 
         }
 
@@ -181,7 +194,9 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
             unset($this->data[self::PURCHASABLES_KEY][$fullIdentifier]);
 
+
             $this->eventService->dispatch(Events::PURCHASABLE_REMOVED);
+
 
         }
 
@@ -256,8 +271,8 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
             }
 
             $this->data[self::TOTAL_KEY] = $total;
-
             $this->eventService->dispatch(Events::UPDATED);
+
 
         }
 
