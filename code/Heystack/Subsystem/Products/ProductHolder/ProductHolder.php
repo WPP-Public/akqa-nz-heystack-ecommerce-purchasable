@@ -125,35 +125,33 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
      */
     public function setPurchasable(PurchasableInterface $purchasable, $quantity)
     {
-        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
-
-            if ($cachedPurchasable->getQuantity() != $quantity) {
-
-                $cachedPurchasable->setQuantity($quantity);
-
-
-                $this->getEventService()->dispatch(Events::PURCHASABLE_CHANGED);
-
-
-            }
-
+        if ($quantity === 0) {
+            $this->removePurchasable($purchasable->getIdentifier());
         } else {
+            if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
 
-            $purchasable->addStateService($this->getStateService());
-            $purchasable->addEventService($this->getEventService());
+                if ($cachedPurchasable->getQuantity() != $quantity) {
 
-            $purchasable->setQuantity($quantity);
-            $purchasable->setUnitPrice($purchasable->getPrice());
+                    $cachedPurchasable->setQuantity($quantity);
 
-            $this->data[self::PURCHASABLES_KEY][$purchasable->getIdentifier()->getFull()] = $purchasable;
+                    $this->getEventService()->dispatch(Events::PURCHASABLE_CHANGED);
+                }
 
+            } else {
 
+                $eventService = $this->getEventService();
 
-            $this->getEventService()->dispatch(Events::PURCHASABLE_ADDED);
+                $purchasable->addStateService($this->getStateService());
+                $purchasable->addEventService($eventService);
 
+                $purchasable->setQuantity($quantity);
+                $purchasable->setUnitPrice($purchasable->getPrice());
 
+                $this->data[self::PURCHASABLES_KEY][$purchasable->getIdentifier()->getFull()] = $purchasable;
+
+                $eventService->dispatch(Events::PURCHASABLE_ADDED);
+            }
         }
-
     }
 
     /**
@@ -172,13 +170,13 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     {
         $matches = array();
 
-        foreach($this->data[self::PURCHASABLES_KEY] as $purchasable) {
-            if($purchasable->getIdentifier()->isMatch($identifier)){
+        foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
+            if ($purchasable->getIdentifier()->isMatch($identifier)){
                 $matches[] = $purchasable;
             }
         }
 
-        if(count($matches)){
+        if (count($matches)) {
             return $matches;
         }
 
@@ -198,18 +196,14 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
 
             unset($this->data[self::PURCHASABLES_KEY][$fullIdentifier]);
 
-
             $this->getEventService()->dispatch(Events::PURCHASABLE_REMOVED);
-
-
         }
-
     }
 
     /**
      * Get multiple purchasables, if no identifiers are passed in then return all purchasables
      * @param  array|null $identifiers An array of identifiers if passed in
-     * @return array      And array of purchasables
+     * @return \Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface[]  An array of purchasables
      */
     public function getPurchasables(array $identifiers = null)
     {
