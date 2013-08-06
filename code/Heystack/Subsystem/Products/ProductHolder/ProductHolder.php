@@ -63,16 +63,16 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     const TOTAL_KEY = 'total';
 
     /**
-     * Holds the State service
-     * @var State
-     */
-    protected $stateService;
-
-    /**
      * Holds the EventDispatcher Service
      * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
     protected $eventService;
+
+    /**
+     * Stores data for state
+     * @var array
+     */
+    protected $data;
 
     /**
      * ProductHolder Constructor. Not directly called, use the ServiceStore to
@@ -376,5 +376,23 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
             Backend::IDENTIFIER
         );
     }
+
+    /**
+     * @param array $data
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+
 
 }
