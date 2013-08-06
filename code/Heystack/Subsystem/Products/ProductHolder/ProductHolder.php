@@ -10,6 +10,7 @@
  */
 namespace Heystack\Subsystem\Products\ProductHolder;
 
+use Heystack\Subsystem\Core\Interfaces\HasDataInterface;
 use Heystack\Subsystem\Core\Interfaces\HasStateServiceInterface;
 use Heystack\Subsystem\Core\State\State;
 use Heystack\Subsystem\Core\Identifier\IdentifierInterface;
@@ -47,7 +48,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @package Ecommerce-Products
  *
  */
-class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable, StorableInterface, HasEventServiceInterface, HasStateServiceInterface
+class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable, StorableInterface, HasEventServiceInterface, HasStateServiceInterface, HasDataInterface
 {
     use TransactionModifierStateTrait;
     use TransactionModifierSerializeTrait;
