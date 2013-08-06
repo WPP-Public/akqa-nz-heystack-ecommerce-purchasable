@@ -393,6 +393,20 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         return $this->data;
     }
 
+    /**
+     * @param \Heystack\Subsystem\Core\State\State $stateService
+     */
+    public function setStateService(State $stateService)
+    {
+        $this->stateService = $stateService;
+    }
 
+    /**
+     * @return \Heystack\Subsystem\Core\State\State
+     */
+    public function getStateService()
+    {
+        return $this->stateService;
+    }
 
 }
