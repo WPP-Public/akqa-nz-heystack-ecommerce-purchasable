@@ -64,12 +64,6 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     const TOTAL_KEY = 'total';
 
     /**
-     * Holds the EventDispatcher Service
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-     */
-    protected $eventService;
-
-    /**
      * Stores data for state
      * @var array
      */
