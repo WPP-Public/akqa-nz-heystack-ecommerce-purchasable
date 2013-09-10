@@ -119,6 +119,7 @@ class Processor implements ProcessorInterface
 
             $quantity = $request->param('ExtraID') ? $request->param('ExtraID') : 1 ;
 
+
             if ($product instanceof $this->productClass) {
 
                 switch ($request->param('ID')) {
@@ -127,7 +128,7 @@ class Processor implements ProcessorInterface
                         $this->purchasableHolder->addPurchasable($product,$quantity);
                         break;
                     case 'remove':
-                        $this->purchasableHolder->removePurchasable($product->getIdentifier()->getFull());
+                        $this->purchasableHolder->removePurchasable($product->getIdentifier());
                         break;
                     case 'set':
                         $this->purchasableHolder->setPurchasable($product,$quantity);
