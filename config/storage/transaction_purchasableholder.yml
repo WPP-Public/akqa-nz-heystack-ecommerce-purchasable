@@ -4,4 +4,4 @@ flat:
 parent:
 related:
 children:
-  ProductHolder: +ProductHolder
+  PurchasableHolder: +PurchasableHolder

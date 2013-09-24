@@ -1,24 +1,24 @@
 <?php
 /**
- * This file is part of the Ecommerce-Products package
+ * This file is part of the Ecommerce-Purchasable package
  *
- * @package Ecommerce-Products
+ * @package Ecommerce-Purchasable
  */
 
 /**
- * Product Output namespace
+ * Purchasable Output namespace
  */
-namespace Heystack\Subsystem\Products\Product\Output;
+namespace Heystack\Subsystem\Purchasable\Purchasable\Output;
 
 use Heystack\Subsystem\Core\Identifier\Identifier;
 use Heystack\Subsystem\Core\Output\ProcessorInterface;
 use Heystack\Subsystem\Core\State\State;
-use Heystack\Subsystem\Products\ProductHolder\ProductHolder;
+use Heystack\Subsystem\Purchasable\PurchasableHolder\PurchasableHolder;
 
 /**
- * Product output processor
+ * Purchasable output processor
  *
- * Determines what to do with the results from the Product Input Processor.
+ * Determines what to do with the results from the Purchasable Input Processor.
  *
  * @copyright  Heyday
  * @author Glenn Bautista <glenn@heyday.co.nz>
@@ -28,35 +28,33 @@ use Heystack\Subsystem\Products\ProductHolder\ProductHolder;
 class Processor implements ProcessorInterface
 {
     /**
-     * The class name of the Product object
+     * The class name of the Purchasable object
      * @var string
      */
-    private $productClass;
+    private $purchasableClass;
 
     /**
-     * The application state
-     * @var object
+     * @var \Heystack\Subsystem\Core\State\State
      */
     private $state;
 
     /**
-     * This application productholder
-     * @var object
+     * @var \Heystack\Subsystem\Purchasable\PurchasableHolder\PurchasableHolder
      */
-    private $productHolder;
+    private $purchasableHolder;
 
     /**
-     * Creates the Product input processor
+     * Creates the Purchasable output processor
      *
-     * @param string                                                   $productClass
-     * @param \Heystack\Subsystem\Core\State\State                     $state
-     * @param \Heystack\Subsystem\Products\ProductHolder\ProductHolder $productHolder
+     * @param string $purchasableClass
+     * @param \Heystack\Subsystem\Core\State\State $state
+     * @param \Heystack\Subsystem\Purchasable\PurchasableHolder\PurchasableHolder $purchasableHolder
      */
-    public function __construct($productClass, State $state, ProductHolder $productHolder)
+    public function __construct($purchasableClass, State $state, PurchasableHolder $purchasableHolder)
     {
-        $this->productClass = $productClass;
+        $this->purchasableClass = $purchasableClass;
         $this->state = $state;
-        $this->productHolder = $productHolder;
+        $this->purchasableHolder = $purchasableHolder;
     }
 
     /**
@@ -65,13 +63,13 @@ class Processor implements ProcessorInterface
      */
     public function getIdentifier()
     {
-        return new Identifier(strtolower($this->productClass));
+        return new Identifier(strtolower($this->purchasableClass));
     }
 
     /**
      * Determines what to do with the result from the input processor
      * @param  \Controller $controller
-     * @param  type        $result
+     * @param  type $result
      * @return mixed
      */
     public function process(\Controller $controller, $result = null)
@@ -91,5 +89,4 @@ class Processor implements ProcessorInterface
 
         return null;
     }
-
 }

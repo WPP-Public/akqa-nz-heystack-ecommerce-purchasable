@@ -1,41 +1,36 @@
 <?php
 /**
- * This file is part of the Ecommerce-Products package
+ * This file is part of the Ecommerce-Purchasable package
  *
- * @package Ecommerce-Products
+ * @package Ecommerce-Purchasable
  */
 
 /**
- * ProductHolder namespace
+ * PurchasableHolder namespace
  */
-namespace Heystack\Subsystem\Products\ProductHolder;
+namespace Heystack\Subsystem\Purchasable\PurchasableHolder;
 
+use Heystack\Subsystem\Core\Identifier\Identifier;
+use Heystack\Subsystem\Core\Identifier\IdentifierInterface;
 use Heystack\Subsystem\Core\Interfaces\HasDataInterface;
+use Heystack\Subsystem\Core\Interfaces\HasEventServiceInterface;
 use Heystack\Subsystem\Core\Interfaces\HasStateServiceInterface;
 use Heystack\Subsystem\Core\State\State;
-use Heystack\Subsystem\Core\Identifier\IdentifierInterface;
-use Heystack\Subsystem\Core\Identifier\Identifier;
 use Heystack\Subsystem\Core\State\StateableInterface;
-
-use Heystack\Subsystem\Core\Storage\StorableInterface;
 use Heystack\Subsystem\Core\Storage\Backends\SilverStripeOrm\Backend;
+use Heystack\Subsystem\Core\Storage\StorableInterface;
 use Heystack\Subsystem\Core\Storage\Traits\ParentReferenceTrait;
-
 use Heystack\Subsystem\Core\Traits\HasEventService;
-use Heystack\Subsystem\Core\Interfaces\HasEventServiceInterface;
-
 use Heystack\Subsystem\Core\Traits\HasStateService;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
-
-use Heystack\Subsystem\Ecommerce\Transaction\TransactionModifierTypes;
-use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierStateTrait;
 use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
-
+use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierStateTrait;
+use Heystack\Subsystem\Ecommerce\Transaction\TransactionModifierTypes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Purchasable Holder implementation for Ecommerce-Products
+ * Purchasable Holder implementation for Ecommerce-Purchasable
  *
  * This class is our version of a 'shopping cart'. It holds together all the
  * 'purchasables' in for an order. Notice that it also implements serializable
@@ -45,10 +40,17 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @author Stevie Mayhew <stevie@heyday.co.nz>
  * @author Glenn Bautista <glenn@heyday.co.nz>
  * @author Cam Spiers <cameron@heyday.co.nz>
- * @package Ecommerce-Products
+ * @package Ecommerce-Purchasable
  *
  */
-class ProductHolder implements PurchasableHolderInterface, StateableInterface, \Serializable, StorableInterface, HasEventServiceInterface, HasStateServiceInterface, HasDataInterface
+class PurchasableHolder implements
+    PurchasableHolderInterface,
+    StateableInterface,
+    \Serializable,
+    StorableInterface,
+    HasEventServiceInterface,
+    HasStateServiceInterface,
+    HasDataInterface
 {
     use TransactionModifierStateTrait;
     use TransactionModifierSerializeTrait;
@@ -59,7 +61,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     /**
      * State Key constant
      */
-    const IDENTIFIER = 'productholder';
+    const IDENTIFIER = 'purchasableholder';
     const PURCHASABLES_KEY = 'purchasables';
     const TOTAL_KEY = 'total';
 
@@ -70,10 +72,10 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     protected $data;
 
     /**
-     * ProductHolder Constructor. Not directly called, use the ServiceStore to
+     * PurchasableHolder Constructor. Not directly called, use the ServiceStore to
      * get an instance of this class
      *
-     * @param \Heystack\Subsystem\Core\State\State                        $stateService
+     * @param \Heystack\Subsystem\Core\State\State $stateService
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventService
      */
     public function __construct(State $stateService, EventDispatcherInterface $eventService)
@@ -81,6 +83,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         $this->stateService = $stateService;
         $this->eventService = $eventService;
     }
+
     /**
      * @return \Heystack\Subsystem\Core\Identifier\IdentifierInterface
      */
@@ -98,10 +101,10 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     }
 
     /**
-     * Adds a purchasable object to the product holder and increments the
+     * Adds a purchasable object to the purchasable holder and increments the
      * quantity
      * @param PurchasableInterface $purchasable The purchasable object
-     * @param integer              $quantity    quantity of the object to add
+     * @param integer $quantity    quantity of the object to add
      */
     public function addPurchasable(PurchasableInterface $purchasable, $quantity = 1)
     {
@@ -114,9 +117,9 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     }
 
     /**
-     * Sets the quantity of a purchasable object on the product holder
+     * Sets the quantity of a purchasable object on the Purchasable holder
      * @param PurchasableInterface $purchasable The purchasable object
-     * @param int                  $quantity    quantity of the purchasable object to be set
+     * @param int $quantity    quantity of the purchasable object to be set
      */
     public function setPurchasable(PurchasableInterface $purchasable, $quantity)
     {
@@ -166,7 +169,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
         $matches = array();
 
         foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
-            if ($purchasable->getIdentifier()->isMatch($identifier)){
+            if ($purchasable->getIdentifier()->isMatch($identifier)) {
                 $matches[] = $purchasable;
             }
         }
@@ -179,7 +182,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     }
 
     /**
-     * Removes a purchasable from the product holder if found
+     * Removes a purchasable from the Purchasable holder if found
      * @param  \Heystack\Subsystem\Core\Identifier\IdentifierInterface $identifier The identifier of the purchasable to remove
      * @return null
      */
@@ -204,7 +207,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     {
         $purchasables = array();
 
-        if (!is_null($identifiers) && $identifiers == (array) $identifiers) {
+        if (!is_null($identifiers) && $identifiers == (array)$identifiers) {
 
             foreach ($identifiers as $identifier) {
 
@@ -226,7 +229,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     }
 
     /**
-     * Set an array of purchasables on the product holder
+     * Set an array of purchasables on the purchasable holder
      * @param array $purchasables Array of purchasables
      */
     public function setPurchasables(array $purchasables)
@@ -239,7 +242,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     }
 
     /**
-     * Get the current purchasable total on the product holder
+     * Get the current purchasable total on the purchasable holder
      * @return float
      */
     public function getTotal()
@@ -248,7 +251,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     }
 
     /**
-     * Update the purchasable total on the product holder
+     * Update the purchasable total on the purchasable holder
      */
     public function updateTotal()
     {
@@ -292,7 +295,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     }
 
     /**
-     * Get tax exemptions from products if they exist
+     * Get tax exemptions from purchasables if they exist
      */
     public function getTaxExemptTotal()
     {
@@ -317,25 +320,25 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     }
 
     /**
-     * Get the data to store for the productholder
+     * Get the data to store for the purchasableholder
      * @return array
      */
     public function getStorableData()
     {
 
-       $data = array();
+        $data = array();
 
-       $data['id'] = 'ProductHolder';
+        $data['id'] = 'PurchasableHolder';
 
-       $data['flat'] = array(
-           'Total' => $this->getTotal(),
-           'NoOfItems' => count($this->getPurchasables()),
-           'ParentID' => $this->parentReference
-       );
+        $data['flat'] = array(
+            'Total' => $this->getTotal(),
+            'NoOfItems' => count($this->getPurchasables()),
+            'ParentID' => $this->parentReference
+        );
 
-       $data['parent'] = true;
+        $data['parent'] = true;
 
-       return $data;
+        return $data;
 
     }
 
@@ -357,7 +360,7 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     public function getSchemaName()
     {
 
-        return 'ProductHolder';
+        return 'PurchasableHolder';
 
     }
 
@@ -403,5 +406,4 @@ class ProductHolder implements PurchasableHolderInterface, StateableInterface, \
     {
         return $this->stateService;
     }
-
 }

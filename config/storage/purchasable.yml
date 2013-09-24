@@ -1,5 +1,5 @@
-data_provider_id: product
-id: Product
+data_provider_id: purchasable
+id: Purchasable
 flat:
   Name: Varchar(255)
   UnitPrice: Varchar(255)
@@ -7,4 +7,4 @@ flat:
   Total: Varchar(255)
 related:
 parent:
-  Parent: +ProductHolder
+  Parent: +PurchasableHolder

@@ -1,16 +1,16 @@
 <?php
 /**
- * This file is part of the Ecommerce-Products package
+ * This file is part of the Ecommerce-Purchasable package
  *
- * @package Ecommerce-Products
+ * @package Ecommerce-Purchasable
  */
 
 /**
- * Products namespace
+ * DependencyInjection namespace
  */
-namespace Heystack\Subsystem\Products\DependencyInjection;
+namespace Heystack\Subsystem\Purchasable\DependencyInjection;
 
-use Heystack\Subsystem\Products\Config\ContainerConfig;
+use Heystack\Subsystem\Purchasable\Config\ContainerConfig;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -20,14 +20,14 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 /**
  * Container extension for Heystack.
  *
- * If Heystacks services are loaded as an extension (this happens when there is
+ * If Heystack's services are loaded as an extension (this happens when there is
  * a primary services.yml file in mysite/config) then this is the container
- * extension that loads heystacks services.yml
+ * extension that loads heystack's services.yml
  *
  * @copyright  Heyday
  * @author     Cam Spiers <cameron@heyday.co.nz>
  * @author     Glenn Bautista <glenn@heyday.co.nz>
- * @package    Ecommerce-Products
+ * @package    Ecommerce-Purchasable
  *
  */
 class ContainerExtension extends Extension
@@ -46,7 +46,7 @@ class ContainerExtension extends Extension
 
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator(ECOMMERCE_PRODUCTS_BASE_PATH . '/config')
+            new FileLocator(ECOMMERCE_PURCHASABLE_BASE_PATH . '/config')
         );
 
         $loader->load('services.yml');
@@ -56,31 +56,33 @@ class ContainerExtension extends Extension
             $configs
         );
 
-        if (isset($config['product_class'])) {
-            $container->setParameter('product.class', $config['product_class']);
+        if (isset($config['purchasable_class'])) {
+            $container->setParameter('purchasable.class', $config['purchasable_class']);
         }
 
-        if (isset($config['yml_product']) && $container->hasDefinition('product_schema')) {
+        if (isset($config['yml_purchasable']) && $container->hasDefinition('purchasable_schema')) {
 
-            $definition = $container->getDefinition('product_schema');
+            $definition = $container->getDefinition('purchasable_schema');
 
-            $definition->replaceArgument(0, $config['yml_product']);
-
-        }
-
-        if (isset($config['yml_productholder']) && $container->hasDefinition('product_holder_schema')) {
-
-            $definition = $container->getDefinition('product_holder_schema');
-
-            $definition->replaceArgument(0, $config['yml_productholder']);
+            $definition->replaceArgument(0, $config['yml_purchasable']);
 
         }
 
-        if (isset($config['yml_transaction_productholder']) && $container->hasDefinition('transaction_product_holder_schema')) {
+        if (isset($config['yml_purchasableholder']) && $container->hasDefinition('purchasable_holder_schema')) {
 
-            $definition = $container->getDefinition('transaction_product_holder_schema');
+            $definition = $container->getDefinition('purchasable_holder_schema');
 
-            $definition->replaceArgument(0, $config['yml_transaction_productholder']);
+            $definition->replaceArgument(0, $config['yml_purchasableholder']);
+
+        }
+
+        if (isset($config['yml_transaction_purchasableholder'])
+            && $container->hasDefinition('transaction_purchasable_holder_schema')
+        ) {
+
+            $definition = $container->getDefinition('transaction_purchasable_holder_schema');
+
+            $definition->replaceArgument(0, $config['yml_transaction_purchasableholder']);
 
         }
 
@@ -92,7 +94,7 @@ class ContainerExtension extends Extension
      */
     public function getNamespace()
     {
-        return 'products';
+        return 'purchasable';
     }
 
     /**
@@ -110,7 +112,6 @@ class ContainerExtension extends Extension
      */
     public function getAlias()
     {
-        return 'products';
+        return 'purchasable';
     }
-
 }

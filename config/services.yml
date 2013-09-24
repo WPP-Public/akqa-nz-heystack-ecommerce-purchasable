@@ -1,36 +1,36 @@
 parameters:
-  product_input_processor.class: Heystack\Subsystem\Products\Product\Input\Processor
-  product_output_processor.class: Heystack\Subsystem\Products\Product\Output\Processor
-  productholder_subscriber.class: Heystack\Subsystem\Products\ProductHolder\Subscriber
-  productholder.class: Heystack\Subsystem\Products\ProductHolder\ProductHolder
+  purchasable_input_processor.class: Heystack\Subsystem\Purchasable\Purchasable\Input\Processor
+  purchasable_output_processor.class: Heystack\Subsystem\Purchasable\Purchasable\Output\Processor
+  purchasableholder_subscriber.class: Heystack\Subsystem\Purchasable\PurchasableHolder\Subscriber
+  purchasableholder.class: Heystack\Subsystem\Purchasable\PurchasableHolder\PurchasableHolder
   
 services:
 
-  product:
-    class: %product.class%
+  purchasable:
+    class: %purchasable.class%
     tags:
       - { name: ss_orm_backend.data_provider }
 
-  productholder_subscriber:
-    class: %productholder_subscriber.class%
-    arguments: [@event_dispatcher, @productholder, @storage]
+  purchasableholder_subscriber:
+    class: %purchasableholder_subscriber.class%
+    arguments: [@event_dispatcher, @purchasableholder, @storage]
     tags:
       - { name: event_dispatcher.subscriber }
 
-  product_input_processor:
-    class: %product_input_processor.class%
-    arguments: [%product.class%, @state, @event_dispatcher, @productholder, @dataobject_handler]
+  purchasable_input_processor:
+    class: %purchasable_input_processor.class%
+    arguments: [%purchasable.class%, @state, @event_dispatcher, @purchasableholder, @dataobject_handler]
     tags:
       - { name: input_processor_handler.processor }
     
-  product_output_processor:
-    class: %product_output_processor.class%
-    arguments: [%product.class%, @state, @productholder]
+  purchasable_output_processor:
+    class: %purchasable_output_processor.class%
+    arguments: [%purchasable.class%, @state, @purchasableholder]
     tags:
       - { name: output_processor_handler.processor }
 
-  productholder:
-    class: %productholder.class%
+  purchasableholder:
+    class: %purchasableholder.class%
     arguments: [ @state, @event_dispatcher ]
     calls:
       - [ restoreState ]
@@ -38,20 +38,20 @@ services:
       - { name: ss_orm_backend.data_provider }
       - { name: transaction.modifier }
 
-  product_schema:
+  purchasable_schema:
     class: %yaml_data_object_schema.class%
-    arguments: [ ecommerce-products/config/storage/product.yml, @state_global ]
+    arguments: [ ecommerce-purchasable/config/storage/purchasable.yml, @state_global ]
     tags:
       - { name: dataobject_generator.schema }
       
-  product_holder_schema:
+  purchasable_holder_schema:
     class: %yaml_data_object_schema.class%
-    arguments: [ ecommerce-products/config/storage/productholder.yml, @state_global ]
+    arguments: [ ecommerce-purchasable/config/storage/purchasableholder.yml, @state_global ]
     tags:
       - { name: dataobject_generator.schema }
       
-  transaction_product_holder_schema:
+  transaction_purchasable_holder_schema:
     class: %yaml_data_object_schema.class%
-    arguments: [ ecommerce-products/config/storage/transaction_productholder.yml, @state_global ]
+    arguments: [ ecommerce-purchasable/config/storage/transaction_purchasableholder.yml, @state_global ]
     tags:
       - { name: dataobject_generator.schema }

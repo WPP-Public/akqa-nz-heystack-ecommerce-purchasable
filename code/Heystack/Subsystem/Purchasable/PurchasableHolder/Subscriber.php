@@ -1,14 +1,14 @@
 <?php
 /**
- * This file is part of the Ecommerce-Products package
+ * This file is part of the Ecommerce-Purchasable package
  *
- * @package Ecommerce-Products
+ * @package Ecommerce-Purchasable
  */
 
 /**
- * ProductHolder namespace
+ * PurchasableHolder namespace
  */
-namespace Heystack\Subsystem\Products\ProductHolder;
+namespace Heystack\Subsystem\Purchasable\PurchasableHolder;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -24,16 +24,16 @@ use Heystack\Subsystem\Core\Storage\Backends\SilverStripeOrm\Backend;
 use Heystack\Subsystem\Core\Storage\Event as StorageEvent;
 
 /**
- * ProductHolder Subscriber
+ * PurchasableHolder Subscriber
  *
  * Handles both subscribing to events and acting on those events for all
- * information which is related to the productholder.
+ * information which is related to the purchasableholder.
  *
  * @copyright  Heyday
  * @author Stevie Mayhew <stevie@heyday.co.nz>
  * @author Glenn Bautista <glenn@heyday.co.nz>
  * @author Cam Spiers <cameron@heyday.co.nz>
- * @package Ecommerce-Products
+ * @package Ecommerce-Purchasable
  *
  */
 class Subscriber implements EventSubscriberInterface
@@ -82,7 +82,7 @@ class Subscriber implements EventSubscriberInterface
             Events::PURCHASABLE_REMOVED          => array('onRemove', 100),
             CurrencyEvents::CHANGED              => array('onCurrencyChange', 0),
             Backend::IDENTIFIER . '.' . TransactionEvents::STORED  => array('onTransactionStored', 0),
-            Backend::IDENTIFIER . '.' . Events::STORED  => array('onProductHolderStored', 0)
+            Backend::IDENTIFIER . '.' . Events::STORED  => array('onPurchasableHolderStored', 0)
         );
     }
 
@@ -144,7 +144,7 @@ class Subscriber implements EventSubscriberInterface
      * Stores the purchasables which are attached to the purchasable holder
      * @param \Heystack\Subsystem\Core\Storage\Event $storageEvent
      */
-    public function onProductHolderStored(StorageEvent $storageEvent)
+    public function onPurchasableHolderStored(StorageEvent $storageEvent)
     {
 
         $parentReference = $storageEvent->getParentReference();
@@ -163,5 +163,4 @@ class Subscriber implements EventSubscriberInterface
         }
 
     }
-
 }

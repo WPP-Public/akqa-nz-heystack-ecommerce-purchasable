@@ -1,6 +1,6 @@
 <?php
 
-namespace Heystack\Subsystem\Products\Product;
+namespace Heystack\Subsystem\Purchasable\Purchasable;
 
 use Heystack\Subsystem\Core\Identifier\Identifier;
 use Heystack\Subsystem\Core\State\State;
@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Class DataObjectTrait
- * @package Heystack\Subsystem\Products\Product
+ * @package Heystack\Subsystem\Purchasable\Purchasable
  */
 trait DataObjectTrait
 {
