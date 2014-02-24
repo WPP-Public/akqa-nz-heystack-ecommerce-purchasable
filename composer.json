@@ -1,19 +1,19 @@
 {
     "name": "heystack/ecommerce-purchasable",
     "type": "silverstripe-module",
-    "require": {        
+    "require": {
         "php": ">=5.4.0",
         "composer/installers": "~1.0.0"
     },
     "autoload": {
-        "psr-0": {
-            "Heystack": "code/"
+        "psr-4": {
+            "Heystack\\Subsystem\\Purchasable\\": "src/"
         }
     },
     "extra": {
         "branch-alias": {
             "dev-master": "3.0.x-dev",
-	        "dev-2.1": "2.1.x-dev",
+            "dev-2.1": "2.1.x-dev",
             "dev-1.0": "1.0.x-dev"
         }
     }
