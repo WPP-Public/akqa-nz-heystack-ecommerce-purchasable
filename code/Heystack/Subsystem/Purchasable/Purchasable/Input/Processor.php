@@ -140,16 +140,16 @@ class Processor implements ProcessorInterface
 
                 $this->purchasableHolder->saveState();
 
-                return array(
+                return [
                     'Success' => true
-                );
+                ];
 
             }
 
         }
 
-        return array(
+        return [
             'Success' => false
-        );
+        ];
     }
 }

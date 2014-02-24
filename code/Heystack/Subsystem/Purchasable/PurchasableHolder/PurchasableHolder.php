@@ -166,7 +166,7 @@ class PurchasableHolder implements
 
     public function getPurchasablesByPrimaryIdentifier(IdentifierInterface $identifier)
     {
-        $matches = array();
+        $matches = [];
 
         foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
             if ($purchasable->getIdentifier()->isMatch($identifier)) {
@@ -205,7 +205,7 @@ class PurchasableHolder implements
      */
     public function getPurchasables(array $identifiers = null)
     {
-        $purchasables = array();
+        $purchasables = [];
 
         if (!is_null($identifiers) && $identifiers == (array)$identifiers) {
 
@@ -326,15 +326,15 @@ class PurchasableHolder implements
     public function getStorableData()
     {
 
-        $data = array();
+        $data = [];
 
         $data['id'] = 'PurchasableHolder';
 
-        $data['flat'] = array(
+        $data['flat'] = [
             'Total' => $this->getTotal(),
             'NoOfItems' => count($this->getPurchasables()),
             'ParentID' => $this->parentReference
-        );
+        ];
 
         $data['parent'] = true;
 
@@ -370,9 +370,9 @@ class PurchasableHolder implements
      */
     public function getStorableBackendIdentifiers()
     {
-        return array(
+        return [
             Backend::IDENTIFIER
-        );
+        ];
     }
 
     /**
