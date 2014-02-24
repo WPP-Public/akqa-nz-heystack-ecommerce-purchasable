@@ -6,19 +6,19 @@ The ecommerce purchasable module provides a basic implementation of the Purchasa
 * Heystack
 * Ecommerce Core
 
-## Purchasable Holder `Heystack\Subsystem\Purchasable\PurchasableHolder\PurchasableHolder`
+## Purchasable Holder `Heystack\Purchasable\PurchasableHolder\PurchasableHolder`
 
-The Purchasable Holder class implements the Purchasable Holder Interface (`Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface`). The class is a Transaction Modifier whose main function is to keep track of all the purchasables that the end-user has selected for purchase. This class usually acts as a shopping cart.
+The Purchasable Holder class implements the Purchasable Holder Interface (`Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface`). The class is a Transaction Modifier whose main function is to keep track of all the purchasables that the end-user has selected for purchase. This class usually acts as a shopping cart.
 
 ### Purchasable
 
-The Purchasable Interface (`Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface`) is defined in the ecommerce core module but is used extensively in the ecommerce purchasable module. The main purpose of the Purchasable Holder is to keep track of the purchasables involved in the transaction. 
+The Purchasable Interface (`Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface`) is defined in the ecommerce core module but is used extensively in the ecommerce purchasable module. The main purpose of the Purchasable Holder is to keep track of the purchasables involved in the transaction. 
 
 The Purchasable Interface is not implemented in any of the modules. It is left to the developer to implement the interface and customise the class as needed. This is intentional to provide maximum flexibility. It could be a descendant of SiteTree, or DataObject, or both in the same application, or any class for that matter as long as it implements the interface.
 
 ### Subscriber and Events
 
-The Purchasable Holder's Subscriber `Heystack\Subsystem\Purchasable\PurchasableHolder\Subscriber` is notified whenever one of the events it subscribes to is dispatched. A method is called that corresponds to each subscribed event.
+The Purchasable Holder's Subscriber `Heystack\Purchasable\PurchasableHolder\Subscriber` is notified whenever one of the events it subscribes to is dispatched. A method is called that corresponds to each subscribed event.
 
 #### Change Events
 

@@ -8,7 +8,7 @@
 /**
  * Purchasable namespace
  */
-namespace Heystack\Subsystem\Purchasable;
+namespace Heystack\Purchasable;
 
 /**
  * Holds constants corresponding to the services defined in the services.yml file

@@ -8,25 +8,25 @@
 /**
  * PurchasableHolder namespace
  */
-namespace Heystack\Subsystem\Purchasable\PurchasableHolder;
+namespace Heystack\Purchasable\PurchasableHolder;
 
-use Heystack\Subsystem\Core\Identifier\Identifier;
-use Heystack\Subsystem\Core\Identifier\IdentifierInterface;
-use Heystack\Subsystem\Core\Interfaces\HasDataInterface;
-use Heystack\Subsystem\Core\Interfaces\HasEventServiceInterface;
-use Heystack\Subsystem\Core\Interfaces\HasStateServiceInterface;
-use Heystack\Subsystem\Core\State\State;
-use Heystack\Subsystem\Core\State\StateableInterface;
-use Heystack\Subsystem\Core\Storage\Backends\SilverStripeOrm\Backend;
-use Heystack\Subsystem\Core\Storage\StorableInterface;
-use Heystack\Subsystem\Core\Storage\Traits\ParentReferenceTrait;
-use Heystack\Subsystem\Core\Traits\HasEventService;
-use Heystack\Subsystem\Core\Traits\HasStateService;
-use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
-use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
-use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
-use Heystack\Subsystem\Ecommerce\Transaction\Traits\TransactionModifierStateTrait;
-use Heystack\Subsystem\Ecommerce\Transaction\TransactionModifierTypes;
+use Heystack\Core\Identifier\Identifier;
+use Heystack\Core\Identifier\IdentifierInterface;
+use Heystack\Core\Interfaces\HasDataInterface;
+use Heystack\Core\Interfaces\HasEventServiceInterface;
+use Heystack\Core\Interfaces\HasStateServiceInterface;
+use Heystack\Core\State\State;
+use Heystack\Core\State\StateableInterface;
+use Heystack\Core\Storage\Backends\SilverStripeOrm\Backend;
+use Heystack\Core\Storage\StorableInterface;
+use Heystack\Core\Storage\Traits\ParentReferenceTrait;
+use Heystack\Core\Traits\HasEventService;
+use Heystack\Core\Traits\HasStateService;
+use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
+use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
+use Heystack\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
+use Heystack\Ecommerce\Transaction\Traits\TransactionModifierStateTrait;
+use Heystack\Ecommerce\Transaction\TransactionModifierTypes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -75,7 +75,7 @@ class PurchasableHolder implements
      * PurchasableHolder Constructor. Not directly called, use the ServiceStore to
      * get an instance of this class
      *
-     * @param \Heystack\Subsystem\Core\State\State $stateService
+     * @param \Heystack\Core\State\State $stateService
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventService
      */
     public function __construct(State $stateService, EventDispatcherInterface $eventService)
@@ -85,7 +85,7 @@ class PurchasableHolder implements
     }
 
     /**
-     * @return \Heystack\Subsystem\Core\Identifier\IdentifierInterface
+     * @return \Heystack\Core\Identifier\IdentifierInterface
      */
     public function getIdentifier()
     {
@@ -154,7 +154,7 @@ class PurchasableHolder implements
 
     /**
      * Returns a purchasable by its identifier
-     * @param  \Heystack\Subsystem\Core\Identifier\IdentifierInterface $identifier The identifier of the purchasable
+     * @param  \Heystack\Core\Identifier\IdentifierInterface $identifier The identifier of the purchasable
      * @return PurchasableInterface|false The Purchasable object if found
      */
     public function getPurchasable(IdentifierInterface $identifier)
@@ -183,7 +183,7 @@ class PurchasableHolder implements
 
     /**
      * Removes a purchasable from the Purchasable holder if found
-     * @param  \Heystack\Subsystem\Core\Identifier\IdentifierInterface $identifier The identifier of the purchasable to remove
+     * @param  \Heystack\Core\Identifier\IdentifierInterface $identifier The identifier of the purchasable to remove
      * @return null
      */
     public function removePurchasable(IdentifierInterface $identifier)
@@ -201,7 +201,7 @@ class PurchasableHolder implements
     /**
      * Get multiple purchasables, if no identifiers are passed in then return all purchasables
      * @param  array|null $identifiers An array of identifiers if passed in
-     * @return \Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableInterface[]  An array of purchasables
+     * @return \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface[]  An array of purchasables
      */
     public function getPurchasables(array $identifiers = null)
     {
@@ -392,7 +392,7 @@ class PurchasableHolder implements
     }
 
     /**
-     * @param \Heystack\Subsystem\Core\State\State $stateService
+     * @param \Heystack\Core\State\State $stateService
      */
     public function setStateService(State $stateService)
     {
@@ -400,7 +400,7 @@ class PurchasableHolder implements
     }
 
     /**
-     * @return \Heystack\Subsystem\Core\State\State
+     * @return \Heystack\Core\State\State
      */
     public function getStateService()
     {

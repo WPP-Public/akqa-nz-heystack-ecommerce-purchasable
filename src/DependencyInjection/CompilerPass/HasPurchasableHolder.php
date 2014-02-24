@@ -1,13 +1,13 @@
 <?php
 
-namespace Heystack\Subsystem\Purchasable\DependencyInjection\CompilerPass;
+namespace Heystack\Purchasable\DependencyInjection\CompilerPass;
 
-use Heystack\Subsystem\Core\DependencyInjection\CompilerPass\HasService;
-use Heystack\Subsystem\Purchasable\Services;
+use Heystack\Core\DependencyInjection\CompilerPass\HasService;
+use Heystack\Purchasable\Services;
 
 /**
  * Class HasPurchasableHolder
- * @package Heystack\Subsystem\Purchasable\DependencyInjection\CompilerPass
+ * @package Heystack\Purchasable\DependencyInjection\CompilerPass
  */
 class HasPurchasableHolder extends HasService
 {

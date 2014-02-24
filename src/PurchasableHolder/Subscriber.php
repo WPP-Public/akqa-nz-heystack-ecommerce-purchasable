@@ -8,20 +8,20 @@
 /**
  * PurchasableHolder namespace
  */
-namespace Heystack\Subsystem\Purchasable\PurchasableHolder;
+namespace Heystack\Purchasable\PurchasableHolder;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use Heystack\Subsystem\Ecommerce\Currency\Events as CurrencyEvents;
+use Heystack\Ecommerce\Currency\Events as CurrencyEvents;
 
-use Heystack\Subsystem\Ecommerce\Transaction\Events as TransactionEvents;
+use Heystack\Ecommerce\Transaction\Events as TransactionEvents;
 
-use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
+use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 
-use Heystack\Subsystem\Core\Storage\Storage;
-use Heystack\Subsystem\Core\Storage\Backends\SilverStripeOrm\Backend;
-use Heystack\Subsystem\Core\Storage\Event as StorageEvent;
+use Heystack\Core\Storage\Storage;
+use Heystack\Core\Storage\Backends\SilverStripeOrm\Backend;
+use Heystack\Core\Storage\Event as StorageEvent;
 
 /**
  * PurchasableHolder Subscriber
@@ -60,8 +60,8 @@ class Subscriber implements EventSubscriberInterface
     /**
      * Construct the subscriber
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface                     $eventDispatcher
-     * @param \Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface $purchasableHolder
-     * @param \Heystack\Subsystem\Core\Storage\Storage                                        $storageService
+     * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface $purchasableHolder
+     * @param \Heystack\Core\Storage\Storage                                        $storageService
      */
     public function __construct(EventDispatcherInterface $eventDispatcher, PurchasableHolderInterface $purchasableHolder, Storage $storageService)
     {
@@ -142,7 +142,7 @@ class Subscriber implements EventSubscriberInterface
 
     /**
      * Stores the purchasables which are attached to the purchasable holder
-     * @param \Heystack\Subsystem\Core\Storage\Event $storageEvent
+     * @param \Heystack\Core\Storage\Event $storageEvent
      */
     public function onPurchasableHolderStored(StorageEvent $storageEvent)
     {

@@ -1,8 +1,8 @@
 parameters:
-  purchasable_input_processor.class: Heystack\Subsystem\Purchasable\Purchasable\Input\Processor
-  purchasable_output_processor.class: Heystack\Subsystem\Purchasable\Purchasable\Output\Processor
-  purchasableholder_subscriber.class: Heystack\Subsystem\Purchasable\PurchasableHolder\Subscriber
-  purchasableholder.class: Heystack\Subsystem\Purchasable\PurchasableHolder\PurchasableHolder
+  purchasable_input_processor.class: Heystack\Purchasable\Purchasable\Input\Processor
+  purchasable_output_processor.class: Heystack\Purchasable\Purchasable\Output\Processor
+  purchasableholder_subscriber.class: Heystack\Purchasable\PurchasableHolder\Subscriber
+  purchasableholder.class: Heystack\Purchasable\PurchasableHolder\PurchasableHolder
   
 services:
 

@@ -5,7 +5,7 @@
  * @package Ecommerce-Purchasable
  */
 
-namespace Heystack\Subsystem\Purchasable\Config;
+namespace Heystack\Purchasable\Config;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

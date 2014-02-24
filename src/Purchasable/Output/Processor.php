@@ -8,12 +8,12 @@
 /**
  * Purchasable Output namespace
  */
-namespace Heystack\Subsystem\Purchasable\Purchasable\Output;
+namespace Heystack\Purchasable\Purchasable\Output;
 
-use Heystack\Subsystem\Core\Identifier\Identifier;
-use Heystack\Subsystem\Core\Output\ProcessorInterface;
-use Heystack\Subsystem\Core\State\State;
-use Heystack\Subsystem\Purchasable\PurchasableHolder\PurchasableHolder;
+use Heystack\Core\Identifier\Identifier;
+use Heystack\Core\Output\ProcessorInterface;
+use Heystack\Core\State\State;
+use Heystack\Purchasable\PurchasableHolder\PurchasableHolder;
 
 /**
  * Purchasable output processor
@@ -34,12 +34,12 @@ class Processor implements ProcessorInterface
     private $purchasableClass;
 
     /**
-     * @var \Heystack\Subsystem\Core\State\State
+     * @var \Heystack\Core\State\State
      */
     private $state;
 
     /**
-     * @var \Heystack\Subsystem\Purchasable\PurchasableHolder\PurchasableHolder
+     * @var \Heystack\Purchasable\PurchasableHolder\PurchasableHolder
      */
     private $purchasableHolder;
 
@@ -47,8 +47,8 @@ class Processor implements ProcessorInterface
      * Creates the Purchasable output processor
      *
      * @param string $purchasableClass
-     * @param \Heystack\Subsystem\Core\State\State $state
-     * @param \Heystack\Subsystem\Purchasable\PurchasableHolder\PurchasableHolder $purchasableHolder
+     * @param \Heystack\Core\State\State $state
+     * @param \Heystack\Purchasable\PurchasableHolder\PurchasableHolder $purchasableHolder
      */
     public function __construct($purchasableClass, State $state, PurchasableHolder $purchasableHolder)
     {
@@ -59,7 +59,7 @@ class Processor implements ProcessorInterface
 
     /**
      * Get the identifier for this processor
-     * @return \Heystack\Subsystem\Core\Identifier\Identifier
+     * @return \Heystack\Core\Identifier\Identifier
      */
     public function getIdentifier()
     {

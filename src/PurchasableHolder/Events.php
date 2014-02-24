@@ -8,7 +8,7 @@
 /**
  * PurchasableHolder namespace
  */
-namespace Heystack\Subsystem\Purchasable\PurchasableHolder;
+namespace Heystack\Purchasable\PurchasableHolder;
 
 /**
  * Events holds constant references to triggerable dispatch events.

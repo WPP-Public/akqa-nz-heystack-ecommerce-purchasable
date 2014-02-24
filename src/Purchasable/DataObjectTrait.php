@@ -1,18 +1,18 @@
 <?php
 
-namespace Heystack\Subsystem\Purchasable\Purchasable;
+namespace Heystack\Purchasable\Purchasable;
 
-use Heystack\Subsystem\Core\Identifier\Identifier;
-use Heystack\Subsystem\Core\State\State;
+use Heystack\Core\Identifier\Identifier;
+use Heystack\Core\State\State;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Class DataObjectTrait
- * @package Heystack\Subsystem\Purchasable\Purchasable
+ * @package Heystack\Purchasable\Purchasable
  */
 trait DataObjectTrait
 {
-    use \Heystack\Subsystem\Core\State\Traits\DataObjectSerializableTrait;
+    use \Heystack\Core\State\Traits\DataObjectSerializableTrait;
 
     /**
      * @var
@@ -23,7 +23,7 @@ trait DataObjectTrait
      */
     private $eventService;
     /**
-     * @return \Heystack\Subsystem\Core\Identifier\Identifier
+     * @return \Heystack\Core\Identifier\Identifier
      */
     public function getIdentifier()
     {
@@ -31,7 +31,7 @@ trait DataObjectTrait
     }
 
     /**
-     * @param \Heystack\Subsystem\Core\State\State $stateService
+     * @param \Heystack\Core\State\State $stateService
      */
     public function addStateService(State $stateService)
     {

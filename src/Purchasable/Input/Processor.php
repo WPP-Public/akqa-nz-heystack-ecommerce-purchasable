@@ -8,13 +8,13 @@
 /**
  * Purchasable Input namespace
  */
-namespace Heystack\Subsystem\Purchasable\Purchasable\Input;
+namespace Heystack\Purchasable\Purchasable\Input;
 
-use Heystack\Subsystem\Core\DataObjectHandler\DataObjectHandlerInterface;
-use Heystack\Subsystem\Core\Identifier\Identifier;
-use Heystack\Subsystem\Core\Input\ProcessorInterface;
-use Heystack\Subsystem\Core\State\State;
-use Heystack\Subsystem\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
+use Heystack\Core\DataObjectHandler\DataObjectHandlerInterface;
+use Heystack\Core\Identifier\Identifier;
+use Heystack\Core\Input\ProcessorInterface;
+use Heystack\Core\State\State;
+use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -65,7 +65,7 @@ class Processor implements ProcessorInterface
     protected $purchasableHolder;
 
     /**
-     * @var \Heystack\Subsystem\Core\DataObjectHandler\DataObjectHandlerInterface
+     * @var \Heystack\Core\DataObjectHandler\DataObjectHandlerInterface
      */
     protected $dataObjectHandler;
 
@@ -95,7 +95,7 @@ class Processor implements ProcessorInterface
 
     /**
      * Get the identifier for this processor
-     * @return \Heystack\Subsystem\Core\Identifier\Identifier
+     * @return \Heystack\Core\Identifier\Identifier
      */
     public function getIdentifier()
     {

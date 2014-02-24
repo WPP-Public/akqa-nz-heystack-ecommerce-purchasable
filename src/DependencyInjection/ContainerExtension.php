@@ -8,9 +8,9 @@
 /**
  * DependencyInjection namespace
  */
-namespace Heystack\Subsystem\Purchasable\DependencyInjection;
+namespace Heystack\Purchasable\DependencyInjection;
 
-use Heystack\Subsystem\Purchasable\Config\ContainerConfig;
+use Heystack\Purchasable\Config\ContainerConfig;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
