@@ -10,7 +10,6 @@
  */
 namespace Heystack\Purchasable\Purchasable\Input;
 
-use Heystack\Core\DataObjectHandler\DataObjectHandlerInterface;
 use Heystack\Core\Identifier\Identifier;
 use Heystack\Core\Input\ProcessorInterface;
 use Heystack\Core\State\State;
@@ -65,32 +64,24 @@ class Processor implements ProcessorInterface
     protected $purchasableHolder;
 
     /**
-     * @var \Heystack\Core\DataObjectHandler\DataObjectHandlerInterface
-     */
-    protected $dataObjectHandler;
-
-    /**
      * Construct the processor
      *
      * @param $purchasableClass
      * @param State $state
      * @param EventDispatcher $eventDispatcher
      * @param PurchasableHolderInterface $purchasableHolder
-     * @param DataObjectHandlerInterface $dataObjectHandler
      */
     public function __construct(
         $purchasableClass,
         State $state,
         EventDispatcher $eventDispatcher,
-        PurchasableHolderInterface $purchasableHolder,
-        DataObjectHandlerInterface $dataObjectHandler
+        PurchasableHolderInterface $purchasableHolder
     ) {
 
         $this->purchasableClass = $purchasableClass;
         $this->state = $state;
         $this->eventDispatcher = $eventDispatcher;
         $this->purchasableHolder = $purchasableHolder;
-        $this->dataObjectHandler = $dataObjectHandler;
     }
 
     /**
@@ -114,13 +105,9 @@ class Processor implements ProcessorInterface
     {
         if ($id = $request->param('OtherID')) {
 
-            $purchasable = $this->dataObjectHandler->getDataObjectById(
-                $this->purchasableClass,
-                $request->param('OtherID')
-            );
+            $purchasable = \DataList::create($this->purchasableClass)->byID($request->param('OtherID'));
 
             $quantity = $request->param('ExtraID') ? $request->param('ExtraID') : 1;
-
 
             if ($purchasable instanceof $this->purchasableClass) {
 

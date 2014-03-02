@@ -20,8 +20,8 @@ use Heystack\Core\State\StateableInterface;
 use Heystack\Core\Storage\Backends\SilverStripeOrm\Backend;
 use Heystack\Core\Storage\StorableInterface;
 use Heystack\Core\Storage\Traits\ParentReferenceTrait;
-use Heystack\Core\Traits\HasEventService;
-use Heystack\Core\Traits\HasStateService;
+use Heystack\Core\Traits\HasEventServiceTrait;
+use Heystack\Core\Traits\HasStateServiceTrait;
 use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
@@ -55,8 +55,8 @@ class PurchasableHolder implements
     use TransactionModifierStateTrait;
     use TransactionModifierSerializeTrait;
     use ParentReferenceTrait;
-    use HasEventService;
-    use HasStateService;
+    use HasEventServiceTrait;
+    use HasStateServiceTrait;
 
     /**
      * State Key constant

@@ -19,7 +19,7 @@ services:
 
   purchasable_input_processor:
     class: %purchasable_input_processor.class%
-    arguments: [%purchasable.class%, @state, @event_dispatcher, @purchasableholder, @dataobject_handler]
+    arguments: [%purchasable.class%, @state, @event_dispatcher, @purchasableholder]
     tags:
       - { name: input_processor_handler.processor }
     
