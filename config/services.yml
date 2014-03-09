@@ -32,18 +32,21 @@ services:
 
   purchasable_schema:
     class: %yaml_data_object_schema.class%
-    arguments: [ ecommerce-purchasable/config/storage/purchasable.yml, @state_global ]
+    arguments: [ ecommerce-purchasable/config/storage/purchasable.yml ]
     tags:
-      - { name: dataobject_generator.schema }
+      - { name: schema }
+      - { name: autoinject, arguments: true }
       
   purchasable_holder_schema:
     class: %yaml_data_object_schema.class%
-    arguments: [ ecommerce-purchasable/config/storage/purchasableholder.yml, @state_global ]
+    arguments: [ ecommerce-purchasable/config/storage/purchasableholder.yml ]
     tags:
-      - { name: dataobject_generator.schema }
+      - { name: schema }
+      - { name: autoinject, arguments: true }
       
   transaction_purchasable_holder_schema:
     class: %yaml_data_object_schema.class%
-    arguments: [ ecommerce-purchasable/config/storage/transaction_purchasableholder.yml, @state_global ]
+    arguments: [ ecommerce-purchasable/config/storage/transaction_purchasableholder.yml ]
     tags:
-      - { name: dataobject_generator.schema }
+      - { name: schema }
+      - { name: autoinject, arguments: true }
