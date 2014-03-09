@@ -1,9 +1,7 @@
-data_provider_id: purchasableholder
 id: PurchasableHolder
 flat:
   Total: Varchar(255)
   NoOfItems: Varchar(3)
-related:
 parent:
   Parent: +Transaction
 children:

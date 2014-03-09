@@ -13,9 +13,10 @@ namespace Heystack\Purchasable\Purchasable\Input;
 use Heystack\Core\Identifier\Identifier;
 use Heystack\Core\Input\ProcessorInterface;
 use Heystack\Core\State\State;
+use Heystack\Ecommerce\Exception\MoneyOverflowException;
 use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
-
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use SebastianBergmann\Money\InvalidArgumentException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Process input for the purchasable system.
@@ -43,23 +44,21 @@ class Processor implements ProcessorInterface
     /**
      * The state interface for Heystack
      *
-     * @uses State
-     * @var object State
+     * @var \Heystack\Core\State\State
      */
     protected $state;
 
     /**
      * The event dispatcher for Heystack
-     * @see EventDispatcher
      *
-     * @var object
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
     protected $eventDispatcher;
 
     /**
      * PurchasableHolderInterface
      *
-     * @var Interface
+     * @var \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface
      */
     protected $purchasableHolder;
 
@@ -67,14 +66,14 @@ class Processor implements ProcessorInterface
      * Construct the processor
      *
      * @param $purchasableClass
-     * @param State $state
-     * @param EventDispatcher $eventDispatcher
-     * @param PurchasableHolderInterface $purchasableHolder
+     * @param \Heystack\Core\State\State $state
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+     * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface $purchasableHolder
      */
     public function __construct(
         $purchasableClass,
         State $state,
-        EventDispatcher $eventDispatcher,
+        EventDispatcherInterface $eventDispatcher,
         PurchasableHolderInterface $purchasableHolder
     ) {
 
@@ -103,40 +102,59 @@ class Processor implements ProcessorInterface
      */
     public function process(\SS_HTTPRequest $request)
     {
-        if ($id = $request->param('OtherID')) {
+        // TODO: Ensure PUT or POST.
+        try {
 
-            $purchasable = \DataList::create($this->purchasableClass)->byID($request->param('OtherID'));
+            if ($id = $request->param('OtherID')) {
 
-            $quantity = $request->param('ExtraID') ? $request->param('ExtraID') : 1;
+                $purchasable = \DataList::create($this->purchasableClass)->byID($request->param('OtherID'));
 
-            if ($purchasable instanceof $this->purchasableClass) {
+                $quantity = $request->param('ExtraID') ? $request->param('ExtraID') : 1;
 
-                switch ($request->param('ID')) {
+                if ($purchasable instanceof $this->purchasableClass) {
 
-                    case 'add':
-                        $this->purchasableHolder->addPurchasable($purchasable, $quantity);
-                        break;
-                    case 'remove':
-                        $this->purchasableHolder->removePurchasable($purchasable->getIdentifier());
-                        break;
-                    case 'set':
-                        $this->purchasableHolder->setPurchasable($purchasable, $quantity);
-                        break;
+                    switch ($request->param('ID')) {
+
+                        case 'add':
+                            $this->purchasableHolder->addPurchasable($purchasable, $quantity);
+                            break;
+                        case 'remove':
+                            $this->purchasableHolder->removePurchasable($purchasable->getIdentifier());
+                            break;
+                        case 'set':
+                            $this->purchasableHolder->setPurchasable($purchasable, $quantity);
+                            break;
+
+                    }
+
+                    $this->purchasableHolder->saveState();
+
+                    return [
+                        'Success' => true
+                    ];
 
                 }
 
-                $this->purchasableHolder->saveState();
-
-                return [
-                    'Success' => true
-                ];
-
             }
 
+        } catch (MoneyOverflowException $e) {
+            return $this->boundsExceeded();
+        } catch (\OverflowException $e) {
+            return $this->boundsExceeded();
+        } catch (InvalidArgumentException $e) {
+            return $this->boundsExceeded();
         }
 
         return [
             'Success' => false
+        ];
+    }
+    
+    protected function boundsExceeded()
+    {
+        return [
+            'Success' => false,
+            'Message' => 'Cart bounds exceeded'
         ];
     }
 }

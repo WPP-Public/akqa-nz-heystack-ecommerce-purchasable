@@ -4,7 +4,8 @@ namespace Heystack\Purchasable\Purchasable;
 
 use Heystack\Core\Identifier\Identifier;
 use Heystack\Core\State\State;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Heystack\Core\State\Traits\DataObjectSerializableTrait;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class DataObjectTrait
@@ -12,7 +13,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 trait DataObjectTrait
 {
-    use \Heystack\Core\State\Traits\DataObjectSerializableTrait;
+    use DataObjectSerializableTrait;
 
     /**
      * @var
@@ -22,6 +23,7 @@ trait DataObjectTrait
      * @var
      */
     private $eventService;
+
     /**
      * @return \Heystack\Core\Identifier\Identifier
      */
@@ -39,9 +41,9 @@ trait DataObjectTrait
     }
 
     /**
-     * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventService
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventService
      */
-    public function addEventService(EventDispatcher $eventService)
+    public function addEventService(EventDispatcherInterface $eventService)
     {
         $this->eventService = $eventService;
     }

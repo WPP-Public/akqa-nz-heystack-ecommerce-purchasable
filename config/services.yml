@@ -5,15 +5,9 @@ parameters:
   purchasableholder.class: Heystack\Purchasable\PurchasableHolder\PurchasableHolder
   
 services:
-
-  purchasable:
-    class: %purchasable.class%
-    tags:
-      - { name: ss_orm_backend.data_provider }
-
   purchasableholder_subscriber:
     class: %purchasableholder_subscriber.class%
-    arguments: [@event_dispatcher, @purchasableholder, @storage]
+    arguments: [ @event_dispatcher, @purchasableholder, @storage, @state ]
     tags:
       - { name: event_dispatcher.subscriber }
 
@@ -31,12 +25,10 @@ services:
 
   purchasableholder:
     class: %purchasableholder.class%
-    arguments: [ @state, @event_dispatcher ]
-    calls:
-      - [ restoreState ]
+    arguments: [ @state, @event_dispatcher, @currency_service]
     tags:
-      - { name: ss_orm_backend.data_provider }
       - { name: transaction.modifier }
+      - { name: state.restore }
 
   purchasable_schema:
     class: %yaml_data_object_schema.class%

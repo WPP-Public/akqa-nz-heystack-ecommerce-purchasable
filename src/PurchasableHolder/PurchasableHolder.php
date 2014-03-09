@@ -12,16 +12,17 @@ namespace Heystack\Purchasable\PurchasableHolder;
 
 use Heystack\Core\Identifier\Identifier;
 use Heystack\Core\Identifier\IdentifierInterface;
-use Heystack\Core\Interfaces\HasDataInterface;
 use Heystack\Core\Interfaces\HasEventServiceInterface;
 use Heystack\Core\Interfaces\HasStateServiceInterface;
 use Heystack\Core\State\State;
-use Heystack\Core\State\StateableInterface;
 use Heystack\Core\Storage\Backends\SilverStripeOrm\Backend;
-use Heystack\Core\Storage\StorableInterface;
 use Heystack\Core\Storage\Traits\ParentReferenceTrait;
 use Heystack\Core\Traits\HasEventServiceTrait;
 use Heystack\Core\Traits\HasStateServiceTrait;
+use Heystack\Ecommerce\Currency\Interfaces\CurrencyServiceInterface;
+use Heystack\Ecommerce\Currency\Interfaces\HasCurrencyServiceInterface;
+use Heystack\Ecommerce\Currency\Traits\HasCurrencyServiceTrait;
+use Heystack\Ecommerce\Exception\MoneyOverflowException;
 use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
 use Heystack\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
@@ -45,43 +46,48 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class PurchasableHolder implements
     PurchasableHolderInterface,
-    StateableInterface,
-    \Serializable,
-    StorableInterface,
     HasEventServiceInterface,
     HasStateServiceInterface,
-    HasDataInterface
+    HasCurrencyServiceInterface
 {
-    use TransactionModifierStateTrait;
     use TransactionModifierSerializeTrait;
     use ParentReferenceTrait;
     use HasEventServiceTrait;
     use HasStateServiceTrait;
+    use HasCurrencyServiceTrait;
 
     /**
      * State Key constant
      */
     const IDENTIFIER = 'purchasableholder';
-    const PURCHASABLES_KEY = 'purchasables';
-    const TOTAL_KEY = 'total';
 
     /**
-     * Stores data for state
-     * @var array
+     * @var \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface[]
      */
-    protected $data;
+    protected $purchasables = [];
 
     /**
-     * PurchasableHolder Constructor. Not directly called, use the ServiceStore to
-     * get an instance of this class
+     * @var \SebastianBergmann\Money\Money
+     */
+    protected $total;
+
+    /**
+     * PurchasableHolder Constructor.
      *
      * @param \Heystack\Core\State\State $stateService
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventService
+     * @param \Heystack\Ecommerce\Currency\Interfaces\CurrencyServiceInterface $currencyService
      */
-    public function __construct(State $stateService, EventDispatcherInterface $eventService)
+    public function __construct(
+        State $stateService,
+        EventDispatcherInterface $eventService,
+        CurrencyServiceInterface $currencyService
+    )
     {
         $this->stateService = $stateService;
         $this->eventService = $eventService;
+        $this->currencyService = $currencyService;
+        $this->total = $this->currencyService->getZeroMoney();
     }
 
     /**
@@ -109,11 +115,11 @@ class PurchasableHolder implements
     public function addPurchasable(PurchasableInterface $purchasable, $quantity = 1)
     {
         if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
-            $this->setPurchasable($cachedPurchasable, $cachedPurchasable->getQuantity() + $quantity);
+            $cachedPurchasable->setQuantity($cachedPurchasable->getQuantity() + $quantity);
+            $this->eventService->dispatch(Events::PURCHASABLE_CHANGED);
         } else {
             $this->setPurchasable($purchasable, $quantity);
         }
-
     }
 
     /**
@@ -127,27 +133,20 @@ class PurchasableHolder implements
             $this->removePurchasable($purchasable->getIdentifier());
         } else {
             if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
-
                 if ($cachedPurchasable->getQuantity() != $quantity) {
-
                     $cachedPurchasable->setQuantity($quantity);
-
-                    $this->getEventService()->dispatch(Events::PURCHASABLE_CHANGED);
+                    $this->eventService->dispatch(Events::PURCHASABLE_CHANGED);
                 }
-
             } else {
-
-                $eventService = $this->getEventService();
-
-                $purchasable->addStateService($this->getStateService());
-                $purchasable->addEventService($eventService);
+                $purchasable->addStateService($this->stateService);
+                $purchasable->addEventService($this->eventService);
 
                 $purchasable->setQuantity($quantity);
                 $purchasable->setUnitPrice($purchasable->getPrice());
 
-                $this->data[self::PURCHASABLES_KEY][$purchasable->getIdentifier()->getFull()] = $purchasable;
+                $this->purchasables[$purchasable->getIdentifier()->getFull()] = $purchasable;
 
-                $eventService->dispatch(Events::PURCHASABLE_ADDED);
+                $this->eventService->dispatch(Events::PURCHASABLE_ADDED);
             }
         }
     }
@@ -161,14 +160,18 @@ class PurchasableHolder implements
     {
         $fullIdentifier = $identifier->getFull();
 
-        return isset($this->data[self::PURCHASABLES_KEY][$fullIdentifier]) ? $this->data[self::PURCHASABLES_KEY][$fullIdentifier] : false;
+        return isset($this->purchasables[$fullIdentifier]) ? $this->purchasables[$fullIdentifier] : false;
     }
 
+    /**
+     * @param IdentifierInterface $identifier
+     * @return bool|\Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface[]
+     */
     public function getPurchasablesByPrimaryIdentifier(IdentifierInterface $identifier)
     {
         $matches = [];
 
-        foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
+        foreach ($this->purchasables as $purchasable) {
             if ($purchasable->getIdentifier()->isMatch($identifier)) {
                 $matches[] = $purchasable;
             }
@@ -184,17 +187,17 @@ class PurchasableHolder implements
     /**
      * Removes a purchasable from the Purchasable holder if found
      * @param  \Heystack\Core\Identifier\IdentifierInterface $identifier The identifier of the purchasable to remove
-     * @return null
+     * @return void
      */
     public function removePurchasable(IdentifierInterface $identifier)
     {
         $fullIdentifier = $identifier->getFull();
 
-        if (isset($this->data[self::PURCHASABLES_KEY][$fullIdentifier])) {
+        if (isset($this->purchasables[$fullIdentifier])) {
 
-            unset($this->data[self::PURCHASABLES_KEY][$fullIdentifier]);
+            unset($this->purchasables[$fullIdentifier]);
 
-            $this->getEventService()->dispatch(Events::PURCHASABLE_REMOVED);
+            $this->eventService->dispatch(Events::PURCHASABLE_REMOVED);
         }
     }
 
@@ -221,7 +224,7 @@ class PurchasableHolder implements
 
         } else {
 
-            $purchasables = $this->data[self::PURCHASABLES_KEY];
+            $purchasables = $this->purchasables;
 
         }
 
@@ -230,50 +233,44 @@ class PurchasableHolder implements
 
     /**
      * Set an array of purchasables on the purchasable holder
-     * @param array $purchasables Array of purchasables
+     * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface[] $purchasables Array of purchasables
      */
     public function setPurchasables(array $purchasables)
     {
         foreach ($purchasables as $purchasable) {
-
             $this->addPurchasable($purchasable);
-
         }
     }
 
     /**
      * Get the current purchasable total on the purchasable holder
-     * @return float
+     * @return \SebastianBergmann\Money\Money
      */
     public function getTotal()
     {
-        return isset($this->data[self::TOTAL_KEY]) ? $this->data[self::TOTAL_KEY] : 0;
+        return $this->total;
     }
 
     /**
      * Update the purchasable total on the purchasable holder
+     * @throws \Heystack\Ecommerce\Exception\MoneyOverflowException
      */
     public function updateTotal()
     {
-
-        if (isset($this->data[self::PURCHASABLES_KEY])) {
-
-            $total = 0;
-
-            foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
-
-                $total += $purchasable->getTotal();
-
+        $this->total = $this->currencyService->getZeroMoney();
+        
+        if ($this->purchasables) {
+            foreach ($this->purchasables as $purchasable) {
+                $operationTotal = $purchasable->getTotal();
+                if (($operationTotal->getAmount() + $this->total->getAmount()) > PHP_INT_MAX) {
+                    throw new MoneyOverflowException;
+                }
+                $this->total = $this->total->add($operationTotal);
             }
-
-            $this->data[self::TOTAL_KEY] = $total;
-            $this->getEventService()->dispatch(Events::UPDATED);
-
-
+            $this->eventService->dispatch(Events::UPDATED);
         }
 
         $this->saveState();
-
     }
 
     /**
@@ -281,42 +278,11 @@ class PurchasableHolder implements
      */
     public function updatePurchasablePrices()
     {
-        if (isset($this->data[self::PURCHASABLES_KEY])) {
-
-            foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
-
-                $purchasable->setUnitPrice($purchasable->getPrice());
-
-            }
-
+        foreach ($this->purchasables as $purchasable) {
+            $purchasable->setUnitPrice($purchasable->getPrice());
         }
 
         $this->saveState();
-    }
-
-    /**
-     * Get tax exemptions from purchasables if they exist
-     */
-    public function getTaxExemptTotal()
-    {
-        $total = 0;
-
-        if (isset($this->data[self::PURCHASABLES_KEY])) {
-
-            foreach ($this->data[self::PURCHASABLES_KEY] as $purchasable) {
-
-                if (method_exists($purchasable, 'isTaxExempt') && $purchasable->isTaxExempt()) {
-
-                    $total += $purchasable->getTotal();
-
-                }
-
-            }
-
-        }
-
-        return $total;
-
     }
 
     /**
@@ -325,21 +291,15 @@ class PurchasableHolder implements
      */
     public function getStorableData()
     {
-
-        $data = [];
-
-        $data['id'] = 'PurchasableHolder';
-
-        $data['flat'] = [
-            'Total' => $this->getTotal(),
-            'NoOfItems' => count($this->getPurchasables()),
-            'ParentID' => $this->parentReference
+        return [
+            'id' => 'PurchasableHolder',
+            'flat' => [
+                'Total' => $this->total->getAmount() / $this->total->getCurrency()->getSubUnit(),
+                'NoOfItems' => count($this->purchasables),
+                'ParentID' => $this->parentReference
+            ],
+            'parent' => true
         ];
-
-        $data['parent'] = true;
-
-        return $data;
-
     }
 
     /**
@@ -348,9 +308,7 @@ class PurchasableHolder implements
      */
     public function getStorableIdentifier()
     {
-
         return self::IDENTIFIER;
-
     }
 
     /**
@@ -359,9 +317,7 @@ class PurchasableHolder implements
      */
     public function getSchemaName()
     {
-
         return 'PurchasableHolder';
-
     }
 
     /**
@@ -376,11 +332,21 @@ class PurchasableHolder implements
     }
 
     /**
-     * @param array $data
+     * @return mixed
      */
-    public function setData($data)
+    public function saveState()
     {
-        $this->data = $data;
+        $this->stateService->setByKey(self::IDENTIFIER, $this->getData());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function restoreState()
+    {
+        if ($data = $this->stateService->getByKey(self::IDENTIFIER)) {
+            $this->setData($data);
+        }
     }
 
     /**
@@ -388,22 +354,16 @@ class PurchasableHolder implements
      */
     public function getData()
     {
-        return $this->data;
+        return [$this->total, $this->purchasables];
     }
 
     /**
-     * @param \Heystack\Core\State\State $stateService
+     * @param array $data
      */
-    public function setStateService(State $stateService)
+    public function setData($data)
     {
-        $this->stateService = $stateService;
-    }
-
-    /**
-     * @return \Heystack\Core\State\State
-     */
-    public function getStateService()
-    {
-        return $this->stateService;
+        if (is_array($data)) {
+            list($this->total, $this->purchasables) = $data;
+        }
     }
 }

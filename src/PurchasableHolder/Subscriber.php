@@ -10,6 +10,10 @@
  */
 namespace Heystack\Purchasable\PurchasableHolder;
 
+use Heystack\Core\State\State;
+use Heystack\Core\Traits\HasEventServiceTrait;
+use Heystack\Core\Traits\HasStateServiceTrait;
+use Heystack\Purchasable\PurchasableHolder\Traits\HasPurchasableHolderTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -38,19 +42,10 @@ use Heystack\Core\Storage\Event as StorageEvent;
  */
 class Subscriber implements EventSubscriberInterface
 {
-
-    /**
-     * The Event Dispatcher
-     * @var object
-     */
-    protected $eventDispatcher;
-
-    /**
-     * The purchasableholder which this subscriber will act on
-     * @var object
-     */
-    protected $purchasableHolder;
-
+    use HasEventServiceTrait;
+    use HasStateServiceTrait;
+    use HasPurchasableHolderTrait;
+    
     /**
      * The storage service which will be used in cases where storage is needed.
      * @var object
@@ -59,15 +54,22 @@ class Subscriber implements EventSubscriberInterface
 
     /**
      * Construct the subscriber
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface                     $eventDispatcher
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventService
      * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface $purchasableHolder
-     * @param \Heystack\Core\Storage\Storage                                        $storageService
+     * @param \Heystack\Core\Storage\Storage $storageService
+     * @param \Heystack\Core\State\State $stateService
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, PurchasableHolderInterface $purchasableHolder, Storage $storageService)
+    public function __construct(
+        EventDispatcherInterface $eventService,
+        PurchasableHolderInterface $purchasableHolder,
+        Storage $storageService,
+        State $stateService
+    )
     {
-        $this->eventDispatcher = $eventDispatcher;
+        $this->eventService = $eventService;
         $this->purchasableHolder = $purchasableHolder;
         $this->storageService = $storageService;
+        $this->stateService = $stateService;
     }
 
     /**
@@ -93,7 +95,7 @@ class Subscriber implements EventSubscriberInterface
     public function onChange()
     {
         $this->purchasableHolder->updateTotal();
-        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
+        $this->eventService->dispatch(TransactionEvents::UPDATE);
     }
 
     /**
@@ -103,7 +105,7 @@ class Subscriber implements EventSubscriberInterface
     public function onRemove()
     {
         $this->purchasableHolder->updateTotal();
-        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
+        $this->eventService->dispatch(TransactionEvents::UPDATE);
     }
 
     /**
@@ -113,7 +115,7 @@ class Subscriber implements EventSubscriberInterface
     public function onAdd()
     {
         $this->purchasableHolder->updateTotal();
-        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
+        $this->eventService->dispatch(TransactionEvents::UPDATE);
     }
 
     /**
@@ -124,8 +126,7 @@ class Subscriber implements EventSubscriberInterface
     {
         $this->purchasableHolder->updatePurchasablePrices();
         $this->purchasableHolder->updateTotal();
-
-        $this->eventDispatcher->dispatch(TransactionEvents::UPDATE);
+        $this->eventService->dispatch(TransactionEvents::UPDATE);
     }
 
     /**
@@ -133,11 +134,9 @@ class Subscriber implements EventSubscriberInterface
      */
     public function onTransactionStored(StorageEvent $storageEvent)
     {
-
         $this->purchasableHolder->setParentReference($storageEvent->getParentReference());
-
         $this->storageService->process($this->purchasableHolder);
-
+        $this->stateService->removeByKey(PurchasableHolder::IDENTIFIER);
     }
 
     /**
@@ -146,21 +145,14 @@ class Subscriber implements EventSubscriberInterface
      */
     public function onPurchasableHolderStored(StorageEvent $storageEvent)
     {
-
         $parentReference = $storageEvent->getParentReference();
         $purchasables = $this->purchasableHolder->getPurchasables();
 
         if ($purchasables) {
-
             foreach ($purchasables as $purchaseable) {
-
                 $purchaseable->setParentReference($parentReference);
-
                 $this->storageService->process($purchaseable);
-
             }
-
         }
-
     }
 }
