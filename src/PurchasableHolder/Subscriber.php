@@ -136,7 +136,6 @@ class Subscriber implements EventSubscriberInterface
     {
         $this->purchasableHolder->setParentReference($storageEvent->getParentReference());
         $this->storageService->process($this->purchasableHolder);
-        $this->stateService->removeByKey(PurchasableHolder::IDENTIFIER);
     }
 
     /**
@@ -154,5 +153,7 @@ class Subscriber implements EventSubscriberInterface
                 $this->storageService->process($purchaseable);
             }
         }
+        
+        $this->stateService->removeByKey(PurchasableHolder::IDENTIFIER);
     }
 }

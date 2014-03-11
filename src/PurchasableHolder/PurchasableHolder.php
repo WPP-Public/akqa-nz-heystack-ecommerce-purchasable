@@ -202,6 +202,15 @@ class PurchasableHolder implements
     }
 
     /**
+     * Removes all purchasables from the service
+     * @return void
+     */
+    public function removePurchasables()
+    {
+        $this->purchasables = [];
+    }
+
+    /**
      * Get multiple purchasables, if no identifiers are passed in then return all purchasables
      * @param  array|null $identifiers An array of identifiers if passed in
      * @return \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface[]  An array of purchasables
@@ -255,7 +264,7 @@ class PurchasableHolder implements
      * Update the purchasable total on the purchasable holder
      * @throws \Heystack\Ecommerce\Exception\MoneyOverflowException
      */
-    public function updateTotal()
+    public function updateTotal($saveState = true)
     {
         $this->total = $this->currencyService->getZeroMoney();
         
@@ -267,10 +276,13 @@ class PurchasableHolder implements
                 }
                 $this->total = $this->total->add($operationTotal);
             }
+            
             $this->eventService->dispatch(Events::UPDATED);
         }
 
-        $this->saveState();
+        if ($saveState) {
+            $this->saveState();
+        }
     }
 
     /**
