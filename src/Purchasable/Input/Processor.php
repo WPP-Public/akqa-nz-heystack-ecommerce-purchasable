@@ -102,10 +102,10 @@ class Processor implements ProcessorInterface
      */
     public function process(\SS_HTTPRequest $request)
     {
-        // TODO: Ensure PUT or POST.
         try {
+            $id = $request->param('OtherID');
 
-            if ($id = $request->param('OtherID')) {
+            if (in_array($request->httpMethod(), ['POST', 'PUT']) && $id) {
 
                 $purchasable = \DataList::create($this->purchasableClass)->byID($request->param('OtherID'));
 
