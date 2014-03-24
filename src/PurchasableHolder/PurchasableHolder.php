@@ -110,10 +110,12 @@ class PurchasableHolder implements
      * Adds a purchasable object to the purchasable holder and increments the
      * quantity
      * @param PurchasableInterface $purchasable The purchasable object
-     * @param integer $quantity    quantity of the object to add
+     * @param int $quantity quantity of the object to add
+     * @throws \InvalidArgumentException
      */
     public function addPurchasable(PurchasableInterface $purchasable, $quantity = 1)
     {
+        $this->assertValidQuantity($quantity);
         if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
             $cachedPurchasable->setQuantity($cachedPurchasable->getQuantity() + $quantity);
             $this->eventService->dispatch(Events::PURCHASABLE_CHANGED);
@@ -132,6 +134,7 @@ class PurchasableHolder implements
         if ($quantity === 0) {
             $this->removePurchasable($purchasable->getIdentifier());
         } else {
+            $this->assertValidQuantity($quantity);
             if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
                 if ($cachedPurchasable->getQuantity() != $quantity) {
                     $cachedPurchasable->setQuantity($quantity);
@@ -376,6 +379,17 @@ class PurchasableHolder implements
     {
         if (is_array($data)) {
             list($this->total, $this->purchasables) = $data;
+        }
+    }
+
+    /**
+     * @param $quantity
+     * @throws \InvalidArgumentException
+     */
+    protected function assertValidQuantity($quantity)
+    {
+        if ($quantity < 1) {
+            throw new \InvalidArgumentException("Quantity must be positive");
         }
     }
 }

@@ -109,12 +109,12 @@ class Processor implements ProcessorInterface
 
                 $purchasable = \DataList::create($this->purchasableClass)->byID($request->param('OtherID'));
 
-                $quantity = $request->param('ExtraID') ? $request->param('ExtraID') : 1;
+                // Ensure quantity is non-negative
+                $quantity = max(0, $request->param('ExtraID') ? $request->param('ExtraID') : 1);
 
                 if ($purchasable instanceof $this->purchasableClass) {
 
                     switch ($request->param('ID')) {
-
                         case 'add':
                             $this->purchasableHolder->addPurchasable($purchasable, $quantity);
                             break;
@@ -124,7 +124,6 @@ class Processor implements ProcessorInterface
                         case 'set':
                             $this->purchasableHolder->setPurchasable($purchasable, $quantity);
                             break;
-
                     }
 
                     $this->purchasableHolder->saveState();
