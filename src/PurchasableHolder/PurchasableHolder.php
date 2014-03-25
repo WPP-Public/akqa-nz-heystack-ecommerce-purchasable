@@ -388,6 +388,9 @@ class PurchasableHolder implements
      */
     protected function assertValidQuantity($quantity)
     {
+        if (!is_int($quantity)) {
+            throw new \InvalidArgumentException("Quantity must be an integer");
+        }
         if ($quantity < 1) {
             throw new \InvalidArgumentException("Quantity must be positive");
         }
