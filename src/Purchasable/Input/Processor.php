@@ -109,8 +109,8 @@ class Processor implements ProcessorInterface
 
                 $purchasable = \DataList::create($this->purchasableClass)->byID($request->param('OtherID'));
 
-                // Ensure quantity is non-negative
-                $quantity = max(0, $request->param('ExtraID') ? $request->param('ExtraID') : 1);
+                // Ensure quantity is non-negative and an integer
+                $quantity = (int) max(0, $request->param('ExtraID') ? $request->param('ExtraID') : 1);
 
                 if ($purchasable instanceof $this->purchasableClass) {
 
