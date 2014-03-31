@@ -1,13 +1,5 @@
 <?php
-/**
- * This file is part of the Ecommerce-Purchasable package
- *
- * @package Ecommerce-Purchasable
- */
 
-/**
- * PurchasableHolder namespace
- */
 namespace Heystack\Purchasable\PurchasableHolder;
 
 use Heystack\Core\Identifier\Identifier;
@@ -22,9 +14,9 @@ use Heystack\Core\Traits\HasStateServiceTrait;
 use Heystack\Ecommerce\Currency\Interfaces\CurrencyServiceInterface;
 use Heystack\Ecommerce\Currency\Interfaces\HasCurrencyServiceInterface;
 use Heystack\Ecommerce\Currency\Traits\HasCurrencyServiceTrait;
-use Heystack\Ecommerce\Exception\MoneyOverflowException;
 use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
+use Heystack\Ecommerce\Transaction\Events as TransactionEvents;
 use Heystack\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
 use Heystack\Ecommerce\Transaction\Traits\TransactionModifierStateTrait;
 use Heystack\Ecommerce\Transaction\TransactionModifierTypes;
