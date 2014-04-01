@@ -1,13 +1,5 @@
 <?php
-/**
- * This file is part of the Ecommerce-Purchasable package
- *
- * @package Ecommerce-Purchasable
- */
 
-/**
- * PurchasableHolder namespace
- */
 namespace Heystack\Purchasable\PurchasableHolder;
 
 use Heystack\Core\State\State;

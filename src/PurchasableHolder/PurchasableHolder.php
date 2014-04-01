@@ -16,7 +16,6 @@ use Heystack\Ecommerce\Currency\Interfaces\HasCurrencyServiceInterface;
 use Heystack\Ecommerce\Currency\Traits\HasCurrencyServiceTrait;
 use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
-use Heystack\Ecommerce\Transaction\Events as TransactionEvents;
 use Heystack\Ecommerce\Transaction\Traits\TransactionModifierSerializeTrait;
 use Heystack\Ecommerce\Transaction\Traits\TransactionModifierStateTrait;
 use Heystack\Ecommerce\Transaction\TransactionModifierTypes;
@@ -287,9 +286,9 @@ class PurchasableHolder implements
             foreach ($this->purchasables as $purchasable) {
                 $this->total = $this->total->add($purchasable->getTotal());
             }
-            
-            $this->eventService->dispatch(Events::UPDATED);
         }
+
+        $this->eventService->dispatch(Events::UPDATED);
 
         if ($saveState) {
             $this->saveState();
