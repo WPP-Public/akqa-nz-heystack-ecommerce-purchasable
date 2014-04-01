@@ -107,10 +107,10 @@ class PurchasableHolder implements
      */
     public function addPurchasable(PurchasableInterface $purchasable, $quantity = 1)
     {
-        $this->assertValidQuantity($quantity);
-        if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
-            $cachedPurchasable->setQuantity($cachedPurchasable->getQuantity() + $quantity);
-            $this->eventService->dispatch(Events::PURCHASABLE_CHANGED);
+        $identifier = $purchasable->getIdentifier();
+        if ($this->hasPurchasable($identifier)) {
+            $purchasable = $this->getPurchasable($identifier);
+            $this->changePurchasableQuantity($purchasable, $purchasable->getQuantity() + $quantity);
         } else {
             $this->setPurchasable($purchasable, $quantity);
         }
@@ -123,26 +123,55 @@ class PurchasableHolder implements
      */
     public function setPurchasable(PurchasableInterface $purchasable, $quantity)
     {
-        if ($quantity === 0) {
-            $this->removePurchasable($purchasable->getIdentifier());
+        $this->assertValidQuantity($quantity);
+        $identifier = $purchasable->getIdentifier();
+        
+        // If already in the holder
+        if ($this->hasPurchasable($identifier)) {
+            $this->changePurchasableQuantity($this->getPurchasable($identifier), $quantity);
         } else {
-            $this->assertValidQuantity($quantity);
-            if ($cachedPurchasable = $this->getPurchasable($purchasable->getIdentifier())) {
-                if ($cachedPurchasable->getQuantity() != $quantity) {
-                    $cachedPurchasable->setQuantity($quantity);
-                    $this->eventService->dispatch(Events::PURCHASABLE_CHANGED);
-                }
-            } else {
-                $purchasable->addStateService($this->stateService);
-                $purchasable->addEventService($this->eventService);
+            $purchasable->addStateService($this->stateService);
+            $purchasable->addEventService($this->eventService);
 
-                $purchasable->setQuantity($quantity);
-                $purchasable->setUnitPrice($purchasable->getPrice());
+            $purchasable->setQuantity($quantity);
+            $purchasable->setUnitPrice($purchasable->getPrice());
 
-                $this->purchasables[$purchasable->getIdentifier()->getFull()] = $purchasable;
+            $this->purchasables[$identifier->getFull()] = $purchasable;
 
-                $this->eventService->dispatch(Events::PURCHASABLE_ADDED);
-            }
+            $this->updateTotal();
+            $this->eventService->dispatch(Events::PURCHASABLE_ADDED);
+        }
+    }
+
+    /**
+     * Removes a purchasable from the Purchasable holder if found
+     * @param  \Heystack\Core\Identifier\IdentifierInterface $identifier The identifier of the purchasable to remove
+     * @return void
+     */
+    public function removePurchasable(IdentifierInterface $identifier)
+    {
+        $fullIdentifier = $identifier->getFull();
+
+        if (isset($this->purchasables[$fullIdentifier])) {
+
+            unset($this->purchasables[$fullIdentifier]);
+
+            $this->updateTotal();
+            $this->eventService->dispatch(Events::PURCHASABLE_REMOVED);
+        }
+    }
+
+    /**
+     * Change a purchasble on the holder
+     * @param $purchasable
+     * @param int $quantity
+     */
+    protected function changePurchasableQuantity(PurchasableInterface $purchasable, $quantity)
+    {
+        if ($purchasable->getQuantity() !== $quantity) {
+            $purchasable->setQuantity($quantity);
+            $this->updateTotal();
+            $this->eventService->dispatch(Events::PURCHASABLE_CHANGED);
         }
     }
 
@@ -153,9 +182,17 @@ class PurchasableHolder implements
      */
     public function getPurchasable(IdentifierInterface $identifier)
     {
-        $fullIdentifier = $identifier->getFull();
+        return $this->hasPurchasable($identifier) ? $this->purchasables[$identifier->getFull()] : false;
+    }
 
-        return isset($this->purchasables[$fullIdentifier]) ? $this->purchasables[$fullIdentifier] : false;
+    /**
+     * Returns whether or not the purchable is on the holder
+     * @param IdentifierInterface $identifier
+     * @return bool
+     */
+    public function hasPurchasable(IdentifierInterface $identifier)
+    {
+        return isset($this->purchasables[$identifier->getFull()]);
     }
 
     /**
@@ -177,23 +214,6 @@ class PurchasableHolder implements
         }
 
         return false;
-    }
-
-    /**
-     * Removes a purchasable from the Purchasable holder if found
-     * @param  \Heystack\Core\Identifier\IdentifierInterface $identifier The identifier of the purchasable to remove
-     * @return void
-     */
-    public function removePurchasable(IdentifierInterface $identifier)
-    {
-        $fullIdentifier = $identifier->getFull();
-
-        if (isset($this->purchasables[$fullIdentifier])) {
-
-            unset($this->purchasables[$fullIdentifier]);
-
-            $this->eventService->dispatch(Events::PURCHASABLE_REMOVED);
-        }
     }
 
     /**
@@ -257,7 +277,7 @@ class PurchasableHolder implements
 
     /**
      * Update the purchasable total on the purchasable holder
-     * @throws \Heystack\Ecommerce\Exception\MoneyOverflowException
+     * @throws \SebastianBergmann\Money\OverflowException
      */
     public function updateTotal($saveState = true)
     {
@@ -265,11 +285,7 @@ class PurchasableHolder implements
         
         if ($this->purchasables) {
             foreach ($this->purchasables as $purchasable) {
-                $operationTotal = $purchasable->getTotal();
-                if (($operationTotal->getAmount() + $this->total->getAmount()) > PHP_INT_MAX) {
-                    throw new MoneyOverflowException;
-                }
-                $this->total = $this->total->add($operationTotal);
+                $this->total = $this->total->add($purchasable->getTotal());
             }
             
             $this->eventService->dispatch(Events::UPDATED);

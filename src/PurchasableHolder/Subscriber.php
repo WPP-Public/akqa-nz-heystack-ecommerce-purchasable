@@ -53,6 +53,11 @@ class Subscriber implements EventSubscriberInterface
     protected $storageService;
 
     /**
+     * @var
+     */
+    protected $currencyChanging;
+
+    /**
      * Construct the subscriber
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventService
      * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface $purchasableHolder
@@ -79,12 +84,10 @@ class Subscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::PURCHASABLE_ADDED            => ['onAdd', 100],
-            Events::PURCHASABLE_CHANGED          => ['onChange', 100],
-            Events::PURCHASABLE_REMOVED          => ['onRemove', 100],
-            CurrencyEvents::CHANGED              => ['onCurrencyChange', 0],
-            Backend::IDENTIFIER . '.' . TransactionEvents::STORED  => ['onTransactionStored', 0],
-            Backend::IDENTIFIER . '.' . Events::STORED  => ['onPurchasableHolderStored', 0]
+            Events::UPDATED                                                  => ['onTotalUpdated', 0],
+            CurrencyEvents::CHANGED                                          => ['onCurrencyChanged', 0],
+            sprintf('%s.%s', Backend::IDENTIFIER, TransactionEvents::STORED) => ['onTransactionStored', 0],
+            sprintf('%s.%s', Backend::IDENTIFIER, Events::STORED)            => ['onPurchasableHolderStored', 0]
         ];
     }
 
@@ -92,41 +95,23 @@ class Subscriber implements EventSubscriberInterface
      * Updates the total of the holder and lets the transaction know it has to
      * update
      */
-    public function onChange()
+    public function onTotalUpdated()
     {
-        $this->purchasableHolder->updateTotal();
-        $this->eventService->dispatch(TransactionEvents::UPDATE);
+        if (!$this->currencyChanging) {
+            $this->eventService->dispatch(TransactionEvents::UPDATE);
+        }
     }
 
     /**
      * Updates the total of the holder and lets the transaction know it has to
      * update
      */
-    public function onRemove()
+    public function onCurrencyChanged()
     {
-        $this->purchasableHolder->updateTotal();
-        $this->eventService->dispatch(TransactionEvents::UPDATE);
-    }
-
-    /**
-     * Updates the total of the holder and lets the transaction know it has to
-     * update
-     */
-    public function onAdd()
-    {
-        $this->purchasableHolder->updateTotal();
-        $this->eventService->dispatch(TransactionEvents::UPDATE);
-    }
-
-    /**
-     * Updates the total of the holder and lets the transaction know it has to
-     * update
-     */
-    public function onCurrencyChange()
-    {
+        $this->currencyChanging = true;
         $this->purchasableHolder->updatePurchasablePrices();
         $this->purchasableHolder->updateTotal();
-        $this->eventService->dispatch(TransactionEvents::UPDATE);
+        $this->currencyChanging = false;
     }
 
     /**
