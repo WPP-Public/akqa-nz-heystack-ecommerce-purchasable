@@ -1,5 +1,5 @@
-INSERT INTO CachedPurchasable (ID, Created, LastEdited, Title, UnitPrice, Quantity, Total, Category, ParentID, ProductCode)
-  SELECT ID, Created, LastEdited, Title, UnitPrice, Quantity, Total, Category, ParentID, ProductCode FROM CachedProduct;
+INSERT INTO CachedPurchasable (ID, ClassName, Created, LastEdited, Title, UnitPrice, Quantity, Total, Category, ParentID, ProductCode)
+  SELECT ID, 'StoredPurchasable', Created, LastEdited, Title, UnitPrice, Quantity, Total, Category, ParentID, ProductCode FROM CachedProduct;
 
-INSERT INTO CachedPurchasableHolder (ID, Created, LastEdited, Total, NoOfItems, ParentID)
-  SELECT ID, Created, LastEdited, Total, NoOfItems, ParentID FROM CachedProductHolder;
+INSERT INTO CachedPurchasableHolder (ID, ClassName, Created, LastEdited, Total, NoOfItems, ParentID)
+  SELECT ID, 'StoredPurchasableHolder', Created, LastEdited, Total, NoOfItems, ParentID FROM CachedProductHolder;
