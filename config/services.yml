@@ -7,9 +7,9 @@ parameters:
 services:
   purchasableholder_subscriber:
     class: %purchasableholder_subscriber.class%
-    arguments: [ @event_dispatcher, @purchasableholder, @storage, @state ]
     tags:
       - { name: event_dispatcher.subscriber }
+      - { name: autoinject  }
 
   purchasable_input_processor:
     class: %purchasable_input_processor.class%
@@ -29,6 +29,7 @@ services:
     tags:
       - { name: transaction.modifier }
       - { name: state.restore }
+      - { name: autoinject.provides }
 
   purchasable_schema:
     class: %yaml_data_object_schema.class%
