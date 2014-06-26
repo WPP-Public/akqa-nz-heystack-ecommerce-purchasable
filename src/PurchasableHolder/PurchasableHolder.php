@@ -398,7 +398,7 @@ class PurchasableHolder implements
         if (!is_int($quantity)) {
             throw new \InvalidArgumentException("Quantity must be an integer");
         }
-        if ($quantity < 1) {
+        if ($quantity < 0) {
             throw new \InvalidArgumentException("Quantity must be positive");
         }
     }
