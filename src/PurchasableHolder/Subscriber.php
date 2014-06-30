@@ -77,7 +77,7 @@ class Subscriber implements EventSubscriberInterface
     {
         return [
             Events::UPDATED                                                  => ['onTotalUpdated', 0],
-            CurrencyEvents::CHANGED                                          => ['onCurrencyChanged', 0],
+            CurrencyEvents::CHANGED                                          => ['onCurrencyChanged', 100],
             sprintf('%s.%s', Backend::IDENTIFIER, TransactionEvents::STORED) => ['onTransactionStored', 0],
             sprintf('%s.%s', Backend::IDENTIFIER, Events::STORED)            => ['onPurchasableHolderStored', 0]
         ];
