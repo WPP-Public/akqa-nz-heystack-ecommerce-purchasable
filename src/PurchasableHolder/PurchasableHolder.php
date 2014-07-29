@@ -316,7 +316,7 @@ class PurchasableHolder implements
         return [
             'id' => 'PurchasableHolder',
             'flat' => [
-                'Total' => $this->total->getAmount() / $this->total->getCurrency()->getSubUnit(),
+                'Total' => \Heystack\Ecommerce\convertMoneyToString($this->total),
                 'NoOfItems' => count($this->purchasables),
                 'ParentID' => $this->parentReference
             ],
