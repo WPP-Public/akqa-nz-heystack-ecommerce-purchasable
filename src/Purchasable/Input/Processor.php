@@ -16,7 +16,6 @@ use Heystack\Core\State\State;
 use Heystack\Core\Traits\HasEventServiceTrait;
 use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface;
 use Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface;
-use Heystack\Ecommerce\Transaction\Events as TransactionEvents;
 use SebastianBergmann\Money\OverflowException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -61,7 +60,7 @@ class Processor implements ProcessorInterface
     /**
      * Construct the processor
      *
-     * @param $purchasableClass
+     * @param string $purchasableClass
      * @param \Heystack\Core\State\State $state
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventService
      * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface $purchasableHolder
@@ -142,7 +141,7 @@ class Processor implements ProcessorInterface
     }
 
     /**
-     * @param $message
+     * @param string $message
      * @return array
      */
     protected function failed($message)
@@ -155,7 +154,7 @@ class Processor implements ProcessorInterface
 
     /**
      * @param \SS_HTTPRequest $request
-     * @return PurchasableInterface
+     * @return \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface
      */
     protected function getPurchasable(\SS_HTTPRequest $request)
     {

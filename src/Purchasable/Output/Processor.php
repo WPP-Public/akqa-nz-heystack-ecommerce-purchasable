@@ -69,7 +69,7 @@ class Processor implements ProcessorInterface
     /**
      * Determines what to do with the result from the input processor
      * @param  \Controller $controller
-     * @param  type $result
+     * @param  mixed|void $result
      * @return mixed
      */
     public function process(\Controller $controller, $result = null)

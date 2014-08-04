@@ -91,6 +91,7 @@ class PurchasableHolder implements
 
     /**
      * Indicates that this modifier is chargeable
+     * @return string
      */
     public function getType()
     {
@@ -100,9 +101,10 @@ class PurchasableHolder implements
     /**
      * Adds a purchasable object to the purchasable holder and increments the
      * quantity
-     * @param PurchasableInterface $purchasable The purchasable object
-     * @param int $quantity quantity of the object to add
+     * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface $purchasable The purchasable object
+     * @param int|void $quantity quantity of the object to add
      * @throws \InvalidArgumentException
+     * @return void
      */
     public function addPurchasable(PurchasableInterface $purchasable, $quantity = 1)
     {
@@ -117,8 +119,9 @@ class PurchasableHolder implements
 
     /**
      * Sets the quantity of a purchasable object on the Purchasable holder
-     * @param PurchasableInterface $purchasable The purchasable object
+     * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface $purchasable The purchasable object
      * @param int $quantity    quantity of the purchasable object to be set
+     * @return void
      */
     public function setPurchasable(PurchasableInterface $purchasable, $quantity)
     {
@@ -162,8 +165,9 @@ class PurchasableHolder implements
 
     /**
      * Change a purchasble on the holder
-     * @param $purchasable
+     * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface $purchasable
      * @param int $quantity
+     * @return void
      */
     protected function changePurchasableQuantity(PurchasableInterface $purchasable, $quantity)
     {
@@ -177,7 +181,7 @@ class PurchasableHolder implements
     /**
      * Returns a purchasable by its identifier
      * @param  \Heystack\Core\Identifier\IdentifierInterface $identifier The identifier of the purchasable
-     * @return PurchasableInterface|false The Purchasable object if found
+     * @return \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface|bool The Purchasable object if found
      */
     public function getPurchasable(IdentifierInterface $identifier)
     {
@@ -186,7 +190,7 @@ class PurchasableHolder implements
 
     /**
      * Returns whether or not the purchable is on the holder
-     * @param IdentifierInterface $identifier
+     * @param \Heystack\Core\Identifier\IdentifierInterface $identifier
      * @return bool
      */
     public function hasPurchasable(IdentifierInterface $identifier)
@@ -195,7 +199,7 @@ class PurchasableHolder implements
     }
 
     /**
-     * @param IdentifierInterface $identifier
+     * @param \Heystack\Core\Identifier\IdentifierInterface $identifier
      * @return bool|\Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface[]
      */
     public function getPurchasablesByPrimaryIdentifier(IdentifierInterface $identifier)
@@ -226,7 +230,7 @@ class PurchasableHolder implements
 
     /**
      * Get multiple purchasables, if no identifiers are passed in then return all purchasables
-     * @param  array|null $identifiers An array of identifiers if passed in
+     * @param  array|void $identifiers An array of identifiers if passed in
      * @return \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface[]  An array of purchasables
      */
     public function getPurchasables(array $identifiers = null)
@@ -257,6 +261,7 @@ class PurchasableHolder implements
     /**
      * Set an array of purchasables on the purchasable holder
      * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface[] $purchasables Array of purchasables
+     * @return void
      */
     public function setPurchasables(array $purchasables)
     {
@@ -276,7 +281,9 @@ class PurchasableHolder implements
 
     /**
      * Update the purchasable total on the purchasable holder
+     * @param bool|void $saveState
      * @throws \SebastianBergmann\Money\OverflowException
+     * @return void
      */
     public function updateTotal($saveState = true)
     {
@@ -297,6 +304,7 @@ class PurchasableHolder implements
 
     /**
      * Update the purchasable prices on the holder
+     * @return void
      */
     public function updatePurchasablePrices()
     {
@@ -344,7 +352,7 @@ class PurchasableHolder implements
 
     /**
      * Get the type of storage that this object is using
-     * @return string
+     * @return array
      */
     public function getStorableBackendIdentifiers()
     {
@@ -354,7 +362,7 @@ class PurchasableHolder implements
     }
 
     /**
-     * @return mixed
+     * @return void
      */
     public function saveState()
     {
@@ -362,7 +370,7 @@ class PurchasableHolder implements
     }
 
     /**
-     * @return mixed
+     * @return void
      */
     public function restoreState()
     {
@@ -381,6 +389,7 @@ class PurchasableHolder implements
 
     /**
      * @param array $data
+     * @return void
      */
     public function setData($data)
     {
@@ -390,8 +399,9 @@ class PurchasableHolder implements
     }
 
     /**
-     * @param $quantity
+     * @param mixed $quantity
      * @throws \InvalidArgumentException
+     * @return void
      */
     protected function assertValidQuantity($quantity)
     {

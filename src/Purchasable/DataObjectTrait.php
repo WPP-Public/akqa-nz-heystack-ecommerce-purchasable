@@ -34,6 +34,7 @@ trait DataObjectTrait
 
     /**
      * @param \Heystack\Core\State\State $stateService
+     * @return void
      */
     public function addStateService(State $stateService)
     {
@@ -42,6 +43,7 @@ trait DataObjectTrait
 
     /**
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventService
+     * @return void
      */
     public function addEventService(EventDispatcherInterface $eventService)
     {

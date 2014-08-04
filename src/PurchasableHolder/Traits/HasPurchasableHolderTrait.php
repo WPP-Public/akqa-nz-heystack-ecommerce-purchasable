@@ -13,6 +13,7 @@ trait HasPurchasableHolderTrait
 
     /**
      * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableHolderInterface $purchasableHolder
+     * @return void
      */
     public function setPurchasableHolder(PurchasableHolderInterface $purchasableHolder)
     {
