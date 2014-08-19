@@ -115,29 +115,23 @@ class Processor implements ProcessorInterface
         $action = $request->param('ID');
 
         try {
-            if ($action === 'add') {
-                $quantity = max(1, (int) $request->postVar('quantity'));
-                $this->purchasableHolder->addPurchasable($purchasable, $quantity);
-            } elseif ($action === 'set') {
-                $quantity = max(0, (int) $request->postVar('quantity'));
-                if ($quantity === 0) {
-                    $this->purchasableHolder->removePurchasable($purchasable->getIdentifier());
-                } else {
-                    $this->purchasableHolder->setPurchasable($purchasable, $quantity);
-                }
-            } elseif ($action === 'remove') {
-                $this->purchasableHolder->removePurchasable($purchasable->getIdentifier());
-            } else {
-                return $this->failed('Action not allowed');
+            switch ($action) {
+                case 'add':
+                    return $this->addPurchasable($request, $purchasable);
+                    break;
+                case 'set':
+                    return $this->setPurchasable($request, $purchasable);
+                    break;
+                case 'remove':
+                    return $this->removePurchasable($request, $purchasable);
+                    break;
+                default:
+                    return $this->failed('Action not allowed');
+                    break;
             }
-            
         } catch (OverflowException $e) {
             return $this->failed('Cart bounds exceeded');
         }
-
-        return [
-            'Success' => true
-        ];
     }
 
     /**
@@ -153,11 +147,66 @@ class Processor implements ProcessorInterface
     }
 
     /**
+     * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface $purchasable
+     * @return array
+     */
+    protected function succeeded(PurchasableInterface $purchasable)
+    {
+        return [
+            'Success' => true,
+            'Identifier' => $purchasable->getIdentifier()->getFull()
+        ];
+    }
+
+    /**
      * @param \SS_HTTPRequest $request
      * @return \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface
      */
     protected function getPurchasable(\SS_HTTPRequest $request)
     {
         return \DataList::create($this->purchasableClass)->byID($request->param('OtherID'));
+    }
+
+    /**
+     * @param \SS_HTTPRequest $request
+     * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface $purchasable
+     * @return array
+     */
+    protected function addPurchasable(\SS_HTTPRequest $request, PurchasableInterface $purchasable)
+    {
+        $quantity = max(1, (int)$request->postVar('quantity'));
+        $this->purchasableHolder->addPurchasable($purchasable, $quantity);
+
+        return $this->succeeded($purchasable);
+    }
+
+    /**
+     * @param \SS_HTTPRequest $request
+     * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface $purchasable
+     * @return array
+     */
+    protected function setPurchasable(\SS_HTTPRequest $request, PurchasableInterface $purchasable)
+    {
+        $quantity = max(0, (int) $request->postVar('quantity'));
+
+        if ($quantity === 0) {
+            $this->purchasableHolder->removePurchasable($purchasable->getIdentifier());
+        } else {
+            $this->purchasableHolder->setPurchasable($purchasable, $quantity);
+        }
+        
+        return $this->succeeded($purchasable);
+    }
+
+    /**
+     * @param \SS_HTTPRequest $request
+     * @param \Heystack\Ecommerce\Purchasable\Interfaces\PurchasableInterface $purchasable
+     * @return array
+     */
+    protected function removePurchasable(\SS_HTTPRequest $request, PurchasableInterface $purchasable)
+    {
+        $this->purchasableHolder->removePurchasable($purchasable->getIdentifier());
+
+        return $this->succeeded($purchasable);
     }
 }
